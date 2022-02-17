@@ -3,22 +3,22 @@
 	"Version": 1,
 	"VersionName": "1.0",
 	"FriendlyName": "MirageSDK",
-	"Description": "Mirage SDK for Unreal Engine",
+	"Description": "",
 	"Category": "Other",
-	"CreatedBy": "Mirage",
+	"CreatedBy": "",
 	"CreatedByURL": "",
 	"DocsURL": "",
 	"MarketplaceURL": "",
 	"SupportURL": "",
 	"CanContainContent": true,
 	"IsBetaVersion": false,
-	"IsExperimentalVersion": true,
+	"IsExperimentalVersion": false,
 	"Installed": false,
 	"Modules": [
 		{
 			"Name": "MirageSDK",
 			"Type": "Runtime",
-			"LoadingPhase": "PreLoadingScreen"
+			"LoadingPhase": "Default"
 		}
 	]
 }
