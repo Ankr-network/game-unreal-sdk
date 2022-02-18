@@ -38,6 +38,8 @@ public class MirageSDK : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+				"Http",
+				"Json"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
