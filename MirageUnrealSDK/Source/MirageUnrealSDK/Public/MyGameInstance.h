@@ -15,6 +15,9 @@ class MIRAGEUNREALSDK_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+	UPROPERTY()
+	UMirageClient* mirageClient;
+
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void InitializeMirageSDK();
+	UMirageClient* GetMirageClient();
 };

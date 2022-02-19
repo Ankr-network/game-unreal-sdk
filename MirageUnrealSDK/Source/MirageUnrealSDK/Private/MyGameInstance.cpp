@@ -3,8 +3,12 @@
 
 #include "MyGameInstance.h"
 
-void UMyGameInstance::InitializeMirageSDK()
+UMirageClient* UMyGameInstance::GetMirageClient()
 {
-	UMirageClient* mirageClient = NewObject<UMirageClient>();
-	mirageClient->HelloWorldFromPlugin();
+	if (mirageClient == nullptr)
+	{
+		mirageClient = NewObject<UMirageClient>();
+	}
+
+	return mirageClient;
 }
