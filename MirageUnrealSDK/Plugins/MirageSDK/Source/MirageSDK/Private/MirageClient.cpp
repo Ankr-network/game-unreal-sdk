@@ -35,6 +35,7 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 
 				// Output it for debug
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, recievedUri);
+				UE_LOG(LogTemp, Warning, TEXT("uri: %s"), *recievedUri);
 
 				// Set session from backend clientId for future calls
 				this->clientId = sessionId;
@@ -83,7 +84,7 @@ void UMirageClient::SendTransaction(FString contract, FString abi, FString metho
 		});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi, method, args]() {
-		FString url = this->baseUrl + "send/transaction";
+		FString url = baseUrl + "send/transaction";
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
@@ -174,5 +175,85 @@ void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
 	const TCHAR* find = TEXT("\"");
 	const TCHAR* replace = TEXT("\\\"");
 	Request->SetContentAsString("{\"abi\": \"" + abi.Replace(find, replace, ESearchCase::IgnoreCase) + "\"}"); // erc20 abi
+	Request->ProcessRequest();
+}
+
+void UMirageClient::SignMessage(FString message, FMirageDelegate Result)
+{
+	http = &FHttpModule::Get();
+	
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				FString ticketId = JsonObject->GetStringField("ticket");
+				UE_LOG(LogTemp, Warning, TEXT("ticket: %s"), *ticketId);
+				Result.ExecuteIfBound(JsonObject->GetStringField("ticket"));
+			}
+		});
+	
+	FString url = baseUrl + "sign/message";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	// Send clientId to backend to redirect metamask
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\"}"); // erc20 abi
+	Request->ProcessRequest();
+}
+
+void UMirageClient::GetSignature(FString ticket, FMirageDelegate Result)
+{
+	http = &FHttpModule::Get();
+	
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				TSharedPtr<FJsonObject> data = JsonObject->GetObjectField("data");
+				UE_LOG(LogTemp, Warning, TEXT("signature: %s"), *data->GetStringField("signature"));
+				Result.ExecuteIfBound(data->GetStringField("signature"));
+			}
+		});
+	
+	FString url = baseUrl + "result";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	// Send clientId to backend to redirect metamask
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\":\"" + ticket + "\"}"); // erc20 abi
+	Request->ProcessRequest();
+}
+
+void UMirageClient::VerifyMessage(FString message, FString signature, FMirageDelegate Result)
+{
+	http = &FHttpModule::Get();
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("address: %s"), *JsonObject->GetStringField("address"));
+				Result.ExecuteIfBound(JsonObject->GetStringField("address"));
+			}
+		});
+
+	FString url = baseUrl + "verify/message";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	// Send clientId to backend to redirect metamask
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\", \"signature\":\"" + signature + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }

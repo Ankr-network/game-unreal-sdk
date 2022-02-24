@@ -36,4 +36,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	void SendABI(FString abi, FMirageDelegate Result);
+
+	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	void SignMessage(FString message, FMirageDelegate Result);
+
+	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	void GetSignature(FString ticket, FMirageDelegate Result);
+
+	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+    void VerifyMessage(FString message, FString signature, FMirageDelegate Result);
 };
