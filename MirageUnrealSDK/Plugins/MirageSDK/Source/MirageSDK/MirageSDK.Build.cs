@@ -26,6 +26,13 @@ public class MirageSDK : ModuleRules
 			new string[]
 			{
 				"Core",
+				"CoreUObject",
+				"Engine",
+				"Slate",
+				"SlateCore",
+				"Http",
+				"Json",
+				"JsonUtilities"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -34,12 +41,7 @@ public class MirageSDK : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				"CoreUObject",
-				"Engine",
-				"Slate",
-				"SlateCore",
-				"Http",
-				"Json"
+				
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

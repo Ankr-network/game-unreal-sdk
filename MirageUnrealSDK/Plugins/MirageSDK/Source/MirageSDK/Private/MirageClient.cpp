@@ -32,6 +32,7 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 				FString recievedUri = JsonObject->GetStringField("uri");
 				FString sessionId = JsonObject->GetStringField("session");
 				bool needLogin = JsonObject->GetBoolField("login");
+				session = sessionId;
 
 				// Output it for debug
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, recievedUri);
@@ -191,6 +192,7 @@ void UMirageClient::SignMessage(FString message, FMirageDelegate Result)
 			{
 				FString ticketId = JsonObject->GetStringField("ticket");
 				UE_LOG(LogTemp, Warning, TEXT("ticket: %s"), *ticketId);
+				FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 				Result.ExecuteIfBound(JsonObject->GetStringField("ticket"));
 			}
 		});

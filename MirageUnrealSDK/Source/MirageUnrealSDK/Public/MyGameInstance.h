@@ -15,9 +15,18 @@ class MIRAGEUNREALSDK_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+	UMyGameInstance();
+	~UMyGameInstance();
+
+	FDelegateHandle hndl_AppWillEnterBackground;
+	FDelegateHandle hndl_AppHasEnteredForground;
+
 	UPROPERTY()
 	UMirageClient* mirageClient;
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	UMirageClient* GetMirageClient();
+
+	void OnMobileFocusLost();
+	void OnMobileFocusGained();
 };

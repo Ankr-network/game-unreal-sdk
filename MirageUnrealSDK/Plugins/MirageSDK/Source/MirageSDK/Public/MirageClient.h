@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "Engine.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "MirageClient.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FMirageDelegate, FString, StringOut);
@@ -21,6 +22,7 @@ public:
 	FString clientId;
 	FString baseUrl;
 	FString deviceId;
+	FString session;
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	bool GetClient(FMirageConnectionStatus Callback);
