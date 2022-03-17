@@ -38,6 +38,7 @@
         <li><a href="#signmessage-function">SignMessage Function</a></li>
         <li><a href="#getsignature-function">GetSignature Function</a></li>
         <li><a href="#verifysignature-function">VerifySignature Function</a></li>
+    <li><a href="#01-connect-wallet">Connect Wallet</a></li>
   </ol>
 </details>
 
@@ -235,11 +236,12 @@ FString url = baseUrl + "verify/message";
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## 🗒 Current ERC Proposals
 
-<!-- LICENSE -->
-## License
+We have two ERC proposals.  
+[ERC-4884  Rentable NFT Standard](https://github.com/Ankr-network/game-smart-contract-example/blob/master/ERC/rentable-nft.md)
+[ERC-4911  Composability Extension For ERC-721 Standard](https://github.com/Ankr-network/game-smart-contract-example/blob/master/ERC/composable-nft.md)
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
