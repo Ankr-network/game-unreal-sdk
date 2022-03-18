@@ -38,7 +38,7 @@
         <li><a href="#signmessage-function">SignMessage Function</a></li>
         <li><a href="#getsignature-function">GetSignature Function</a></li>
         <li><a href="#verifysignature-function">VerifySignature Function</a></li>
-    <li><a href="#01-connect-wallet">Connect Wallet</a></li>
+    <li><a href="#current-erc-proposals">Current ERC Proposals</a></li>
   </ol>
 </details>
 
