@@ -112,10 +112,6 @@ FString url = baseUrl + "connect";
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## 🚀 02 Performing Updates to NFTs 
-
-Making updates to the NFT e.g. adding a red hat to a character requires signing and sending a transaction.
-
 ### Signing Transactions
 
 Transactions are signed via a prompt from MetaMask requiring a signature.
@@ -243,6 +239,10 @@ The Call is as follows:
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\", \"signature\":\"" + signature + "\"}");
 ```
 
+## 🚀 02 Performing Updates to NFTs 
+
+Getting NFTs and Making updates to the NFT.
+
 ### GetNFT Info Function
 
 This function gets the NFT item information as a json. 
@@ -263,7 +263,7 @@ The Call is as follows:
 	Request->ProcessRequest();
 ```
 
-### GetNFT Info Function
+### UpdateNFT Function
 
 This function updates the NFT information.
 
