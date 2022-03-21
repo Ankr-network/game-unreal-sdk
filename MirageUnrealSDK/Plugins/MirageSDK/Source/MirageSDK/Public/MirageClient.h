@@ -4,25 +4,30 @@
 #include "Engine.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "UpdateNFTExample.h"
+#include "WearableNFTExample.h"
+#include "MirageDelegates.h"
 #include "MirageClient.generated.h"
-
-DECLARE_DYNAMIC_DELEGATE_OneParam(FMirageDelegate, FString, StringOut);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FMirageConnectionStatus, bool, status);
-DECLARE_DYNAMIC_DELEGATE_OneParam(FMirageTicket, FString, TicketId);
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FMirageTicketResult, FString, Status, int, Code);
 
 UCLASS(Blueprintable, BlueprintType)
 class MIRAGESDK_API UMirageClient : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
+	
 public:
 
 	FHttpModule* http;
-	FString clientId;
 	FString baseUrl;
 	FString deviceId;
 	FString session;
+	FString clientId;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UUpdateNFTExample* updateNFTExample;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UWearableNFTExample* wearableNFTExample;
+
+	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	void Ping(FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	bool GetClient(FMirageConnectionStatus Callback);

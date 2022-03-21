@@ -1,6 +1,8 @@
 #include "MirageClient.h"
 #include "MirageSaveGame.h"
 #include <string>
+#include "ItemInfo.h"
+#include "RequestBodyStructure.h"
 
 UMirageClient::UMirageClient(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -14,6 +16,35 @@ UMirageClient::UMirageClient(const FObjectInitializer& ObjectInitializer) : Supe
 	baseUrl = "http://45.77.189.28:5000/";
 
 	UE_LOG(LogTemp, Warning, TEXT("MirageSDK initialized - UniqueId: %s | baseUrl: %s"), *load->UniqueId, *baseUrl);
+
+	if (updateNFTExample == nullptr)
+	{
+		updateNFTExample = NewObject<UUpdateNFTExample>();
+	}
+	if (wearableNFTExample == nullptr)
+	{
+		wearableNFTExample = NewObject<UWearableNFTExample>();
+	}
+}
+
+void UMirageClient::Ping(FMirageDelegate Result)
+{
+	http = &FHttpModule::Get();
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MirageClient - Ping: %s"), *Response->GetContentAsString());
+			Result.ExecuteIfBound(*Response->GetContentAsString());
+		});
+
+	FString url = baseUrl + "ping";
+
+	Request->SetURL(url);
+	Request->SetVerb("GET");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->ProcessRequest();
 }
 
 bool UMirageClient::GetClient(FMirageConnectionStatus Status)
@@ -25,7 +56,7 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-
+			UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetClient - GetContentAsString: %s"), *Response->GetContentAsString());
 			// Deserialize the json data given Reader and the actual object to deserialize
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
@@ -33,22 +64,26 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 				FString sessionId = JsonObject->GetStringField("session");
 				bool needLogin = JsonObject->GetBoolField("login");
 				session = sessionId;
+				clientId = sessionId;
+
+				updateNFTExample->Init(deviceId, baseUrl, session);
+				wearableNFTExample->Init(deviceId, baseUrl, session);
 
 				// Output it for debug
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, recievedUri);
 				UE_LOG(LogTemp, Warning, TEXT("uri: %s"), *recievedUri);
 
-				// Set session from backend clientId for future calls
-				this->clientId = sessionId;
-
 				// Open Metamask
-				if (needLogin) {
+				if (needLogin) 
+				{
+#if PLATFORM_ANDROID
 					FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
+#endif
 				}
-				Status.Execute(true);
+				Status.ExecuteIfBound(true);
 			}
 			else {
-				Status.Execute(false);
+				Status.ExecuteIfBound(false);
 			}
 
 		});
@@ -63,6 +98,37 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
 	Request->ProcessRequest();
 	return true;
+}
+
+void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
+{
+	http = &FHttpModule::Get();
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("SendABI Response: %s"), *Response->GetContentAsString());
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				Result.ExecuteIfBound(JsonObject->GetStringField("abi"));
+			}
+		});
+
+	FString url = baseUrl + "abi";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	// Send clientId to backend to redirect metamask
+
+	const TCHAR* find = TEXT("\"");
+	const TCHAR* replace = TEXT("\\\"");
+	FString body = FString("{\"abi\": \"" + abi.Replace(find, replace, ESearchCase::IgnoreCase) + "\"}");
+	UE_LOG(LogTemp, Warning, TEXT("SendABI body: %s"), *body);
+	Request->SetContentAsString(*body); // erc20 abi
+	Request->ProcessRequest();
 }
 
 void UMirageClient::SendTransaction(FString contract, FString abi, FString method, FString args, FMirageTicket Ticket)
@@ -80,7 +146,7 @@ void UMirageClient::SendTransaction(FString contract, FString abi, FString metho
 				FString ticketId = JsonObject->GetStringField("ticket");
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, ticketId);
 
-				Ticket.Execute(ticketId);
+				Ticket.ExecuteIfBound(ticketId);
 			}
 		});
 
@@ -90,12 +156,14 @@ void UMirageClient::SendTransaction(FString contract, FString abi, FString metho
 		Request->SetVerb("POST");
 		Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 		Request->SetHeader("Content-Type", TEXT("application/json"));
-		Request->SetContentAsString("{\"device_id\": \"" + this->deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
+		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
 		Request->ProcessRequest();
 		});
 
 	// Open Metamask
-	FPlatformProcess::LaunchURL(this->clientId.GetCharArray().GetData(), NULL, NULL);
+#if PLATFORM_ANDROID
+	FPlatformProcess::LaunchURL(clientId.GetCharArray().GetData(), NULL, NULL);
+#endif
 }
 
 void UMirageClient::GetTicketResult(FString ticketId, FMirageTicketResult Result)
@@ -115,7 +183,7 @@ void UMirageClient::GetTicketResult(FString ticketId, FMirageTicketResult Result
 				{
 					int code = JsonObject->GetIntegerField("code");
 					FString status = JsonObject->GetStringField("status");
-					Result.Execute("Transaction status: " + status, code);
+					Result.ExecuteIfBound("Transaction status: " + status, code);
 				}
 			});
 
@@ -141,7 +209,7 @@ void UMirageClient::GetData(FString contract, FString abi, FString method, FStri
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			Result.Execute(Response->GetContentAsString());
+			Result.ExecuteIfBound(Response->GetContentAsString());
 		});
 
 	FString url = baseUrl + "call/method";
@@ -150,32 +218,8 @@ void UMirageClient::GetData(FString contract, FString abi, FString method, FStri
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	// Send clientId to backend to redirect metamask
+
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
-	Request->ProcessRequest();
-}
-
-void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
-{
-	http = &FHttpModule::Get();
-
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			Result.Execute(JsonObject->GetStringField("abi_hash"));
-		});
-
-	FString url = baseUrl + "call/method";
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
-	// Send clientId to backend to redirect metamask
-
-	const TCHAR* find = TEXT("\"");
-	const TCHAR* replace = TEXT("\\\"");
-	Request->SetContentAsString("{\"abi\": \"" + abi.Replace(find, replace, ESearchCase::IgnoreCase) + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }
 
@@ -192,7 +236,9 @@ void UMirageClient::SignMessage(FString message, FMirageDelegate Result)
 			{
 				FString ticketId = JsonObject->GetStringField("ticket");
 				UE_LOG(LogTemp, Warning, TEXT("ticket: %s"), *ticketId);
+#if PLATFORM_ANDROID
 				FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+#endif
 				Result.ExecuteIfBound(JsonObject->GetStringField("ticket"));
 			}
 		});
