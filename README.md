@@ -7,7 +7,7 @@
     <!-- <a href="https://github.com/github_username/repo_name"></a> -->
     <br />
     <br />
-    <a href="https://github.com/Ankr-network/game-unity-demo">View Demo</a>
+    <a href="https://github.com/Ankr-network/game-unreal-demo">View Demo</a>
     ·
     <!-- <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
     ·
@@ -70,14 +70,14 @@ Currently, the Unreal Engine serves three Use Cases.
 
 ## 👝 01 Connect Wallet
 
-1. Upon initialization, the client is called and a `device_id` is created.  
+1. Upon initialization, the client is called with a `device_id`.  
 
 ```js
 deviceId = load->UniqueId;
 baseUrl = "http://45.77.189.28:5000/";
 ```
 
-2. The Connection status is queried and a `sessionId`is assigned subject to the Login Status.
+2. The Connection status is queried and a `sessionId`is assigned subject to the Login Status, if previously logged in then login to metamask is not required.
 
 ```js
 GetClient(FMirageConnectionStatus Status)
@@ -90,7 +90,7 @@ FString recievedUri = JsonObject->GetStringField("uri");
 				session = sessionId;
 ```
 
-2. Login via MetaMask is required to authenticate the session. A connection request is sent with the `device_id` as a parameter.
+2. If Login via MetaMask is required to authenticate the session. A connection request is sent to metamask with `uri` as a deeplink.
 
 ```js
 FString url = baseUrl + "connect";
@@ -102,10 +102,13 @@ FString url = baseUrl + "connect";
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
 	Request->ProcessRequest();
+
+	FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
+
 	return true;
 ```
 
-3. If successful, a JSON object is returned with the `session_id` and `URI`. This is now a valid session and any transaction to the blockchain can be performed.  
+3. If already logged in then a JSON object is returned with the `session_id` and `URI`. This is now a valid session and any transaction to the blockchain can be performed.  
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -125,7 +128,7 @@ Any function in the contract can be called. The following are required.
 * ABI 
 * Method
  
-If you want to call any standard function on the smart contract, use the function `SendTransaction` to get all available functions via the client.
+If you want to send transactions, use the function `SendTransaction` with body parameters having, `device_id`, `contract_address`, `abi_hash`, `method` and `args`.
 
 When a call is made, the back end client sends a `Ticket` via MetaMask if the call was successful.
 
@@ -133,7 +136,7 @@ When a call is made, the back end client sends a `Ticket` via MetaMask if the ca
 
 Check status of tickets by calling `GetTicketResult`.
 
-For example, if the game is hanging or you are still waiting.
+For example, if you come back to the game, check the status of the ticket with GetTicketResult having body parameters as `device_id`, `ticket`.
 
 Returns the status of the result.
 
@@ -141,7 +144,7 @@ Successful or unsuccessful.
 
 ### GetData Function
 
-Use `GetData` function to call non standard functions.
+Use `GetData` function to call read only functions.
 
 ```js
 GetData(FString contract, FString abi, FString method, FString args, FMirageDelegate Result)
@@ -156,13 +159,14 @@ FString url = baseUrl + "call/method";
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}");
 ```
 
 ### SendABI Function
 
-If you are using non-standard functions you must use the `SendABI` function.
+If you are using non-standard functions you must use the `SendABI` to call the functions.
 
-First, get the ABI from the smart contract, then send it. 
+First, get the ABI hash of the smart contract by sending abi. 
 
 ```js
 SendABI(FString abi, FMirageDelegate Result)
@@ -171,14 +175,14 @@ SendABI(FString abi, FMirageDelegate Result)
 The Call is as follows: 
 
 ```js
-FString url = baseUrl + "SendABI";
+FString url = baseUrl + "abi";
 
 ```
 
 ### SignMessage Function
 
-This can be used to sign any data message e.g. minting.
-MetaMask requests a signature, then returns a ticket.
+This can be used to sign a message.
+MetaMask popups a request to the sign the message and then returns a ticket.
 
 ```js
 SignMessage(FString message, FMirageDelegate Result)
@@ -217,11 +221,12 @@ FString url = baseUrl + "result";
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\":\"" + ticket + "\"}");
 ```
 
 ### VerifySignature Function
 
-This function compares the `SignMessage` to the `Signature` from the ticket. 
+This function verifies the authentic signer who signed the message by comparing the signature to the public address. 
 
 ```js
 VerifyMessage(FString message, FString signature, FMirageDelegate Result)
@@ -230,7 +235,62 @@ VerifyMessage(FString message, FString signature, FMirageDelegate Result)
 The Call is as follows:
 
 ```js
-FString url = baseUrl + "verify/message";
+	FString url = baseUrl + "verify/message";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\", \"signature\":\"" + signature + "\"}");
+```
+
+### GetNFT Info Function
+
+This function gets the NFT item information as a json. 
+
+```js
+UpdateNFTExamples::GetNFTInfo(int tokenId, FMirageDelegate Result)
+```
+
+The Call is as follows:
+
+```js
+	FString url = "http://root@eth-01.dccn.ankr.com:8080/hero/";
+	url.AppendInt(tokenId); UE_LOG(LogTemp, Warning, TEXT("url: %s"), *url);
+	Request->SetURL(url);
+	Request->SetVerb("GET");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->ProcessRequest();
+```
+
+### GetNFT Info Function
+
+This function updates the NFT information.
+
+```js
+UpdateNFTExample::UpdateNFT(FString abi_hash, FString itemJson, FMirageDelegate Result)
+```
+
+The Call is as follows:
+
+```js
+	FString url = baseUrl + "send/transaction";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+			
+	FRequestBodyStruct requestBody{};
+	requestBody.device_id = deviceId;
+	requestBody.contract_address = ContractAddress;
+	requestBody.abi_hash = abi_hash;
+	requestBody.method = "updateTokenWithSignedMessage";
+
+	FItemInfoStructure item = FItemInfoStructure::FromJson(itemJson);
+	item.strength++;
+	item.signature = "0x";
+	requestBody.args.Add(item);
+	Request->SetContentAsString(FRequestBodyStruct::ToJson(requestBody));
 ```
 
 
