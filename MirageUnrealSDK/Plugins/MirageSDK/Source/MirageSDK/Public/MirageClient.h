@@ -36,7 +36,7 @@ public:
 	void GetData(FString contract, FString abi, FString method, FString args, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void SendTransaction(FString contract, FString abi, FString method, FString args, FMirageTicket Ticket);
+	void SendTransaction(FString contract, FString abi_hash, FString method, FString args, FMirageTicket Ticket);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	void GetTicketResult(FString ticketId, FMirageTicketResult Result);

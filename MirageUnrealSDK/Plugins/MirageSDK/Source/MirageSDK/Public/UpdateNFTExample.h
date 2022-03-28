@@ -26,10 +26,10 @@ public:
 	void Init(FString _deviceId, FString _baseUrl, FString _session);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetNFTInfo(int tokenId, FMirageDelegate Result);
+	void GetNFTInfo(FString abi_hash, int tokenId, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void UpdateNFT(FString abi_hash, FString itemJson, FMirageDelegate Result);
+	void UpdateNFT(FString abi_hash, FItemInfoStructure _item, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	void GetTicketResult(FString ticketId, FMirageTicketResult Result);

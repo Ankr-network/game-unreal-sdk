@@ -46,22 +46,22 @@ public:
 	void GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetCharacterBalance(FString address, FMirageDelegate Result);
+	void GetCharacterBalance(FString abi_hash, FString address, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetBalanceERC1155(FString account, FString id, FMirageDelegate Result);
+	void GetBalanceERC1155(FString contract_address, FString abi_hash, FString account, FString id, FMirageDelegate Result);
 
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetCharacterTokenId(int64 tokenBalance, FString owner, FString index, FMirageDelegate Result);
+	void GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetHasHatToken(int64 tokenBalance, FString tokenAddress, FString account, FString id, FMirageDelegate Result);
+	void GetHasHatToken(FString abi_hash, int tokenBalance, FString tokenAddress, FString account, FString id, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void ChangeHat(int64 characterId, bool hasHat, FString hatAddress, FMirageDelegate Result);
+	void ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetHat(FString abi_hash, int64 characterId, FMirageDelegate Result);
+	void GetHat(FString abi_hash, int characterId, FMirageDelegate Result);
 	
 };

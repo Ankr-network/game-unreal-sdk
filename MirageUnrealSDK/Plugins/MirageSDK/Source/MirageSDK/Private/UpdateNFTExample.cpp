@@ -15,7 +15,7 @@ void UUpdateNFTExample::Init(FString _deviceId, FString _baseUrl, FString _sessi
 	session = _session;
 }
 
-void UUpdateNFTExample::GetNFTInfo(int tokenId, FMirageDelegate Result)
+void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -24,23 +24,28 @@ void UUpdateNFTExample::GetNFTInfo(int tokenId, FMirageDelegate Result)
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetNFTInformation - GetContentAsString: %s"), *Response->GetContentAsString());
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Item: %s"), *Response->GetContentAsString());
 				Result.ExecuteIfBound(Response->GetContentAsString());
 			}
 		});
 
-	FString url = "http://root@eth-01.dccn.ankr.com:8080/hero/";
-	url.AppendInt(tokenId); UE_LOG(LogTemp, Warning, TEXT("url: %s"), *url);
+	FString getTokenDetailsMethodName = "getTokenDetails";
+	FString content = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + ContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getTokenDetailsMethodName + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}";
+	UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetNFTInformation - content: %s"), *content);
+
+	FString url = baseUrl + "call/method";
+
 	Request->SetURL(url);
-	Request->SetVerb("GET");
+	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString(content);
 	Request->ProcessRequest();
 }
 
-void UUpdateNFTExample::UpdateNFT(FString abi_hash, FString itemJson, FMirageDelegate Result)
+void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -58,7 +63,7 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FString itemJson, FMirageDel
 			}
 		});
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, itemJson]()
+	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, _item]()
 		{
 			FString url = baseUrl + "send/transaction";
 			Request->SetURL(url);
@@ -73,7 +78,7 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FString itemJson, FMirageDel
 			requestBody.abi_hash = abi_hash;
 			requestBody.method = "updateTokenWithSignedMessage";
 
-			FItemInfoStructure item = FItemInfoStructure::FromJson(itemJson);
+			FItemInfoStructure item = _item;
 			item.strength++;
 			item.signature = "0x";
 			requestBody.args.Add(item);

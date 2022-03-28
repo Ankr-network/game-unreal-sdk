@@ -13,7 +13,7 @@ UMirageClient::UMirageClient(const FObjectInitializer& ObjectInitializer) : Supe
 	UMirageSaveGame* load = UMirageSaveGame::Load();
 
 	deviceId = load->UniqueId;
-	baseUrl = "http://45.77.189.28:5000/";
+	baseUrl  = "http://45.77.189.28:5000/";
 
 	UE_LOG(LogTemp, Warning, TEXT("MirageSDK initialized - UniqueId: %s | baseUrl: %s"), *load->UniqueId, *baseUrl);
 
@@ -57,23 +57,21 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 			UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetClient - GetContentAsString: %s"), *Response->GetContentAsString());
-			// Deserialize the json data given Reader and the actual object to deserialize
+			
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				FString recievedUri = JsonObject->GetStringField("uri");
-				FString sessionId = JsonObject->GetStringField("session");
-				bool needLogin = JsonObject->GetBoolField("login");
-				session = sessionId;
-				clientId = sessionId;
+				FString sessionId	= JsonObject->GetStringField("session");
+				bool needLogin		= JsonObject->GetBoolField("login");
+				session				= sessionId;
+				clientId			= sessionId;
 
 				updateNFTExample->Init(deviceId, baseUrl, session);
 				wearableNFTExample->Init(deviceId, baseUrl, session);
 
-				// Output it for debug
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, recievedUri);
-				UE_LOG(LogTemp, Warning, TEXT("uri: %s"), *recievedUri);
+				UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetClient - uri: %s"), *recievedUri);
 
-				// Open Metamask
 				if (needLogin) 
 				{
 #if PLATFORM_ANDROID
@@ -82,7 +80,8 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 				}
 				Status.ExecuteIfBound(true);
 			}
-			else {
+			else 
+			{
 				Status.ExecuteIfBound(false);
 			}
 
@@ -117,11 +116,11 @@ void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
 		});
 
 	FString url = baseUrl + "abi";
+
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
-	// Send clientId to backend to redirect metamask
 
 	const TCHAR* find = TEXT("\"");
 	const TCHAR* replace = TEXT("\\\"");
@@ -131,7 +130,7 @@ void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
 	Request->ProcessRequest();
 }
 
-void UMirageClient::SendTransaction(FString contract, FString abi, FString method, FString args, FMirageTicket Ticket)
+void UMirageClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, FMirageTicket Ticket)
 {
 	http = &FHttpModule::Get();
 
@@ -150,17 +149,18 @@ void UMirageClient::SendTransaction(FString contract, FString abi, FString metho
 			}
 		});
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi, method, args]() {
-		FString url = baseUrl + "send/transaction";
-		Request->SetURL(url);
-		Request->SetVerb("POST");
-		Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-		Request->SetHeader("Content-Type", TEXT("application/json"));
-		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
-		Request->ProcessRequest();
+	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi_hash, method, args]()
+		{
+			FString url = baseUrl + "send/transaction";
+
+			Request->SetURL(url);
+			Request->SetVerb("POST");
+			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+			Request->SetHeader("Content-Type", TEXT("application/json"));
+			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
+			Request->ProcessRequest();
 		});
 
-	// Open Metamask
 #if PLATFORM_ANDROID
 	FPlatformProcess::LaunchURL(clientId.GetCharArray().GetData(), NULL, NULL);
 #endif
@@ -188,6 +188,7 @@ void UMirageClient::GetTicketResult(FString ticketId, FMirageTicketResult Result
 			});
 
 		FString url = baseUrl + "result";
+
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
@@ -200,7 +201,7 @@ void UMirageClient::GetTicketResult(FString ticketId, FMirageTicketResult Result
 	}
 }
 
-void UMirageClient::GetData(FString contract, FString abi, FString method, FString args, FMirageDelegate Result)
+void UMirageClient::GetData(FString contract, FString abi_hash, FString method, FString args, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -213,13 +214,12 @@ void UMirageClient::GetData(FString contract, FString abi, FString method, FStri
 		});
 
 	FString url = baseUrl + "call/method";
+
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
-	// Send clientId to backend to redirect metamask
-
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }
 
@@ -236,19 +236,20 @@ void UMirageClient::SignMessage(FString message, FMirageDelegate Result)
 			{
 				FString ticketId = JsonObject->GetStringField("ticket");
 				UE_LOG(LogTemp, Warning, TEXT("ticket: %s"), *ticketId);
+
 #if PLATFORM_ANDROID
 				FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
-				Result.ExecuteIfBound(JsonObject->GetStringField("ticket"));
+				Result.ExecuteIfBound(ticketId);
 			}
 		});
 	
 	FString url = baseUrl + "sign/message";
+
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
-	// Send clientId to backend to redirect metamask
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }
@@ -271,11 +272,11 @@ void UMirageClient::GetSignature(FString ticket, FMirageDelegate Result)
 		});
 	
 	FString url = baseUrl + "result";
+
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
-	// Send clientId to backend to redirect metamask
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\":\"" + ticket + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }
@@ -301,7 +302,6 @@ void UMirageClient::VerifyMessage(FString message, FString signature, FMirageDel
 	Request->SetVerb("POST");
 	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 	Request->SetHeader("Content-Type", TEXT("application/json"));
-	// Send clientId to backend to redirect metamask
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\", \"signature\":\"" + signature + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }

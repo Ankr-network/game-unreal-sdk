@@ -11,12 +11,12 @@ struct FItemInfoStructure
 {
 	GENERATED_BODY()
 
-	UPROPERTY() uint64 tokenId;
-	UPROPERTY() uint64 itemType;
-	UPROPERTY() uint64 strength;
-	UPROPERTY() uint64 level;
-	UPROPERTY() uint64 expireTime;
-	UPROPERTY() FString signature;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) int tokenId;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) int itemType;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) int strength;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) int level;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) int expireTime;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere) FString signature;
 
 	static FString ToJson(FItemInfoStructure _item)
 	{
