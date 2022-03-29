@@ -64,7 +64,7 @@ void UWearableNFTExample::MintItems(FString abi_hash, FMirageDelegate Result)
 		});
 }
 
-void UWearableNFTExample::MintCharacter(FString abi_hash, FMirageDelegate Result)
+void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -74,10 +74,19 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FMirageDelegate Result
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintCharacter - GetContentAsString: %s"), *Response->GetContentAsString());
-			Result.ExecuteIfBound(Response->GetContentAsString());
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				FString ticket = JsonObject->GetStringField("ticket");
+				Result.ExecuteIfBound(ticket);
+			}
+			else
+			{
+				Result.ExecuteIfBound(Response->GetContentAsString());
+			}
 		});
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash]()
+	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, to]()
 		{
 			FString safeMintMethodName = "safeMint";
 
@@ -86,8 +95,12 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FMirageDelegate Result
 			Request->SetVerb("POST");
 			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 			Request->SetHeader("Content-Type", TEXT("application/json"));
-			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + safeMintMethodName + "\", \"args\": \"\"}");
+			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + safeMintMethodName + "\", \"args\": [\"" + to + "\"]}");
 			Request->ProcessRequest();
+
+#if PLATFORM_ANDROID
+			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+#endif
 		});
 }
 
@@ -108,7 +121,7 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 		{
 			FString setApprovalForAllMethodName = "setApprovalForAll";
 
-			FString url = baseUrl + "call/method";
+			FString url = baseUrl + "send/transaction";
 			Request->SetURL(url);
 			Request->SetVerb("POST");
 			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
@@ -132,8 +145,16 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				FString data = JsonObject->GetStringField("data");
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - Balance: %s"), FCString::Atoi(*data));
-				Result.ExecuteIfBound(data);
+				
+				if (!data.IsEmpty())
+				{
+					UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - Balance: %s"), FCString::Atoi(*data));
+					Result.ExecuteIfBound(data);
+				}
+				else
+				{
+					Result.ExecuteIfBound("-1");
+				}
 			}
 		});
 
@@ -284,4 +305,28 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FMirageDeleg
 			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getHatMethodName + "\", \"args\": [{\"_characterId\":" + FString::FromInt(characterId) + "}] }");
 			Request->ProcessRequest();
 		});
+}
+
+void UWearableNFTExample::GetTicketResult(FString ticketId, FMirageTicketResult Result)
+{
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult - GetContentAsString: %s"), *Response->GetContentAsString());
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				FString data = JsonObject->GetStringField("data");
+				Result.ExecuteIfBound(Response->GetContentAsString(), 1);// "Transaction Hash: " + data, 1);
+			}
+		});
+
+	FString url = baseUrl + "result";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
+	Request->ProcessRequest();
 }

@@ -22,6 +22,8 @@ public:
 	FString deviceId;
 	FString session;
 	FString clientId;
+	TArray<FString> accounts;
+	FString chainId;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UUpdateNFTExample* updateNFTExample;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UWearableNFTExample* wearableNFTExample;
@@ -31,6 +33,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	bool GetClient(FMirageConnectionStatus Callback);
+
+	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	void GetWalletInfo(FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	void GetData(FString contract, FString abi, FString method, FString args, FMirageDelegate Result);

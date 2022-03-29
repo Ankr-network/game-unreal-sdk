@@ -99,6 +99,45 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 	return true;
 }
 
+void UMirageClient::GetWalletInfo(FMirageDelegate Result)
+{
+	http = &FHttpModule::Get();
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetWalletInfo - GetContentAsString: %s"), *Response->GetContentAsString());
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, Response->GetContentAsString());
+				UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetWalletInfo - GetContentAsString: "), *Response->GetContentAsString());
+
+				/*TArray<TSharedPtr<FJsonObject>> accountsObject = JsonObject->GetArrayField("accounts");
+				for (int32 i = 0; i < accountsObject.Num(); i++)
+				{
+					accounts.Add(accountsObject->AsString());
+				}
+				
+				chainId  = JsonObject->GetStringField("chainId");*/
+
+				Result.ExecuteIfBound(Response->GetContentAsString());
+			}
+		});
+
+	FString url = baseUrl + "wallet/info";
+	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, url);
+
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
+	Request->ProcessRequest();
+}
+
 void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();

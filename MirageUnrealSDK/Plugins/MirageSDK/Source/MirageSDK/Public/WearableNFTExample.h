@@ -40,7 +40,7 @@ public:
 	void MintItems(FString abi_hash, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void MintCharacter(FString abi_hash, FMirageDelegate Result);
+	void MintCharacter(FString abi_hash, FString to, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	void GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FMirageDelegate Result);
@@ -64,4 +64,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
 	void GetHat(FString abi_hash, int characterId, FMirageDelegate Result);
 	
+	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	void GetTicketResult(FString ticketId, FMirageTicketResult Result);
 };

@@ -70,7 +70,6 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FM
 			Request->SetVerb("POST");
 			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 			Request->SetHeader("Content-Type", TEXT("application/json"));
-			// Send clientId to backend to redirect metamask
 
 			FRequestBodyStruct requestBody{};
 			requestBody.device_id = deviceId;
