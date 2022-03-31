@@ -33,32 +33,6 @@ struct FRequestBodyStruct
 	}
 };
 
-/*USTRUCT(BlueprintType)
-struct FRequestJson
-{
-	GENERATED_BODY()
-
-	UPROPERTY() FString device_id;
-	UPROPERTY() FString contract_address;
-	UPROPERTY() FString abi_hash;
-	UPROPERTY() FString method;
-	UPROPERTY() TArray<FString> args;
-
-	static FString SetContent(FString device_id, FString contract_address, FString abi_hash, FString method, TArray<FString> args)
-	{
-		FRequestJson content{};
-		content.device_id = device_id;
-		content.contract_address = contract_address;
-		content.abi_hash = abi_hash;
-		content.method = method;
-		content.args = args;
-
-		FString json;
-		FJsonObjectConverter::UStructToJsonObjectString(content, json);
-		return json;
-	}
-};*/
-
 UCLASS()
 class MIRAGESDK_API URequestBodyStructure : public UUserDefinedStruct
 {

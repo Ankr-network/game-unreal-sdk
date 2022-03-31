@@ -64,7 +64,6 @@ bool UMirageClient::GetClient(FMirageConnectionStatus Status)
 				FString sessionId	= JsonObject->GetStringField("session");
 				bool needLogin		= JsonObject->GetBoolField("login");
 				session				= sessionId;
-				clientId			= sessionId;
 
 				updateNFTExample->Init(deviceId, baseUrl, session);
 				wearableNFTExample->Init(deviceId, baseUrl, session);
@@ -108,23 +107,33 @@ void UMirageClient::GetWalletInfo(FMirageDelegate Result)
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			FString data = Response->GetContentAsString();
 			UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetWalletInfo - GetContentAsString: %s"), *Response->GetContentAsString());
 
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, Response->GetContentAsString());
-				UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetWalletInfo - GetContentAsString: "), *Response->GetContentAsString());
 
-				/*TArray<TSharedPtr<FJsonObject>> accountsObject = JsonObject->GetArrayField("accounts");
-				for (int32 i = 0; i < accountsObject.Num(); i++)
+				bool result = JsonObject->GetBoolField("result");
+				if (result)
 				{
-					accounts.Add(accountsObject->AsString());
-				}
-				
-				chainId  = JsonObject->GetStringField("chainId");*/
+					TArray<TSharedPtr<FJsonValue>> accountsObject = JsonObject->GetArrayField("accounts");
+					for (int32 i = 0; i < accountsObject.Num(); i++)
+					{
+						accounts.Add(accountsObject[i]->AsString());
+					}
+					activeAccount = accounts[0];
 
-				Result.ExecuteIfBound(Response->GetContentAsString());
+					chainId = JsonObject->GetIntegerField("chainId");
+
+					updateNFTExample->SetAccount(activeAccount, chainId);
+					wearableNFTExample->SetAccount(activeAccount, chainId);
+
+					data = FString("Total Accounts: ").Append(FString::FromInt(accounts.Num())).Append(" | Active Account: ").Append(activeAccount).Append(" | Chain Id: ").Append(FString::FromInt(chainId));
+				}
 			}
+
+			Result.ExecuteIfBound(data);
 		});
 
 	FString url = baseUrl + "wallet/info";
@@ -138,6 +147,17 @@ void UMirageClient::GetWalletInfo(FMirageDelegate Result)
 	Request->ProcessRequest();
 }
 
+FString UMirageClient::GetActiveAccount()
+{
+	if (!activeAccount.IsEmpty())
+	{
+		return activeAccount;
+	}
+
+	GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Green, *FString("MirageClient - GetActiveAccount - Please press Wallet Info on the main screen to get the account address."));
+	return "";
+}
+
 void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -147,7 +167,8 @@ void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("SendABI Response: %s"), *Response->GetContentAsString());
+			FString data = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("SendABI Response: %s"), *data);
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				Result.ExecuteIfBound(JsonObject->GetStringField("abi"));
@@ -164,7 +185,7 @@ void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
 	const TCHAR* find = TEXT("\"");
 	const TCHAR* replace = TEXT("\\\"");
 	FString body = FString("{\"abi\": \"" + abi.Replace(find, replace, ESearchCase::IgnoreCase) + "\"}");
-	UE_LOG(LogTemp, Warning, TEXT("SendABI body: %s"), *body);
+	//UE_LOG(LogTemp, Warning, TEXT("SendABI body: %s"), *body);
 	Request->SetContentAsString(*body); // erc20 abi
 	Request->ProcessRequest();
 }
@@ -178,14 +199,17 @@ void UMirageClient::SendTransaction(FString contract, FString abi_hash, FString 
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			FString data = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("SendTransaction Response: %s"), *data);
 
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				FString ticketId = JsonObject->GetStringField("ticket");
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, ticketId);
-
-				Ticket.ExecuteIfBound(ticketId);
+				data = ticketId;
 			}
+
+			Ticket.ExecuteIfBound(data);
 		});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi_hash, method, args]()
@@ -201,7 +225,7 @@ void UMirageClient::SendTransaction(FString contract, FString abi_hash, FString 
 		});
 
 #if PLATFORM_ANDROID
-	FPlatformProcess::LaunchURL(clientId.GetCharArray().GetData(), NULL, NULL);
+	FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
 }
 
@@ -232,7 +256,6 @@ void UMirageClient::GetTicketResult(FString ticketId, FMirageTicketResult Result
 		Request->SetVerb("POST");
 		Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 		Request->SetHeader("Content-Type", TEXT("application/json"));
-		// Send clientId to backend to redirect metamask
 		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\": \"" + ticketId + "\" }"); // erc20 abi
 		Request->ProcessRequest();
 		FPlatformProcess::Sleep(10000);

@@ -15,6 +15,12 @@ void UUpdateNFTExample::Init(FString _deviceId, FString _baseUrl, FString _sessi
 	session = _session;
 }
 
+void UUpdateNFTExample::SetAccount(FString _account, int _chainId)
+{
+	activeAccount = _account;
+	chainId		  = _chainId;
+}
+
 void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -60,6 +66,10 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FM
 				FString ticket = JsonObject->GetStringField("ticket");
 				UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - UpdateNFT - ticket: %s"), *ticket);
 				Result.ExecuteIfBound(ticket);
+
+#if PLATFORM_ANDROID
+				FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+#endif
 			}
 		});
 
@@ -78,17 +88,12 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FM
 			requestBody.method = "updateTokenWithSignedMessage";
 
 			FItemInfoStructure item = _item;
-			item.strength++;
-			item.signature = "0x";
 			requestBody.args.Add(item);
+
 			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - UpdateNFT - %s"), *FRequestBodyStruct::ToJson(requestBody));
 
 			Request->SetContentAsString(FRequestBodyStruct::ToJson(requestBody));
 			Request->ProcessRequest();
-
-#if PLATFORM_ANDROID
-			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
-#endif
 		});
 }
 

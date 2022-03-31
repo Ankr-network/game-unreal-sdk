@@ -20,11 +20,12 @@ class MIRAGEUNREALSDK_API UMyGameInstance : public UGameInstance
 
 	FDelegateHandle hndl_AppWillEnterBackground;
 	FDelegateHandle hndl_AppHasEnteredForground;
+	bool lostFocus;
 
 	UPROPERTY()
 	UMirageClient* mirageClient;
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	UMirageClient* GetMirageClient();
 
 	void OnMobileFocusLost();

@@ -19,18 +19,24 @@ public:
 	FString deviceId;
 	FString session;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) int chainId;
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString ContractAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString ABI;
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void Init(FString _deviceId, FString _baseUrl, FString _session);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void SetAccount(FString _account, int _chainId);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetNFTInfo(FString abi_hash, int tokenId, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void UpdateNFT(FString abi_hash, FItemInfoStructure _item, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetTicketResult(FString ticketId, FMirageTicketResult Result);
 };

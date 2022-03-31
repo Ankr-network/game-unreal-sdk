@@ -21,14 +21,24 @@ UMirageClient* UMyGameInstance::GetMirageClient()
 
 void UMyGameInstance::OnMobileFocusLost()
 {
-	//GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::Green, *FString("OnMobileFocusLost"));
-	UE_LOG(LogTemp, Warning, TEXT("UMyGameInstance::OnMobileFocusLost"));
+	if (!lostFocus)
+	{
+		lostFocus = true;
+
+		//GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::Green, *FString("UMyGameInstance::OnMobileFocusLost"));
+		UE_LOG(LogTemp, Warning, TEXT("UMyGameInstance::OnMobileFocusLost"));
+	}
 }
 
 void UMyGameInstance::OnMobileFocusGained()
 {
-	//GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::Green, *FString("OnMobileFocusGained"));
-	UE_LOG(LogTemp, Warning, TEXT("UMyGameInstance::OnMobileFocusGained"));
+	if (lostFocus)
+	{
+		lostFocus = false;
+
+		//GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::Green, *FString("UMyGameInstance::OnMobileFocusGained"));
+		UE_LOG(LogTemp, Warning, TEXT("UMyGameInstance::OnMobileFocusGained"));
+	}
 }
 
 UMyGameInstance::~UMyGameInstance()

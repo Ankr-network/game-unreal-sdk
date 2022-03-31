@@ -19,6 +19,9 @@ public:
 	FString deviceId;
 	FString session;
 
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) int chainId;
+
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemContractAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemABI;
 			 
@@ -33,37 +36,40 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedGlassesAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteGlassesAddress;
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void Init(FString _deviceId, FString _baseUrl, FString _session);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void MintItems(FString abi_hash, FMirageDelegate Result);
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void SetAccount(FString _account, int _chainId);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void MintItems(FString abi_hash, FString to, FMirageDelegate Result);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void MintCharacter(FString abi_hash, FString to, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetCharacterBalance(FString abi_hash, FString address, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetBalanceERC1155(FString contract_address, FString abi_hash, FString account, FString id, FMirageDelegate Result);
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void GetBalanceERC1155(FString contract_address, FString abi_hash, FString _account, FString id, FMirageDelegate Result);
 
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
-	void GetHasHatToken(FString abi_hash, int tokenBalance, FString tokenAddress, FString account, FString id, FMirageDelegate Result);
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void GetHasHatToken(FString abi_hash, int tokenBalance, FString tokenAddress, FString _account, FString id, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FMirageDelegate Result);
 
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetHat(FString abi_hash, int characterId, FMirageDelegate Result);
 	
-	UFUNCTION(BlueprintCallable, Category = "MirageSDK")
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetTicketResult(FString ticketId, FMirageTicketResult Result);
 };
