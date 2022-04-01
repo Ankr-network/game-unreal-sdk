@@ -22,6 +22,7 @@
 #define METHOD_MINT								"mint"
 #define METHOD_SET_APPROVAL_FOR_ALL				"setApprovalForAll"
 #define METHOD_BALANCE_OF						"balanceOf"
+#define METHOD_BALANCE_OF_BATCH					"balanceOfBatch"
 #define METHOD_TOKEN_OF_OWNER_BY_INDEX			"tokenOfOwnerByIndex"
 #define METHOD_CHANGE_HAT						"changeHat"
 #define METHOD_GET_HAT							"getHat"

@@ -17,8 +17,11 @@ UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitial
 	TransactionGasLimit			 = "1000000";
 	BlueHatAddress				 = "0x00010000000000000000000000000000000000000000000000000000000001";
 	RedHatAddress				 = "0x00010000000000000000000000000000000000000000000000000000000002";
+	WhiteHatAddress				 = "0x00010000000000000000000000000000000000000000000000000000000003";
 	BlueShoesAddress			 = "0x00020000000000000000000000000000000000000000000000000000000001";
+	RedShoesAddress				 = "0x00020000000000000000000000000000000000000000000000000000000002";
 	WhiteShoesAddress			 = "0x00020000000000000000000000000000000000000000000000000000000003";
+	BlueGlassesAddress			 = "0x00030000000000000000000000000000000000000000000000000000000001";
 	RedGlassesAddress			 = "0x00030000000000000000000000000000000000000000000000000000000002";
 	WhiteGlassesAddress			 = "0x00030000000000000000000000000000000000000000000000000000000003";
 }
@@ -54,7 +57,7 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FMirageDelegat
 				data = ticket;
 
 			}
-
+			lastMethod = "MintItems";
 			Result.ExecuteIfBound(data);
 		});
 
@@ -100,7 +103,7 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FMirageDel
 				data = ticket;
 				
 			}
-			
+			lastMethod = "MintCharacter";
 			Result.ExecuteIfBound(data);
 		});
 
@@ -143,7 +146,7 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 					data = ticket;
 				}
 			}
-
+			lastMethod = "GameItemSetApproval";
 			Result.ExecuteIfBound(data);
 		});
 
@@ -156,7 +159,9 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 			Request->SetVerb("POST");
 			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 			Request->SetHeader("Content-Type", TEXT("application/json"));
-			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + callOperator + "\", \"" + (approved ? "true":"false") + "\"]}");
+			FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}";
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GameItemSetApproval - Request: %s"), *body);
+			Request->SetContentAsString(body);// "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}");
 			Request->ProcessRequest();
 
 #if PLATFORM_ANDROID
@@ -182,7 +187,7 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 				data = JsonObject->GetStringField("data");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - Balance: %s"), *data);
 			}
-
+			lastMethod = "GetCharacterBalance";
 			Result.ExecuteIfBound(data);
 		});
 
@@ -207,6 +212,7 @@ void UWearableNFTExample::GetBalanceERC1155(FString contract_address, FString ab
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetBalanceERC1155 - GetContentAsString: %s"), *Response->GetContentAsString());
+			lastMethod = "GetBalanceERC1155";
 			Result.ExecuteIfBound(Response->GetContentAsString());
 		});
 
@@ -244,7 +250,7 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 				data = JsonObject->GetStringField("data");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - Balance: %s"), *data);
 			}
-
+			lastMethod = "GetCharacterTokenId";
 			Result.ExecuteIfBound(data);
 		});
 
@@ -276,7 +282,7 @@ void UWearableNFTExample::GetHasHatToken(FString abi_hash, int tokenBalance, FSt
 				data = JsonObject->GetStringField("data");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHasHatToken - Balance: %s"), FCString::Atoi(*data));
 			}
-
+			lastMethod = "GetHasHatToken";
 			Result.ExecuteIfBound(data);
 		});
 
@@ -300,18 +306,36 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 	}
 
 	http = &FHttpModule::Get();
-
+	
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			FString ticket = Response->GetContentAsString();
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - GetContentAsString: %s"), *Response->GetContentAsString());
-			Result.ExecuteIfBound(Response->GetContentAsString());
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				ticket = JsonObject->GetStringField("ticket");
+				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - Ticket: %s"), *ticket);
+			}
+			lastMethod = "ChangeHat";
+			if (hat.Equals(BlueHatAddress))
+			{
+				lastMethod = "ChangeHatBlue";
+			}
+			else if (hat.Equals(RedHatAddress))
+			{
+				lastMethod = "ChangeHatRed";
+			}
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *lastMethod);
+			Result.ExecuteIfBound(ticket);
 		});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, characterId, hasHat, hatAddress]()
 		{
+			hat = hatAddress;
 			FString changeHatMethodName = "changeHat";
 
 			FString url = baseUrl + "send/transaction";
@@ -319,7 +343,9 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 			Request->SetVerb("POST");
 			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
 			Request->SetHeader("Content-Type", TEXT("application/json"));
-			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + BlueHatAddress + "\", \"" + TransactionGasLimit + "\"]}");
+			FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + BlueHatAddress + "\"]}";
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - Request: %s"), *body);
+			Request->SetContentAsString(body);//"{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + BlueHatAddress + "\"]}");
 			Request->ProcessRequest();
 
 #if PLATFORM_ANDROID
@@ -337,22 +363,28 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FMirageDeleg
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			FString data = Response->GetContentAsString();
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - GetContentAsString: %s"), *Response->GetContentAsString());
-			Result.ExecuteIfBound(Response->GetContentAsString());
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				data = JsonObject->GetStringField("data");
+				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - Balance: %s"), *data);
+			}
+			lastMethod = "GetHat";
+			Result.ExecuteIfBound(data);
 		});
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, characterId]()
-		{
-			FString getHatMethodName = "getHat";
+	FString getHatMethodName = "getHat";
 
-			FString url = baseUrl + "call/method";
-			Request->SetURL(url);
-			Request->SetVerb("POST");
-			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-			Request->SetHeader("Content-Type", TEXT("application/json"));
-			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getHatMethodName + "\", \"args\": [{\"_characterId\":" + FString::FromInt(characterId) + "}] }");
-			Request->ProcessRequest();
-		});
+	FString url = baseUrl + "call/method";
+
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\"]}");
+	Request->ProcessRequest();
 }
 
 void UWearableNFTExample::GetTicketResult(FString ticketId, FMirageTicketResult Result)
@@ -362,11 +394,25 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FMirageTicketResult 
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult - GetContentAsString: %s"), *Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult for %s - GetContentAsString: %s"), *lastMethod , *Response->GetContentAsString());
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				FString data = JsonObject->GetStringField("data");
-				Result.ExecuteIfBound(Response->GetContentAsString(), 1);// "Transaction Hash: " + data, 1);
+				int code = 1;
+				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *lastMethod);
+				if (lastMethod.Equals("ChangeHatBlue") || lastMethod.Equals("ChangeHatRed"))
+				{
+					lastResult = JsonObject->GetBoolField("result");
+					TSharedPtr<FJsonObject> object = JsonObject->GetObjectField("data");
+					FString transactionHash = object->GetStringField("tx_hash");
+					FString status = object->GetStringField("status");
+					UE_LOG(LogTemp, Warning, TEXT("tx_hash: %s | status: %s"), *transactionHash, *status);
+					if (lastResult && status == "success")
+					{
+						code = 123;
+					}
+				}
+				Result.ExecuteIfBound(Response->GetContentAsString(), code);// "Transaction Hash: " + data, 1);
 			}
 		});
 
@@ -377,4 +423,98 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FMirageTicketResult 
 	Request->SetHeader("Content-Type", TEXT("application/json"));
 	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
 	Request->ProcessRequest();
+}
+
+void UWearableNFTExample::GetAdvancedTicketResult(FString ticketId, FAdvancedTicketResultDelegate Result)
+{
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetAdvancedTicketResult - GetContentAsString: %s"), *Response->GetContentAsString());
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				lastResult = JsonObject->GetBoolField("result");
+
+				if (lastResult)
+				{
+					TSharedPtr<FJsonObject> data = JsonObject->GetObjectField("data");
+					FString transactionHash = data->GetStringField("tx_hash");
+					FString status = data->GetStringField("status");
+					UE_LOG(LogTemp, Warning, TEXT("tx_hash: %s | status: %s"), *transactionHash, *status);
+
+					Result.ExecuteIfBound(lastMethod, status);
+				}
+				else
+				{
+					Result.ExecuteIfBound(Response->GetContentAsString(), "failed");
+				}
+			}
+			else
+			{
+				Result.ExecuteIfBound(Response->GetContentAsString(), "failed");
+			}
+		});
+
+	FString url = baseUrl + "result";
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
+	Request->ProcessRequest();
+}
+
+void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FMirageDelegate Result)
+{
+	http = &FHttpModule::Get();
+
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+			FString data = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - GetContentAsString: %s"), *data);
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				data = JsonObject->GetStringField("data");
+				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - Balance: %s"), *data);
+			}
+			lastMethod = "GetItemsBalance";
+			Result.ExecuteIfBound(data);
+		});
+
+	FString balanceOfBatchMethodName = "balanceOfBatch";
+
+	FString body = "[ [\"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
+	UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - balanceOfBatch: %s"), *body);
+	
+	FString url = baseUrl + "call/method";
+
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
+	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfBatchMethodName + "\", \"args\": " + body + "}");
+	Request->ProcessRequest();
+}
+
+int UWearableNFTExample::GetItemValueFromBalances(FString data, int index)
+{
+	TArray<FString> tokens;
+	FString seperator(",");
+	data.ParseIntoArray(tokens, *seperator, true);
+
+	for (int32 i = 0; i < tokens.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemValueFromBalances - token: %s"), *tokens[i]);
+	}
+
+	if (index > 8) return -1;
+
+	return FCString::Atoi(*tokens[index]);
 }

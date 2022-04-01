@@ -18,6 +18,10 @@ public:
 	FString baseUrl;
 	FString deviceId;
 	FString session;
+	FString hat;
+
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) bool lastResult;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString lastMethod;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) int chainId;
@@ -31,8 +35,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString TransactionGasLimit;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueHatAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedHatAddress;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteHatAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueShoesAddress;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedShoesAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteShoesAddress;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueGlassesAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedGlassesAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteGlassesAddress;
 
@@ -72,4 +79,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetTicketResult(FString ticketId, FMirageTicketResult Result);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void GetItemsBalance(FString abi_hash, FString address, FMirageDelegate Result);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	int GetItemValueFromBalances(FString data, int index);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void GetAdvancedTicketResult(FString ticketId, FAdvancedTicketResultDelegate Result);
 };
