@@ -20,7 +20,6 @@ public:
 	FString session;
 	FString hat;
 
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) bool lastResult;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString lastMethod;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;
@@ -62,14 +61,7 @@ public:
 	void GetCharacterBalance(FString abi_hash, FString address, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetBalanceERC1155(FString contract_address, FString abi_hash, FString _account, FString id, FMirageDelegate Result);
-
-
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FMirageDelegate Result);
-
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetHasHatToken(FString abi_hash, int tokenBalance, FString tokenAddress, FString _account, FString id, FMirageDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FMirageDelegate Result);
@@ -85,7 +77,4 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	int GetItemValueFromBalances(FString data, int index);
-
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetAdvancedTicketResult(FString ticketId, FAdvancedTicketResultDelegate Result);
 };
