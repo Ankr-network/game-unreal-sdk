@@ -10,7 +10,7 @@
 #include "MirageClient.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
-class MIRAGESDK_API UMirageClient : public UObject
+class ANKRSDK_API UMirageClient : public UObject
 {
 	GENERATED_UCLASS_BODY()
 

@@ -4,7 +4,7 @@
 #include "MirageSaveGame.generated.h"
 
 UCLASS()
-class MIRAGESDK_API UMirageSaveGame : public USaveGame
+class ANKRSDK_API UMirageSaveGame : public USaveGame
 {
     GENERATED_BODY()
 

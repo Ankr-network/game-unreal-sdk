@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class FMirageSDKModule : public IModuleInterface
+class FAnkrSDKModule : public IModuleInterface
 {
 public:
 

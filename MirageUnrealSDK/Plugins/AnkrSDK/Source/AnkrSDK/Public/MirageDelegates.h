@@ -9,7 +9,7 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FMirageTicketResult, FString, Status, int, Co
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FAdvancedTicketResultDelegate, FString, methodName, FString, status);
 
 UCLASS()
-class MIRAGESDK_API UMirageDelegates : public UObject
+class ANKRSDK_API UMirageDelegates : public UObject
 {
 	GENERATED_BODY()
 };

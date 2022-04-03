@@ -2,7 +2,7 @@
 	"FileVersion": 3,
 	"Version": 1,
 	"VersionName": "1.0",
-	"FriendlyName": "MirageSDK",
+	"FriendlyName": "AnkrSDK",
 	"Description": "",
 	"Category": "Other",
 	"CreatedBy": "",
@@ -16,7 +16,7 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "MirageSDK",
+			"Name": "AnkrSDK",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

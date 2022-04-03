@@ -8,7 +8,7 @@
 #include "WearableNFTExample.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
-class MIRAGESDK_API UWearableNFTExample : public UObject
+class ANKRSDK_API UWearableNFTExample : public UObject
 {
 	GENERATED_UCLASS_BODY()
 

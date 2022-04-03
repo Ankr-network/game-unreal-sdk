@@ -34,7 +34,7 @@ struct FRequestBodyStruct
 };
 
 UCLASS()
-class MIRAGESDK_API URequestBodyStructure : public UUserDefinedStruct
+class ANKRSDK_API URequestBodyStructure : public UUserDefinedStruct
 {
 	GENERATED_BODY()
 };

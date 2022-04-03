@@ -34,7 +34,7 @@ struct FItemInfoStructure
 };
 
 UCLASS()
-class MIRAGESDK_API UItemInfo : public UUserDefinedStruct
+class ANKRSDK_API UItemInfo : public UUserDefinedStruct
 {
 	GENERATED_BODY()
 };

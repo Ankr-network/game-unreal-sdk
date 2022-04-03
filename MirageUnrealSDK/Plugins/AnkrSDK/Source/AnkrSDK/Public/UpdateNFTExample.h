@@ -8,7 +8,7 @@
 #include "UpdateNFTExample.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
-class MIRAGESDK_API UUpdateNFTExample : public UObject
+class ANKRSDK_API UUpdateNFTExample : public UObject
 {
 	GENERATED_UCLASS_BODY()
 

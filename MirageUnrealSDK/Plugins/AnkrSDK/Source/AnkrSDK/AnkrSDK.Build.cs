@@ -2,9 +2,9 @@
 
 using UnrealBuildTool;
 
-public class MirageSDK : ModuleRules
+public class AnkrSDK : ModuleRules
 {
-	public MirageSDK(ReadOnlyTargetRules Target) : base(Target)
+	public AnkrSDK(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
@@ -26,13 +26,6 @@ public class MirageSDK : ModuleRules
 			new string[]
 			{
 				"Core",
-				"CoreUObject",
-				"Engine",
-				"Slate",
-				"SlateCore",
-				"Http",
-				"Json",
-				"JsonUtilities"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -41,8 +34,15 @@ public class MirageSDK : ModuleRules
 		PrivateDependencyModuleNames.AddRange(
 			new string[]
 			{
-				
-				// ... add private dependencies that you statically link with here ...	
+				"Core",
+				"CoreUObject",
+				"Engine",
+				"Slate",
+				"SlateCore",
+				"Http",
+				"Json",
+				"JsonUtilities"
+				// ... add other public dependencies that you statically link with here ...
 			}
 			);
 		
