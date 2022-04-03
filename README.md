@@ -46,7 +46,7 @@
 
 ##  🏗 Install SDK
 
-1. Download 'AnkrSDK.zip' package from "https://github.com/Ankr-network/game-unreal-sdk/UnrealPackage".
+1. Download 'AnkrSDK.zip' package from "https://github.com/Ankr-network/game-unreal-sdk/tree/main/UnrealPackage".
 2. Unzip AnkrSDK.zip package to your Unreal Project/Plugins folder.
 3. Delete Binaries, Intermediate, Saved folders and Visual Studio Project file (.sln) from Unreal Project (If any).
 4. Generate Visual Studio Project by Right-Clicking .uproject and select Generate Visual Studio project files.
