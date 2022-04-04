@@ -26,15 +26,6 @@ public class AnkrSDK : ModuleRules
 			new string[]
 			{
 				"Core",
-				// ... add other public dependencies that you statically link with here ...
-			}
-			);
-			
-		
-		PrivateDependencyModuleNames.AddRange(
-			new string[]
-			{
-				"Core",
 				"CoreUObject",
 				"Engine",
 				"Slate",
@@ -43,6 +34,14 @@ public class AnkrSDK : ModuleRules
 				"Json",
 				"JsonUtilities"
 				// ... add other public dependencies that you statically link with here ...
+			}
+			);
+			
+		
+		PrivateDependencyModuleNames.AddRange(
+			new string[]
+			{
+				
 			}
 			);
 		
