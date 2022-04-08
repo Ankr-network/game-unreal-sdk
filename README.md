@@ -56,27 +56,27 @@
 
 ```js
 
-   #include "MirageClient.h"
+   #include "AnkrClient.h"
 
    UPROPERTY()
-   UMirageClient* mirageClient;
+   UAnkrClient* ankrClient;
 
    UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-   UMirageClient* GetMirageClient();
+   UAnkrClient* GetAnkrClient();
    ```
 
 8. Open MyGameInstance.cpp and include the following code:
 
 ```js
 
-UMirageClient* UMyGameInstance::GetMirageClient()
+UAnkrClient* UMyGameInstance::GetAnkrClient()
 {
-	if (mirageClient == nullptr)
+	if (ankrClient == nullptr)
 	{
-		mirageClient = NewObject<UMirageClient>();
+		ankrClient = NewObject<UAnkrClient>();
 	}
 
-	return mirageClient;
+	return ankrClient;
 }
 
 ```
@@ -88,7 +88,7 @@ PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engi
 
 10. Click Edit->Project Settings->Maps and Modes and select your newly created or already created GameInstance from the GameInstance Class dropdown.
 
-11. Now you can call all the functions in blueprint by getting GetGameInstance->GetMirageClient.
+11. Now you can call all the functions in blueprint by getting GetGameInstance->GetAnkrClient.
 
 ## 👉🏻 Getting Started
 
@@ -129,7 +129,7 @@ The session is saved to a variable for later use.
 
 ```js
 
-bool UMirageClient::GetClient(FMirageConnectionStatus Status)
+bool UAnkrClient::GetClient(FMirageConnectionStatus Status)
 {
 	http = &FHttpModule::Get();
 
@@ -196,7 +196,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UMirageClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, FMirageTicket Ticket)
+void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, FMirageTicket Ticket)
 {
 	http = &FHttpModule::Get();
 
@@ -255,7 +255,7 @@ GetData is used to send a request with { 'device_id', 'contract_address', 'abi_h
 
 ```js
 
-void UMirageClient::GetData(FString contract, FString abi_hash, FString method, FString args, FMirageDelegate Result)
+void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FString args, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -285,7 +285,7 @@ SendABI is used to send a request with 'abi' as a raw body parameter at http://4
 
 ```js
 
-void UMirageClient::SendABI(FString abi, FMirageDelegate Result)
+void UAnkrClient::SendABI(FString abi, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -327,7 +327,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UMirageClient::SignMessage(FString message, FMirageDelegate Result)
+void UAnkrClient::SignMessage(FString message, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 	
@@ -374,7 +374,7 @@ The signature will used in addition to the message for verification.
 
 ```js
 
-void UMirageClient::GetSignature(FString ticket, FMirageDelegate Result)
+void UAnkrClient::GetSignature(FString ticket, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 	
@@ -409,7 +409,7 @@ The account address will the connected wallet's public address.
 
 ```js
 
-void UMirageClient::VerifyMessage(FString message, FString signature, FMirageDelegate Result)
+void UAnkrClient::VerifyMessage(FString message, FString signature, FMirageDelegate Result)
 {
 	http = &FHttpModule::Get();
 
