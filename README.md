@@ -129,7 +129,7 @@ The session is saved to a variable for later use.
 
 ```js
 
-bool UAnkrClient::GetClient(FMirageConnectionStatus Status)
+bool UAnkrClient::GetClient(FAnkrConnectionStatus Status)
 {
 	http = &FHttpModule::Get();
 
@@ -196,7 +196,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, FMirageTicket Ticket)
+void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, FAnkrTicket Ticket)
 {
 	http = &FHttpModule::Get();
 
@@ -255,7 +255,7 @@ GetData is used to send a request with { 'device_id', 'contract_address', 'abi_h
 
 ```js
 
-void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FString args, FMirageDelegate Result)
+void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FString args, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -285,7 +285,7 @@ SendABI is used to send a request with 'abi' as a raw body parameter at http://4
 
 ```js
 
-void UAnkrClient::SendABI(FString abi, FMirageDelegate Result)
+void UAnkrClient::SendABI(FString abi, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -327,7 +327,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UAnkrClient::SignMessage(FString message, FMirageDelegate Result)
+void UAnkrClient::SignMessage(FString message, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 	
@@ -374,7 +374,7 @@ The signature will used in addition to the message for verification.
 
 ```js
 
-void UAnkrClient::GetSignature(FString ticket, FMirageDelegate Result)
+void UAnkrClient::GetSignature(FString ticket, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 	
@@ -409,7 +409,7 @@ The account address will the connected wallet's public address.
 
 ```js
 
-void UAnkrClient::VerifyMessage(FString message, FString signature, FMirageDelegate Result)
+void UAnkrClient::VerifyMessage(FString message, FString signature, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -445,7 +445,7 @@ GetNFTInfo is used to send a request with { 'device_id', 'contract_address', 'ab
 
 ```js
 
-void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FMirageDelegate Result)
+void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -485,7 +485,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FMirageDelegate Result)
+void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -541,7 +541,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FMirageDelegate Result)
+void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -590,7 +590,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UWearableNFTExample::MintItems(FString abi_hash, FString to, FMirageDelegate Result)
+void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -642,7 +642,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FMirageDelegate Result)
+void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -695,7 +695,7 @@ The 'data' shows the number of tokens that the user holds.
 
 ```js
 
-void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address, FMirageDelegate Result)
+void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -734,7 +734,7 @@ The 'data' shows the id of the character.
 
 ```js
 
-void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FMirageDelegate Result)
+void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FAnkrDelegate Result)
 {
 	if (tokenBalance <= 0)
 	{
@@ -780,7 +780,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FMirageDelegate Result)
+void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrDelegate Result)
 {
 	if (!hasHat || characterId == -1)
 	{
@@ -843,7 +843,7 @@ The 'data' shows the token address that the player has.
 
 ```js
 
-void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FMirageDelegate Result)
+void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -884,7 +884,7 @@ The 'code' shows a code number related to a specific failure or success.
 
 ```js
 
-void UWearableNFTExample::GetTicketResult(FString ticketId, FMirageTicketResult Result)
+void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
 {
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
 	Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
@@ -931,7 +931,7 @@ The 'data' shows a response of an array of balances for each token, in the seque
 
 ```js
 
-void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FMirageDelegate Result)
+void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
