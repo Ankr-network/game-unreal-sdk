@@ -15,7 +15,6 @@ class ANKRSDK_API UUpdateNFTExample : public UObject
 public:
 
 	FHttpModule* http;
-	FString baseUrl;
 	FString deviceId;
 	FString session;
 
@@ -26,7 +25,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString ABI;
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void Init(FString _deviceId, FString _baseUrl, FString _session);
+	void Init(FString _deviceId, FString _session);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void SetAccount(FString _account, int _chainId);

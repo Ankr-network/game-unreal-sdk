@@ -2,6 +2,7 @@
 #include "AnkrSaveGame.h"
 #include <string>
 #include "ItemInfo.h"
+#include "AnkrUtility.h"
 #include "RequestBodyStructure.h"
 
 // -----------
@@ -17,9 +18,8 @@ UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	UAnkrSaveGame* load = UAnkrSaveGame::Load();
 
 	deviceId = load->UniqueId;
-	baseUrl  = "http://45.77.189.28:5000/";
 
-	UE_LOG(LogTemp, Warning, TEXT("ANKR SDK initialized - deviceId: %s | baseUrl: %s"), *load->UniqueId, *baseUrl);
+	UE_LOG(LogTemp, Warning, TEXT("ANKR SDK initialized - deviceId: %s | ApiBaseUrl: %s"), *load->UniqueId, *API_BASE_URL);
 
 	if (updateNFTExample == nullptr)
 	{
@@ -42,16 +42,18 @@ void UAnkrClient::Ping(FAnkrDelegate Result)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("MirageClient - Ping: %s"), *Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - Ping: %s"), *Response->GetContentAsString());
 			Result.ExecuteIfBound(*Response->GetContentAsString());
 		});
 
-	FString url = baseUrl + "ping";
+	AnkrUtility::SetLastRequest("Ping");
+
+	FString url = API_BASE_URL + ENDPOINT_PING;
 
 	Request->SetURL(url);
 	Request->SetVerb("GET");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->ProcessRequest();
 }
 
@@ -61,7 +63,7 @@ void UAnkrClient::Ping(FAnkrDelegate Result)
 // GetClient is used to send a request with 'device_id' as a raw body parameter at http://45.77.189.28:5000/connect to get a response having a 'uri' deeplink to openmetamask, a 'session' and a 'login' information if required.
 // The 'uri' deeplink will only work on mobile devices as on desktop a QR Code will be generated at the time the login button is pressed.
 // The session is saved to a variable for later use.
-bool UAnkrClient::GetClient(FAnkrConnectionStatus Status)
+void UAnkrClient::GetClient(FAnkrConnectionStatus Status)
 {
 	http = &FHttpModule::Get();
 
@@ -70,47 +72,48 @@ bool UAnkrClient::GetClient(FAnkrConnectionStatus Status)
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetClient - GetContentAsString: %s"), *Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetClient - GetContentAsString: %s"), *Response->GetContentAsString());
+			needLogin = false;
 			
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
+				bool result = JsonObject->GetBoolField("result");
+
 				FString recievedUri = JsonObject->GetStringField("uri");
-				FString sessionId	= JsonObject->GetStringField("session");
-				needLogin		= JsonObject->GetBoolField("login");
-				session				= sessionId;
+				FString sessionId = JsonObject->GetStringField("session");
+				needLogin = JsonObject->GetBoolField("login");
+				session = sessionId;
 				walletConnectDeeplink = recievedUri;
 
-				updateNFTExample->Init(deviceId, baseUrl, session);
-				wearableNFTExample->Init(deviceId, baseUrl, session);
+				updateNFTExample->Init(deviceId, session);
+				wearableNFTExample->Init(deviceId, session);
 
 				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, recievedUri);
-				UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetClient - uri: %s"), *recievedUri);
+				UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetClient - uri: %s"), *recievedUri);
 
-				if (needLogin) 
+				if (needLogin)
 				{
 #if PLATFORM_ANDROID
 					FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
 #endif
 				}
-				Status.ExecuteIfBound(true);
 			}
-			else 
-			{
-				Status.ExecuteIfBound(false);
-			}
+
+			Status.ExecuteIfBound(needLogin);
 
 		});
 
-	FString url = baseUrl + "connect";
+	AnkrUtility::SetLastRequest("GetClient");
+
+	FString url = API_BASE_URL + ENDPOINT_CONNECT;
 	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, url);
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
 	Request->ProcessRequest();
-	return true;
 }
 
 // ---------
@@ -128,7 +131,7 @@ void UAnkrClient::GetWalletInfo(FAnkrDelegate Result)
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
 			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("MirageClient - GetWalletInfo - GetContentAsString: %s"), *Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetWalletInfo - GetContentAsString: %s"), *Response->GetContentAsString());
 
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
@@ -151,18 +154,22 @@ void UAnkrClient::GetWalletInfo(FAnkrDelegate Result)
 
 					data = FString("Active Account: ").Append(activeAccount).Append(" | Chain Id: ").Append(FString::FromInt(chainId));
 				}
+				else
+				{
+					data = JsonObject->GetStringField("msg");
+				}
 			}
 
 			Result.ExecuteIfBound(data);
 		});
 
-	FString url = baseUrl + "wallet/info";
+	FString url = API_BASE_URL + ENDPOINT_WALLET_INFO;
 	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, url);
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
 	Request->ProcessRequest();
 }
@@ -178,7 +185,7 @@ FString UAnkrClient::GetActiveAccount()
 		return activeAccount;
 	}
 
-	GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Green, *FString("MirageClient - GetActiveAccount - Please press Wallet Info on the main screen to get the account address."));
+	GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Green, *FString("AnkrClient - GetActiveAccount - Please press Wallet Info on the main screen to get the account address."));
 	return "";
 }
 
@@ -203,12 +210,12 @@ void UAnkrClient::SendABI(FString abi, FAnkrDelegate Result)
 			}
 		});
 
-	FString url = baseUrl + "abi";
+	FString url = API_BASE_URL + ENDPOINT_ABI;
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 
 	const TCHAR* find = TEXT("\"");
 	const TCHAR* replace = TEXT("\\\"");
@@ -246,14 +253,16 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 			Ticket.ExecuteIfBound(data);
 		});
 
+	AnkrUtility::SetLastRequest("SendTransaction");
+
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi_hash, method, args]()
 		{
-			FString url = baseUrl + "send/transaction";
+			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 
 			Request->SetURL(url);
 			Request->SetVerb("POST");
-			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-			Request->SetHeader("Content-Type", TEXT("application/json"));
+			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
 			Request->ProcessRequest();
 		});
@@ -290,12 +299,12 @@ void UAnkrClient::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
 				}
 			});
 
-		FString url = baseUrl + "result";
+		FString url = API_BASE_URL + ENDPOINT_RESULT;
 
 		Request->SetURL(url);
 		Request->SetVerb("POST");
-		Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-		Request->SetHeader("Content-Type", TEXT("application/json"));
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\": \"" + ticketId + "\" }"); // erc20 abi
 		Request->ProcessRequest();
 		FPlatformProcess::Sleep(10000);
@@ -319,12 +328,12 @@ void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FS
 			Result.ExecuteIfBound(Response->GetContentAsString());
 		});
 
-	FString url = baseUrl + "call/method";
+	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }
@@ -355,13 +364,15 @@ void UAnkrClient::SignMessage(FString message, FAnkrDelegate Result)
 				Result.ExecuteIfBound(ticketId);
 			}
 		});
+
+	AnkrUtility::SetLastRequest("SignMessage");
 	
-	FString url = baseUrl + "sign/message";
+	FString url = API_BASE_URL + ENDPOINT_SIGN_MESSAGE;
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }
@@ -388,12 +399,12 @@ void UAnkrClient::GetSignature(FString ticket, FAnkrDelegate Result)
 			}
 		});
 	
-	FString url = baseUrl + "result";
+	FString url = API_BASE_URL + ENDPOINT_RESULT;
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\":\"" + ticket + "\"}"); // erc20 abi
 	Request->ProcessRequest();
 }
@@ -419,11 +430,23 @@ void UAnkrClient::VerifyMessage(FString message, FString signature, FAnkrDelegat
 			}
 		});
 
-	FString url = baseUrl + "verify/message";
+	FString url = API_BASE_URL + ENDPOINT_VERIFY_MESSAGE;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\", \"signature\":\"" + signature + "\"}"); // erc20 abi
 	Request->ProcessRequest();
+}
+
+FString UAnkrClient::GetLastRequest()
+{
+	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetLastRequest(%s)"), *AnkrUtility::GetLastRequest());
+	return AnkrUtility::GetLastRequest();
+}
+
+void UAnkrClient::SetLastRequest(FString _lastRequest)
+{
+	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - SetLastRequest(%s) | GetLastRequest: %s"), *_lastRequest, *AnkrUtility::GetLastRequest());
+	AnkrUtility::SetLastRequest(_lastRequest);
 }

@@ -1,6 +1,7 @@
 #include "WearableNFTExample.h"
 #include "UpdateNFTExample.h"
 #include "ItemInfo.h"
+#include "AnkrUtility.h"
 #include "RequestBodyStructure.h"
 
 // -----------
@@ -33,11 +34,10 @@ UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitial
 // ----
 // Init
 // ----
-// Init will save deviceId, baseUrl and session when the GetClient is called from MirageClient.cpp.
-void UWearableNFTExample::Init(FString _deviceId, FString _baseUrl, FString _session)
+// Init will save deviceId and session when the GetClient is called from MirageClient.cpp.
+void UWearableNFTExample::Init(FString _deviceId, FString _session)
 {
 	deviceId = _deviceId;
-	baseUrl = _baseUrl;
 	session = _session;
 }
 
@@ -75,7 +75,8 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate 
 				data = ticket;
 
 			}
-			lastMethod = "MintItems";
+			
+			AnkrUtility::SetLastRequest("MintItems");
 			Result.ExecuteIfBound(data);
 		});
 
@@ -86,14 +87,11 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate 
 			FString json = "[\"" + to + "\", [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"], [1, 2, 3, 4, 5, 6], \"0x\"]";
 			json = json.Replace(TEXT(" "), TEXT(""));
 
-			FString j = "[\"0x0e9e2a366f0d82502483380093867335a58025bf\", [\"0x00010000000000000000000000000000000000000000000000000000000001\", \"0x00010000000000000000000000000000000000000000000000000000000002\", \"0x00020000000000000000000000000000000000000000000000000000000001\", \"0x00020000000000000000000000000000000000000000000000000000000003\", \"0x00030000000000000000000000000000000000000000000000000000000002\", \"0x00030000000000000000000000000000000000000000000000000000000003\"],[1, 2, 3, 4, 5, 6], []]";
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintItems - json: %s"), *j);
-
-			FString url = baseUrl + "send/transaction";
+			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 			Request->SetURL(url);
 			Request->SetVerb("POST");
-			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-			Request->SetHeader("Content-Type", TEXT("application/json"));
+			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + mintBatchMethodName + "\", \"args\": " + json + "}");
 			Request->ProcessRequest();
 
@@ -106,7 +104,7 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate 
 // -------------
 // MintCharacter
 // -------------
-// MintItems is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args': ["0xto"] } as a raw body parameter at http://45.77.189.28:5000/send/transaction to get a response having a 'ticket'.
+// MintCharacter is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args': ["0xto"] } as a raw body parameter at http://45.77.189.28:5000/send/transaction to get a response having a 'ticket'.
 // The session saved during Init will be used to open metamask.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
 void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDelegate Result)
@@ -127,7 +125,8 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDeleg
 				data = ticket;
 				
 			}
-			lastMethod = "MintCharacter";
+			
+			AnkrUtility::SetLastRequest("MintCharacter");
 			Result.ExecuteIfBound(data);
 		});
 
@@ -135,11 +134,11 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDeleg
 		{
 			FString safeMintMethodName = "safeMint";
 
-			FString url = baseUrl + "send/transaction";
+			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 			Request->SetURL(url);
 			Request->SetVerb("POST");
-			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-			Request->SetHeader("Content-Type", TEXT("application/json"));
+			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + safeMintMethodName + "\", \"args\": [\"" + to + "\"]}");
 			Request->ProcessRequest();
 
@@ -152,7 +151,7 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDeleg
 // -------------------
 // GameItemSetApproval
 // -------------------
-// MintItems is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args': ["0xoperatorContractAddress", true] } as a raw body parameter at http://45.77.189.28:5000/send/transaction to get a response having a 'ticket'.
+// GameItemSetApproval is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args': ["0xoperatorContractAddress", true] } as a raw body parameter at http://45.77.189.28:5000/send/transaction to get a response having a 'ticket'.
 // The session saved during Init will be used to open metamask.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
 void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrDelegate Result)
@@ -176,7 +175,8 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 					data = ticket;
 				}
 			}
-			lastMethod = "GameItemSetApproval";
+			
+			AnkrUtility::SetLastRequest("GameItemSetApproval");
 			Result.ExecuteIfBound(data);
 		});
 
@@ -184,11 +184,11 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 		{
 			FString setApprovalForAllMethodName = "setApprovalForAll";
 
-			FString url = baseUrl + "send/transaction";
+			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 			Request->SetURL(url);
 			Request->SetVerb("POST");
-			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-			Request->SetHeader("Content-Type", TEXT("application/json"));
+			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 			FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}";
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GameItemSetApproval - Request: %s"), *body);
 			Request->SetContentAsString(body);// "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}");
@@ -222,17 +222,17 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 				data = JsonObject->GetStringField("data");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - Balance: %s"), *data);
 			}
-			lastMethod = "GetCharacterBalance";
+			
 			Result.ExecuteIfBound(data);
 		});
 
 	FString balanceOfMethodName = "balanceOf";
 
-	FString url = baseUrl + "call/method";
+	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfMethodName + "\", \"args\": [\"" + address + "\"]}");
 	Request->ProcessRequest();
 }
@@ -265,17 +265,17 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 				data = JsonObject->GetStringField("data");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - Balance: %s"), *data);
 			}
-			lastMethod = "GetCharacterTokenId";
+
 			Result.ExecuteIfBound(data);
 		});
 
 	FString tokenOfOwnerByIndexMethodName = "tokenOfOwnerByIndex";
 
-	FString url = baseUrl + "call/method";
+	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + tokenOfOwnerByIndexMethodName + "\", \"args\": [\"" + owner + "\", \"" + index + "\"]}");
 	Request->ProcessRequest();
 }
@@ -309,16 +309,17 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 				ticket = JsonObject->GetStringField("ticket");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - Ticket: %s"), *ticket);
 			}
-			lastMethod = "ChangeHat";
+			
+			AnkrUtility::SetLastRequest("ChangeHat");
 			if (hat.Equals(BlueHatAddress))
 			{
-				lastMethod = "ChangeHatBlue";
+				AnkrUtility::SetLastRequest("ChangeHatBlue");
 			}
 			else if (hat.Equals(RedHatAddress))
 			{
-				lastMethod = "ChangeHatRed";
+				AnkrUtility::SetLastRequest("ChangeHatRed");
 			}
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *lastMethod);
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *AnkrUtility::GetLastRequest());
 			Result.ExecuteIfBound(ticket);
 		});
 
@@ -327,14 +328,14 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 			hat = hatAddress;
 			FString changeHatMethodName = "changeHat";
 
-			FString url = baseUrl + "send/transaction";
+			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 			Request->SetURL(url);
 			Request->SetVerb("POST");
-			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-			Request->SetHeader("Content-Type", TEXT("application/json"));
-			FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + BlueHatAddress + "\"]}";
+			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+			FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}";
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - Request: %s"), *body);
-			Request->SetContentAsString(body);//"{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + BlueHatAddress + "\"]}");
+			Request->SetContentAsString(body);
 			Request->ProcessRequest();
 
 #if PLATFORM_ANDROID
@@ -346,7 +347,7 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 // ------
 // GetHat
 // ------
-// GetTicketResult is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args': ["characterId"] } as a raw body parameter at http://45.77.189.28:5000/call/method to get a response having a 'data' string field.
+// GetHat is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args': ["characterId"] } as a raw body parameter at http://45.77.189.28:5000/call/method to get a response having a 'data' string field.
 // The 'data' shows the token address that the player has.
 void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegate Result)
 {
@@ -365,18 +366,18 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegat
 				data = JsonObject->GetStringField("data");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - Balance: %s"), *data);
 			}
-			lastMethod = "GetHat";
+			
 			Result.ExecuteIfBound(data);
 		});
 
 	FString getHatMethodName = "getHat";
 
-	FString url = baseUrl + "call/method";
+	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\"]}");
 	Request->ProcessRequest();
 }
@@ -394,13 +395,13 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Re
 		{
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult for %s - GetContentAsString: %s"), *lastMethod , *Response->GetContentAsString());
+			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult for %s - GetContentAsString: %s"), *AnkrUtility::GetLastRequest(), *Response->GetContentAsString());
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				FString data = JsonObject->GetStringField("data");
 				int code = 1;
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *lastMethod);
-				if (lastMethod.Equals("ChangeHatBlue") || lastMethod.Equals("ChangeHatRed"))
+				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *AnkrUtility::GetLastRequest());
+				if (AnkrUtility::GetLastRequest().Equals("ChangeHatBlue") || AnkrUtility::GetLastRequest().Equals("ChangeHatRed"))
 				{
 					bool result = JsonObject->GetBoolField("result");
 					TSharedPtr<FJsonObject> object = JsonObject->GetObjectField("data");
@@ -416,11 +417,11 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Re
 			}
 		});
 
-	FString url = baseUrl + "result";
+	FString url = API_BASE_URL + ENDPOINT_RESULT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
 	Request->ProcessRequest();
 }
@@ -447,7 +448,7 @@ void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAn
 				data = JsonObject->GetStringField("data");
 				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - Balance: %s"), *data);
 			}
-			lastMethod = "GetItemsBalance";
+			
 			Result.ExecuteIfBound(data);
 		});
 
@@ -456,12 +457,12 @@ void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAn
 	FString body = "[ [\"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
 	UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - balanceOfBatch: %s"), *body);
 	
-	FString url = baseUrl + "call/method";
+	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfBatchMethodName + "\", \"args\": " + body + "}");
 	Request->ProcessRequest();
 }

@@ -1,4 +1,6 @@
 #include "QRCodeGenerator.h"
+
+#if PLATFORM_WINDOWS || PLATFORM_MAC
 #include "qrcodegen.hpp"
 
 #include <string>
@@ -7,6 +9,7 @@
 using namespace std;
 using qrcodegen::QrCode;
 using qrcodegen::QrSegment;
+#endif
 
 #define OUT_FILE_PIXEL_PRESCALER  8
 
@@ -23,6 +26,7 @@ UTexture2D* UQRCodeGenerator::GenerateQRCode(FString code)
 {
 	UTexture2D* MyTexture = NULL;
 
+#if PLATFORM_WINDOWS || PLATFORM_MAC
 	std::string MyStdString(TCHAR_TO_UTF8(*code));
 	const char* szSourceSring = MyStdString.c_str();    //QRCODE_TEXT
 	unsigned int	unWidth, x, y, l, n, unWidthAdjusted, unDataBytes;
@@ -93,6 +97,7 @@ UTexture2D* UQRCodeGenerator::GenerateQRCode(FString code)
 		free(pRGBData);
 		//QRcode_free(pQRC);
 	}
+#endif
 
 	return MyTexture;
 }
@@ -101,6 +106,7 @@ UTexture2D* UQRCodeGenerator::GenerateQRCodeWithParams(FString code, int QRCodeV
 {
 	UTexture2D* MyTexture = NULL;
 
+#if PLATFORM_WINDOWS || PLATFORM_MAC
 	std::string MyStdString(TCHAR_TO_UTF8(*code));
 	const char* szSourceSring = MyStdString.c_str();    //QRCODE_TEXT
 	unsigned int	unWidth, x, y, l, n, unWidthAdjusted, unDataBytes;
@@ -190,6 +196,7 @@ UTexture2D* UQRCodeGenerator::GenerateQRCodeWithParams(FString code, int QRCodeV
 		free(pRGBData);
 		//QRcode_free(pQRC);
 	}
+#endif
 
 	return MyTexture;
 }

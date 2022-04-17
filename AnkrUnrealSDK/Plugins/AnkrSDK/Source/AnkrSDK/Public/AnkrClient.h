@@ -17,9 +17,9 @@ class ANKRSDK_API UAnkrClient : public UObject
 public:
 
 	FHttpModule* http;
-	FString baseUrl;
 	FString deviceId;
 	FString session;
+	
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString walletConnectDeeplink;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) bool needLogin;
@@ -35,7 +35,7 @@ public:
 	void Ping(FAnkrDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	bool GetClient(FAnkrConnectionStatus Callback);
+	void GetClient(FAnkrConnectionStatus Callback);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetWalletInfo(FAnkrDelegate Result);
@@ -63,4 +63,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
     void VerifyMessage(FString message, FString signature, FAnkrDelegate Result);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	FString GetLastRequest();
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void SetLastRequest(FString _lastRequest);
 };

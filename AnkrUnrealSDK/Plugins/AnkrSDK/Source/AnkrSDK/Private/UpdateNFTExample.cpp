@@ -1,5 +1,6 @@
 #include "UpdateNFTExample.h"
 #include "ItemInfo.h"
+#include "AnkrUtility.h"
 #include "RequestBodyStructure.h"
 
 // -----------
@@ -15,11 +16,10 @@ UUpdateNFTExample::UUpdateNFTExample(const FObjectInitializer& ObjectInitializer
 // ----
 // Init
 // ----
-// Init will save deviceId, baseUrl and session when the GetClient is called from MirageClient.cpp.
-void UUpdateNFTExample::Init(FString _deviceId, FString _baseUrl, FString _session)
+// Init will save deviceId and session when the GetClient is called from MirageClient.cpp.
+void UUpdateNFTExample::Init(FString _deviceId, FString _session)
 {
 	deviceId = _deviceId;
-	baseUrl = _baseUrl;
 	session = _session;
 }
 
@@ -57,12 +57,12 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate 
 	FString content = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + ContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getTokenDetailsMethodName + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}";
 	UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetNFTInformation - content: %s"), *content);
 
-	FString url = baseUrl + "call/method";
+	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-	Request->SetHeader("Content-Type", TEXT("application/json"));
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString(content);
 	Request->ProcessRequest();
 }
@@ -95,13 +95,15 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 			}
 		});
 
+	AnkrUtility::SetLastRequest("UpdateNFT");
+
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, _item]()
 		{
-			FString url = baseUrl + "send/transaction";
+			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 			Request->SetURL(url);
 			Request->SetVerb("POST");
-			Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-			Request->SetHeader("Content-Type", TEXT("application/json"));
+			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 
 			FRequestBodyStruct requestBody{};
 			requestBody.device_id = deviceId;
@@ -140,11 +142,11 @@ void UUpdateNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Resu
 				}
 			});
 
-		FString url = baseUrl + "result";
+		FString url = API_BASE_URL + ENDPOINT_RESULT;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
-		Request->SetHeader(TEXT("User-Agent"), "X-MirageSDK-Agent");
-		Request->SetHeader("Content-Type", TEXT("application/json"));
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
 		Request->ProcessRequest();
 }

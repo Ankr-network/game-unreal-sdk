@@ -21,6 +21,7 @@
  *   Software.
  */
 
+#if PLATFORM_WINDOWS || PLATFORM_MAC
 #include <algorithm>
 #include <cassert>
 #include <climits>
@@ -828,3 +829,5 @@ void BitBuffer::appendBits(std::uint32_t val, int len) {
 }
 
 }
+
+#endif

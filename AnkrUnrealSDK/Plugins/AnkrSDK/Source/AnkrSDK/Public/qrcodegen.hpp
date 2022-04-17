@@ -23,6 +23,7 @@
 
 #pragma once
 
+#if PLATFORM_WINDOWS || PLATFORM_MAC
 #include <array>
 #include <cstdint>
 #include <stdexcept>
@@ -547,3 +548,4 @@ class BitBuffer final : public std::vector<bool> {
 };
 
 }
+#endif
