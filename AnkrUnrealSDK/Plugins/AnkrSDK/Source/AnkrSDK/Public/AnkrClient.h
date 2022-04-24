@@ -7,6 +7,7 @@
 #include "UpdateNFTExample.h"
 #include "WearableNFTExample.h"
 #include "AnkrDelegates.h"
+#include "AdvertisementManager.h"
 #include "AnkrClient.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
@@ -19,7 +20,6 @@ public:
 	FHttpModule* http;
 	FString deviceId;
 	FString session;
-	
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString walletConnectDeeplink;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) bool needLogin;
@@ -30,6 +30,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UUpdateNFTExample* updateNFTExample;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UWearableNFTExample* wearableNFTExample;
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UAdvertisementManager* advertisementManager;
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void Ping(FAnkrDelegate Result);

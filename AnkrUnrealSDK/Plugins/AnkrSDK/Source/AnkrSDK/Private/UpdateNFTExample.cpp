@@ -1,5 +1,4 @@
 #include "UpdateNFTExample.h"
-#include "ItemInfo.h"
 #include "AnkrUtility.h"
 #include "RequestBodyStructure.h"
 
@@ -41,29 +40,34 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate 
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetNFTInfo - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+			
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetNFTInformation - GetContentAsString: %s"), *Response->GetContentAsString());
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				Result.ExecuteIfBound(Response->GetContentAsString());
-			}
-		});
+			Result.ExecuteIfBound(content);
+		}
+	});
 
 	FString getTokenDetailsMethodName = "getTokenDetails";
-	FString content = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + ContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getTokenDetailsMethodName + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}";
-	UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetNFTInformation - content: %s"), *content);
-
+	FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + ContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getTokenDetailsMethodName + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}";
+	
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString(content);
+	Request->SetContentAsString(body);
 	Request->ProcessRequest();
 }
 
@@ -77,48 +81,51 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - UpdateNFT - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+			
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - UpdateNFT - GetContentAsString: %s"), *Response->GetContentAsString());
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				FString ticket = JsonObject->GetStringField("ticket");
-				UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - UpdateNFT - ticket: %s"), *ticket);
-				Result.ExecuteIfBound(ticket);
+			FString ticket = JsonObject->GetStringField("ticket");
+			Result.ExecuteIfBound(ticket);
 
 #if PLATFORM_ANDROID
-				FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
-			}
-		});
+		}
+	});
 
 	AnkrUtility::SetLastRequest("UpdateNFT");
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, _item]()
-		{
-			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
-			Request->SetURL(url);
-			Request->SetVerb("POST");
-			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+	{
+		FItemInfoStructure item = _item;
 
-			FRequestBodyStruct requestBody{};
-			requestBody.device_id = deviceId;
-			requestBody.contract_address = ContractAddress;
-			requestBody.abi_hash = abi_hash;
-			requestBody.method = "updateTokenWithSignedMessage";
+		FRequestBodyStruct body{};
+		body.device_id		  = deviceId;
+		body.contract_address = ContractAddress;
+		body.abi_hash		  = abi_hash;
+		body.method			  = "updateTokenWithSignedMessage";
+		body.args.Add(item);
 
-			FItemInfoStructure item = _item;
-			requestBody.args.Add(item);
-
-			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - UpdateNFT - %s"), *FRequestBodyStruct::ToJson(requestBody));
-
-			Request->SetContentAsString(FRequestBodyStruct::ToJson(requestBody));
-			Request->ProcessRequest();
-		});
+		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		Request->SetURL(url);
+		Request->SetVerb("POST");
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+		Request->SetContentAsString(FRequestBodyStruct::ToJson(body));
+		Request->ProcessRequest();
+	});
 }
 
 // ---------------
@@ -129,24 +136,32 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 // The 'code' shows a code number related to a specific failure or success.
 void UUpdateNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
 {
-		TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-		Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-			{
-				TSharedPtr<FJsonObject> JsonObject;
-				TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-				UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult - GetContentAsString: %s"), *Response->GetContentAsString());
-				if (FJsonSerializer::Deserialize(Reader, JsonObject))
-				{
-					FString data = JsonObject->GetStringField("data");
-					Result.ExecuteIfBound("Transaction Hash: " + data, 1);
-				}
-			});
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
+	Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult - GetContentAsString: %s"), *content);
 
-		FString url = API_BASE_URL + ENDPOINT_RESULT;
-		Request->SetURL(url);
-		Request->SetVerb("POST");
-		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-		Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
-		Request->ProcessRequest();
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+				
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			FString data = JsonObject->GetStringField("data");
+
+			Result.ExecuteIfBound("Transaction Hash: " + data, 1);
+		}
+	});
+
+	FString url = API_BASE_URL + ENDPOINT_RESULT;
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
+	Request->ProcessRequest();
 }

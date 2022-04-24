@@ -61,44 +61,49 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate 
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintItems - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintItems - GetContentAsString: %s"), *data);
-
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				FString ticket = JsonObject->GetStringField("ticket");
-				data = ticket;
-
-			}
+			FString ticket = JsonObject->GetStringField("ticket");
+			data = ticket;
+		}
 			
-			AnkrUtility::SetLastRequest("MintItems");
-			Result.ExecuteIfBound(data);
-		});
+		AnkrUtility::SetLastRequest("MintItems");
+		Result.ExecuteIfBound(data);
+	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, to]()
-		{
-			FString mintBatchMethodName = "mintBatch";
+	{
+		FString mintBatchMethodName = "mintBatch";
 
-			FString json = "[\"" + to + "\", [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"], [1, 2, 3, 4, 5, 6], \"0x\"]";
-			json = json.Replace(TEXT(" "), TEXT(""));
+		FString args = "[\"" + to + "\", [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"], [1, 2, 3, 4, 5, 6], \"0x\"]";
+		args = args.Replace(TEXT(" "), TEXT(""));
 
-			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
-			Request->SetURL(url);
-			Request->SetVerb("POST");
-			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + mintBatchMethodName + "\", \"args\": " + json + "}");
-			Request->ProcessRequest();
+		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		Request->SetURL(url);
+		Request->SetVerb("POST");
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + mintBatchMethodName + "\", \"args\": " + args + "}");
+		Request->ProcessRequest();
 
 #if PLATFORM_ANDROID
-			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+		FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
-		});
+	});
 }
 
 // -------------
@@ -111,41 +116,46 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDeleg
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintCharacter - GetContentAsString: %s"), *data);
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintCharacter - GetContentAsString: %s"), *content);
 
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				FString ticket = JsonObject->GetStringField("ticket");
-				data = ticket;
-				
-			}
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			FString ticket = JsonObject->GetStringField("ticket");
+			data = ticket;
+		}
 			
-			AnkrUtility::SetLastRequest("MintCharacter");
-			Result.ExecuteIfBound(data);
-		});
+		AnkrUtility::SetLastRequest("MintCharacter");
+		Result.ExecuteIfBound(data);
+	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, to]()
-		{
-			FString safeMintMethodName = "safeMint";
+	{
+		FString safeMintMethodName = "safeMint";
 
-			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
-			Request->SetURL(url);
-			Request->SetVerb("POST");
-			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + safeMintMethodName + "\", \"args\": [\"" + to + "\"]}");
-			Request->ProcessRequest();
+		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		Request->SetURL(url);
+		Request->SetVerb("POST");
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + safeMintMethodName + "\", \"args\": [\"" + to + "\"]}");
+		Request->ProcessRequest();
 
 #if PLATFORM_ANDROID
 			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
-		});
+	});
 }
 
 // -------------------
@@ -158,46 +168,52 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GameItemSetApproval - GetContentAsString: %s"), *data);
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GameItemSetApproval - GetContentAsString: %s"), *content);
 
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				bool result = JsonObject->GetBoolField("result");
-				if (result)
-				{
-					FString ticket = JsonObject->GetStringField("ticket");
-					data = ticket;
-				}
-			}
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
 			
-			AnkrUtility::SetLastRequest("GameItemSetApproval");
-			Result.ExecuteIfBound(data);
-		});
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			bool result = JsonObject->GetBoolField("result");
+			if (result)
+			{
+				FString ticket = JsonObject->GetStringField("ticket");
+				data = ticket;
+			}
+		}
+			
+		AnkrUtility::SetLastRequest("GameItemSetApproval");
+		Result.ExecuteIfBound(data);
+	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, callOperator, approved]()
-		{
-			FString setApprovalForAllMethodName = "setApprovalForAll";
+	{
+		FString setApprovalForAllMethodName = "setApprovalForAll";
 
-			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
-			Request->SetURL(url);
-			Request->SetVerb("POST");
-			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-			FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}";
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GameItemSetApproval - Request: %s"), *body);
-			Request->SetContentAsString(body);// "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}");
-			Request->ProcessRequest();
+		FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}";
+			
+		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		Request->SetURL(url);
+		Request->SetVerb("POST");
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+		Request->SetContentAsString(body);
+		Request->ProcessRequest();
 
 #if PLATFORM_ANDROID
 			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
-		});
+	});
 }
 
 // -------------------
@@ -209,22 +225,27 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - GetContentAsString: %s"), *data);
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - GetContentAsString: %s"), *content);
 
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				data = JsonObject->GetStringField("data");
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - Balance: %s"), *data);
-			}
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
 			
-			Result.ExecuteIfBound(data);
-		});
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			data = JsonObject->GetStringField("data");
+		}
+			
+		Result.ExecuteIfBound(data);
+	});
 
 	FString balanceOfMethodName = "balanceOf";
 
@@ -252,22 +273,27 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+			
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - GetContentAsString: %s"), *data);
+			data = JsonObject->GetStringField("data");
+		}
 
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				data = JsonObject->GetStringField("data");
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - Balance: %s"), *data);
-			}
-
-			Result.ExecuteIfBound(data);
-		});
+		Result.ExecuteIfBound(data);
+	});
 
 	FString tokenOfOwnerByIndexMethodName = "tokenOfOwnerByIndex";
 
@@ -296,52 +322,49 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 
 	http = &FHttpModule::Get();
 	
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString ticket = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - GetContentAsString: %s"), *Response->GetContentAsString());
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
+	Request->OnProcessRequestComplete().BindLambda([Result, this, hatAddress](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - GetContentAsString: %s"), *content);
 
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				ticket = JsonObject->GetStringField("ticket");
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - Ticket: %s"), *ticket);
-			}
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
 			
-			AnkrUtility::SetLastRequest("ChangeHat");
-			if (hat.Equals(BlueHatAddress))
-			{
-				AnkrUtility::SetLastRequest("ChangeHatBlue");
-			}
-			else if (hat.Equals(RedHatAddress))
-			{
-				AnkrUtility::SetLastRequest("ChangeHatRed");
-			}
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *AnkrUtility::GetLastRequest());
-			Result.ExecuteIfBound(ticket);
-		});
+		FString ticket = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			ticket = JsonObject->GetStringField("ticket");
+		}
+			
+		if		(hatAddress.Equals(BlueHatAddress)) AnkrUtility::SetLastRequest("ChangeHatBlue");
+		else if (hatAddress.Equals(RedHatAddress))  AnkrUtility::SetLastRequest("ChangeHatRed");
+			
+		Result.ExecuteIfBound(ticket);
+	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, characterId, hasHat, hatAddress]()
-		{
-			hat = hatAddress;
-			FString changeHatMethodName = "changeHat";
+	{
+		FString changeHatMethodName = "changeHat";
 
-			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
-			Request->SetURL(url);
-			Request->SetVerb("POST");
-			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-			FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}";
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - Request: %s"), *body);
-			Request->SetContentAsString(body);
-			Request->ProcessRequest();
+		FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}";
+
+		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		Request->SetURL(url);
+		Request->SetVerb("POST");
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+		Request->SetContentAsString(body);
+		Request->ProcessRequest();
 
 #if PLATFORM_ANDROID
-			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+		FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
-		});
+	});
 }
 
 // ------
@@ -353,27 +376,31 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegat
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - GetContentAsString: %s"), *Response->GetContentAsString());
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - GetContentAsString: %s"), *content);
 
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				data = JsonObject->GetStringField("data");
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - Balance: %s"), *data);
-			}
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			data = JsonObject->GetStringField("data");
+		}
 			
-			Result.ExecuteIfBound(data);
-		});
+		Result.ExecuteIfBound(data);
+	});
 
 	FString getHatMethodName = "getHat";
 
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
@@ -390,32 +417,42 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegat
 // The 'code' shows a code number related to a specific failure or success.
 void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
 {
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetTicketResult - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+			
+		FString data = content;
+		int code = 0;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult for %s - GetContentAsString: %s"), *AnkrUtility::GetLastRequest(), *Response->GetContentAsString());
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			code = 1;
+
+			if (AnkrUtility::GetLastRequest().Equals("ChangeHatBlue") || AnkrUtility::GetLastRequest().Equals("ChangeHatRed"))
 			{
-				FString data = JsonObject->GetStringField("data");
-				int code = 1;
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - MethodName: %s"), *AnkrUtility::GetLastRequest());
-				if (AnkrUtility::GetLastRequest().Equals("ChangeHatBlue") || AnkrUtility::GetLastRequest().Equals("ChangeHatRed"))
+				bool result					   = JsonObject->GetBoolField("result");
+				TSharedPtr<FJsonObject> object = JsonObject->GetObjectField("data");
+				FString transactionHash		   = object->GetStringField("tx_hash");
+				FString status				   = object->GetStringField("status");
+				UE_LOG(LogTemp, Warning, TEXT("tx_hash: %s | status: %s"), *transactionHash, *status);
+
+				if (result && status == "success")
 				{
-					bool result = JsonObject->GetBoolField("result");
-					TSharedPtr<FJsonObject> object = JsonObject->GetObjectField("data");
-					FString transactionHash = object->GetStringField("tx_hash");
-					FString status = object->GetStringField("status");
-					UE_LOG(LogTemp, Warning, TEXT("tx_hash: %s | status: %s"), *transactionHash, *status);
-					if (result && status == "success")
-					{
-						code = 123;
-					}
+					code = 123;
 				}
-				Result.ExecuteIfBound(Response->GetContentAsString(), code);// "Transaction Hash: " + data, 1);
 			}
-		});
+		}
+
+		Result.ExecuteIfBound(content, code);
+	});
 
 	FString url = API_BASE_URL + ENDPOINT_RESULT;
 	Request->SetURL(url);
@@ -435,35 +472,39 @@ void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAn
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - GetContentAsString: %s"), *data);
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - GetContentAsString: %s"), *content);
 
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				data = JsonObject->GetStringField("data");
-				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - Balance: %s"), *data);
-			}
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			data = JsonObject->GetStringField("data");
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - Balance: %s"), *data);
+		}
 			
-			Result.ExecuteIfBound(data);
-		});
+		Result.ExecuteIfBound(data);
+	});
 
 	FString balanceOfBatchMethodName = "balanceOfBatch";
 
-	FString body = "[ [\"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
-	UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - balanceOfBatch: %s"), *body);
+	FString args = "[ [\"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
 	
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfBatchMethodName + "\", \"args\": " + body + "}");
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfBatchMethodName + "\", \"args\": " + args + "}");
 	Request->ProcessRequest();
 }
 

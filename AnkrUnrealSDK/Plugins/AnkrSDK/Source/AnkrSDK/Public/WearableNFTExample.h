@@ -17,7 +17,6 @@ public:
 	FHttpModule* http;
 	FString deviceId;
 	FString session;
-	FString hat;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) int chainId;
@@ -39,10 +38,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedGlassesAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteGlassesAddress;
 
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void Init(FString _deviceId, FString _session);
-
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void SetAccount(FString _account, int _chainId);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")

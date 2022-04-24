@@ -85,7 +85,12 @@ UTexture2D* UQRCodeGenerator::GenerateQRCode(FString code)
 
 		MyTexture = UTexture2D::CreateTransient(unWidth * OUT_FILE_PIXEL_PRESCALER, unWidth * OUT_FILE_PIXEL_PRESCALER);
 		//MyTexture->SRGB = true;
+
+#if ENGINE_MAJOR_VERSION < 5
 		FTexture2DMipMap& Mip = MyTexture->PlatformData->Mips[0];
+#else
+		FTexture2DMipMap& Mip = MyTexture->GetPlatformData()->Mips[0];
+#endif
 		void* Data = Mip.BulkData.Lock(LOCK_READ_WRITE);
 
 		//FMemory::Memcpy(Data, RawFileData.GetData(), RawFileData.Num());
@@ -184,7 +189,12 @@ UTexture2D* UQRCodeGenerator::GenerateQRCodeWithParams(FString code, int QRCodeV
 
 		MyTexture = UTexture2D::CreateTransient(unWidth * PixelNum, unWidth * PixelNum);
 		//MyTexture->SRGB = true;
+
+#if ENGINE_MAJOR_VERSION < 5
 		FTexture2DMipMap& Mip = MyTexture->PlatformData->Mips[0];
+#else
+		FTexture2DMipMap& Mip = MyTexture->GetPlatformData()->Mips[0];
+#endif
 		void* Data = Mip.BulkData.Lock(LOCK_READ_WRITE);
 
 		//FMemory::Memcpy(Data, RawFileData.GetData(), RawFileData.Num());

@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/UserDefinedStruct.h"
-#include "GenericPlatform/GenericPlatform.h"
 #include <JsonObjectConverter.h>
 #include "ItemInfo.generated.h"
 

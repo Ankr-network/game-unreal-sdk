@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 
 const FString API_BASE_URL				= FString(TEXT("http://45.77.189.28:5000/"));
+const FString API_AD_URL				= FString(TEXT("http://45.77.189.28:5001/"));
 const FString USER_AGENT_KEY			= FString(TEXT("User-Agent"));
 const FString USER_AGENT_VALUE			= FString(TEXT("X-MirageSDK-Agent"));
 const FString CONTENT_TYPE_KEY			= FString(TEXT("Content-Type"));
@@ -17,6 +18,9 @@ const FString ENDPOINT_RESULT			= FString(TEXT("result"));
 const FString ENDPOINT_CALL_METHOD		= FString(TEXT("call/method"));
 const FString ENDPOINT_SIGN_MESSAGE		= FString(TEXT("sign/message"));
 const FString ENDPOINT_VERIFY_MESSAGE	= FString(TEXT("verify/message"));
+
+const FString ENDPOINT_START_SESSION	= FString(TEXT("start"));
+const FString ENDPOINT_AD				= FString(TEXT("ad"));
 
 static FString LastRequest;
 

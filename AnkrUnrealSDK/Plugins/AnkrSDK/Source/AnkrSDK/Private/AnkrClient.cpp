@@ -1,8 +1,8 @@
 #include "AnkrClient.h"
 #include "AnkrSaveGame.h"
-#include <string>
-#include "ItemInfo.h"
 #include "AnkrUtility.h"
+#include "AdvertisementData.h"
+#include "Containers/UnrealString.h"
 #include "RequestBodyStructure.h"
 
 // -----------
@@ -11,24 +11,14 @@
 // First of all a deviceId is generated and saved which will be associated with requests that are send to backend http://45.77.189.28:5000/{endpoint}. Secondly updateNFTExample and wearableNFTExample objects are instantiated.
 UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	if (UAnkrSaveGame::Load() == nullptr)
-	{
-		UAnkrSaveGame::Save(FGuid::NewGuid().ToString());
-	}
+	if (UAnkrSaveGame::Load() == nullptr) UAnkrSaveGame::Save(FGuid::NewGuid().ToString());
 	UAnkrSaveGame* load = UAnkrSaveGame::Load();
-
 	deviceId = load->UniqueId;
+	UE_LOG(LogTemp, Warning, TEXT("AnkrSDK initialized - deviceId: %s | ApiBaseUrl: %s"), *deviceId, *API_BASE_URL);
 
-	UE_LOG(LogTemp, Warning, TEXT("ANKR SDK initialized - deviceId: %s | ApiBaseUrl: %s"), *load->UniqueId, *API_BASE_URL);
-
-	if (updateNFTExample == nullptr)
-	{
-		updateNFTExample = NewObject<UUpdateNFTExample>();
-	}
-	if (wearableNFTExample == nullptr)
-	{
-		wearableNFTExample = NewObject<UWearableNFTExample>();
-	}
+	if (updateNFTExample	 == nullptr) updateNFTExample     = NewObject<UUpdateNFTExample>();
+	if (wearableNFTExample   == nullptr) wearableNFTExample   = NewObject<UWearableNFTExample>();
+	if (advertisementManager == nullptr) advertisementManager = NewObject<UAdvertisementManager>();
 }
 
 // ----
@@ -39,17 +29,20 @@ void UAnkrClient::Ping(FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - Ping: %s"), *Response->GetContentAsString());
-			Result.ExecuteIfBound(*Response->GetContentAsString());
-		});
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - Ping: %s"), *content);
 
-	AnkrUtility::SetLastRequest("Ping");
+		Result.ExecuteIfBound(content);
+	});
 
 	FString url = API_BASE_URL + ENDPOINT_PING;
-
 	Request->SetURL(url);
 	Request->SetVerb("GET");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
@@ -67,47 +60,46 @@ void UAnkrClient::GetClient(FAnkrConnectionStatus Status)
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-	Request->OnProcessRequestComplete().BindLambda([Status, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetClient - GetContentAsString: %s"), *Response->GetContentAsString());
-			needLogin = false;
-			
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				bool result = JsonObject->GetBoolField("result");
-
-				FString recievedUri = JsonObject->GetStringField("uri");
-				FString sessionId = JsonObject->GetStringField("session");
-				needLogin = JsonObject->GetBoolField("login");
-				session = sessionId;
-				walletConnectDeeplink = recievedUri;
-
-				updateNFTExample->Init(deviceId, session);
-				wearableNFTExample->Init(deviceId, session);
-
-				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, recievedUri);
-				UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetClient - uri: %s"), *recievedUri);
-
-				if (needLogin)
-				{
-#if PLATFORM_ANDROID
-					FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
 #endif
-				}
+	Request->OnProcessRequestComplete().BindLambda([Status, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetClient - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+		
+		needLogin = false;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+		{
+			bool result			  = JsonObject->GetBoolField("result");
+			FString recievedUri	  = JsonObject->GetStringField("uri");
+			FString sessionId	  = JsonObject->GetStringField("session");
+			needLogin			  = JsonObject->GetBoolField("login");
+			session				  = sessionId;
+			walletConnectDeeplink = recievedUri;
+
+			updateNFTExample->Init(deviceId, session);
+			wearableNFTExample->Init(deviceId, session);
+			advertisementManager->Init(deviceId, session);
+
+			if (needLogin)
+			{
+#if PLATFORM_ANDROID
+				AnkrUtility::SetLastRequest("GetClient");
+				FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
+#endif
 			}
+		}
 
-			Status.ExecuteIfBound(needLogin);
-
-		});
-
-	AnkrUtility::SetLastRequest("GetClient");
+		Status.ExecuteIfBound(needLogin);
+	});
 
 	FString url = API_BASE_URL + ENDPOINT_CONNECT;
-	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, url);
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
@@ -125,47 +117,50 @@ void UAnkrClient::GetWalletInfo(FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetWalletInfo - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetWalletInfo - GetContentAsString: %s"), *Response->GetContentAsString());
-
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			bool result = JsonObject->GetBoolField("result");
+			if (result)
 			{
-				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, Response->GetContentAsString());
-
-				bool result = JsonObject->GetBoolField("result");
-				if (result)
+				TArray<TSharedPtr<FJsonValue>> accountsObject = JsonObject->GetArrayField("accounts");
+				for (int32 i = 0; i < accountsObject.Num(); i++)
 				{
-					TArray<TSharedPtr<FJsonValue>> accountsObject = JsonObject->GetArrayField("accounts");
-					for (int32 i = 0; i < accountsObject.Num(); i++)
-					{
-						accounts.Add(accountsObject[i]->AsString());
-					}
-					activeAccount = accounts[0];
-
-					chainId = JsonObject->GetIntegerField("chainId");
-
-					updateNFTExample->SetAccount(activeAccount, chainId);
-					wearableNFTExample->SetAccount(activeAccount, chainId);
-
-					data = FString("Active Account: ").Append(activeAccount).Append(" | Chain Id: ").Append(FString::FromInt(chainId));
+					accounts.Add(accountsObject[i]->AsString());
 				}
-				else
-				{
-					data = JsonObject->GetStringField("msg");
-				}
+				activeAccount = accounts[0];
+
+				chainId = JsonObject->GetIntegerField("chainId");
+
+				updateNFTExample->SetAccount(activeAccount, chainId);
+				wearableNFTExample->SetAccount(activeAccount, chainId);
+				advertisementManager->SetAccount(activeAccount, chainId);
+
+				data = FString("Active Account: ").Append(activeAccount).Append(" | Chain Id: ").Append(FString::FromInt(chainId));
 			}
+			else
+			{
+				data = JsonObject->GetStringField("msg");
+			}
+		}
 
-			Result.ExecuteIfBound(data);
-		});
+		Result.ExecuteIfBound(data);
+	});
 
 	FString url = API_BASE_URL + ENDPOINT_WALLET_INFO;
-	GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, url);
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
@@ -185,7 +180,8 @@ FString UAnkrClient::GetActiveAccount()
 		return activeAccount;
 	}
 
-	GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Green, *FString("AnkrClient - GetActiveAccount - Please press Wallet Info on the main screen to get the account address."));
+	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetActiveAccount - Please Connect Wallet on the main screen to get the account address."));
+	//GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Green, *FString("AnkrClient - GetActiveAccount - Please Connect Wallet on the main screen to get the account address."));
 	return "";
 }
 
@@ -197,31 +193,36 @@ void UAnkrClient::SendABI(FString abi, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - SendABI - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+			
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("SendABI Response: %s"), *data);
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				Result.ExecuteIfBound(JsonObject->GetStringField("abi"));
-			}
-		});
-
-	FString url = API_BASE_URL + ENDPOINT_ABI;
-
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+			Result.ExecuteIfBound(JsonObject->GetStringField("abi"));
+		}
+	});
 
 	const TCHAR* find = TEXT("\"");
 	const TCHAR* replace = TEXT("\\\"");
 	FString body = FString("{\"abi\": \"" + abi.Replace(find, replace, ESearchCase::IgnoreCase) + "\"}");
-	//UE_LOG(LogTemp, Warning, TEXT("SendABI body: %s"), *body);
-	Request->SetContentAsString(*body); // erc20 abi
+
+	FString url = API_BASE_URL + ENDPOINT_ABI;
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+	Request->SetContentAsString(body);
 	Request->ProcessRequest();
 }
 
@@ -235,41 +236,44 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Ticket, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - SendTransaction - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+			
+		FString data = content;
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			FString data = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("SendTransaction Response: %s"), *data);
-
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				FString ticketId = JsonObject->GetStringField("ticket");
-				GEngine->AddOnScreenDebugMessage(1, 2.0f, FColor::Green, ticketId);
-				data = ticketId;
-			}
-
-			Ticket.ExecuteIfBound(data);
-		});
-
-	AnkrUtility::SetLastRequest("SendTransaction");
-
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi_hash, method, args]()
-		{
-			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
-
-			Request->SetURL(url);
-			Request->SetVerb("POST");
-			Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
-			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-			Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
-			Request->ProcessRequest();
-		});
+			FString ticketId = JsonObject->GetStringField("ticket");
+			data = ticketId;
 
 #if PLATFORM_ANDROID
-	FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+			AnkrUtility::SetLastRequest("SendTransaction");
+			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
+		}
+
+		Ticket.ExecuteIfBound(data);
+	});
+
+	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi_hash, method, args]()
+	{
+		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		Request->SetURL(url);
+		Request->SetVerb("POST");
+		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
+		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}");
+		Request->ProcessRequest();
+	});
 }
 
 // ---------------
@@ -285,27 +289,34 @@ void UAnkrClient::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
 
 	while (i < 10 && code == 0)
 	{
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 		TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+		TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 		Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-			{
-				TSharedPtr<FJsonObject> JsonObject;
-				TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+		{
+			const FString content = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetTicketResult - GetContentAsString: %s"), *content);
 
-				if (FJsonSerializer::Deserialize(Reader, JsonObject))
-				{
-					int code = JsonObject->GetIntegerField("code");
-					FString status = JsonObject->GetStringField("status");
-					Result.ExecuteIfBound("Transaction status: " + status, code);
-				}
-			});
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				int code = JsonObject->GetIntegerField("code");
+				FString status = JsonObject->GetStringField("status");
+
+				Result.ExecuteIfBound("Transaction status: " + status, code);
+			}
+		});
 
 		FString url = API_BASE_URL + ENDPOINT_RESULT;
-
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\": \"" + ticketId + "\" }"); // erc20 abi
+		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\": \"" + ticketId + "\" }");
 		Request->ProcessRequest();
 		FPlatformProcess::Sleep(10000);
 		i++;
@@ -320,21 +331,28 @@ void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FS
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			Result.ExecuteIfBound(Response->GetContentAsString());
-		});
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetData - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		Result.ExecuteIfBound(content);
+	});
 
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}"); // erc20 abi
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + contract + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + args + "\"}");
 	Request->ProcessRequest();
 }
 
@@ -348,32 +366,38 @@ void UAnkrClient::SignMessage(FString message, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 	
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - SignMessage - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				FString ticketId = JsonObject->GetStringField("ticket");
-				UE_LOG(LogTemp, Warning, TEXT("ticket: %s"), *ticketId);
+			FString ticketId = JsonObject->GetStringField("ticket");
 
 #if PLATFORM_ANDROID
-				FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+			AnkrUtility::SetLastRequest("SignMessage");
+			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
-				Result.ExecuteIfBound(ticketId);
-			}
-		});
 
-	AnkrUtility::SetLastRequest("SignMessage");
-	
+			Result.ExecuteIfBound(ticketId);
+		}
+	});
+
 	FString url = API_BASE_URL + ENDPOINT_SIGN_MESSAGE;
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\"}"); // erc20 abi
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\"}");
 	Request->ProcessRequest();
 }
 
@@ -386,26 +410,33 @@ void UAnkrClient::GetSignature(FString ticket, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
 	
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetSignature - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				TSharedPtr<FJsonObject> data = JsonObject->GetObjectField("data");
-				UE_LOG(LogTemp, Warning, TEXT("signature: %s"), *data->GetStringField("signature"));
-				Result.ExecuteIfBound(data->GetStringField("signature"));
-			}
-		});
+			TSharedPtr<FJsonObject> data = JsonObject->GetObjectField("data");
+
+			Result.ExecuteIfBound(data->GetStringField("signature"));
+		}
+	});
 	
 	FString url = API_BASE_URL + ENDPOINT_RESULT;
-
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\":\"" + ticket + "\"}"); // erc20 abi
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"ticket\":\"" + ticket + "\"}");
 	Request->ProcessRequest();
 }
 
@@ -418,35 +449,40 @@ void UAnkrClient::VerifyMessage(FString message, FString signature, FAnkrDelegat
 {
 	http = &FHttpModule::Get();
 
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	{
+		const FString content = Response->GetContentAsString();
+		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - VerifyMessage - GetContentAsString: %s"), *content);
+
+		TSharedPtr<FJsonObject> JsonObject;
+		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
+
+		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(Response->GetContentAsString());
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				UE_LOG(LogTemp, Warning, TEXT("address: %s"), *JsonObject->GetStringField("address"));
-				Result.ExecuteIfBound(JsonObject->GetStringField("address"));
-			}
-		});
+			Result.ExecuteIfBound(JsonObject->GetStringField("address"));
+		}
+	});
 
 	FString url = API_BASE_URL + ENDPOINT_VERIFY_MESSAGE;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\", \"signature\":\"" + signature + "\"}"); // erc20 abi
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\", \"signature\":\"" + signature + "\"}");
 	Request->ProcessRequest();
 }
 
 FString UAnkrClient::GetLastRequest()
 {
-	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetLastRequest(%s)"), *AnkrUtility::GetLastRequest());
 	return AnkrUtility::GetLastRequest();
 }
 
 void UAnkrClient::SetLastRequest(FString _lastRequest)
 {
-	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - SetLastRequest(%s) | GetLastRequest: %s"), *_lastRequest, *AnkrUtility::GetLastRequest());
 	AnkrUtility::SetLastRequest(_lastRequest);
 }
