@@ -2,8 +2,9 @@
 
 #include "CoreMinimal.h"
 
-const FString API_BASE_URL				= FString(TEXT("http://45.77.189.28:5000/"));
-const FString API_AD_URL				= FString(TEXT("http://45.77.189.28:5001/"));
+const FString SLASH = FString(TEXT("/"));
+const FString API_BASE_URL				= FString(TEXT("https://ue-service.game.ankr.com/"));
+const FString API_AD_URL				= FString(TEXT(""));
 const FString USER_AGENT_KEY			= FString(TEXT("User-Agent"));
 const FString USER_AGENT_VALUE			= FString(TEXT("X-MirageSDK-Agent"));
 const FString CONTENT_TYPE_KEY			= FString(TEXT("Content-Type"));
@@ -31,4 +32,5 @@ public:
 
 	static FString GetLastRequest();
 	static void SetLastRequest(FString _lastRequest);
+	static void Process(FString _url, FString _verb, FString _body, TFunctionRef<void(const FString)> response);
 };

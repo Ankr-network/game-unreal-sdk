@@ -11,7 +11,9 @@ UENUM(BlueprintType)
 enum class EAdvertisementType : uint8
 {
 	banner,
-	fullscreen
+	full_image,
+	video,
+	rewarded
 };
 
 USTRUCT(BlueprintType)

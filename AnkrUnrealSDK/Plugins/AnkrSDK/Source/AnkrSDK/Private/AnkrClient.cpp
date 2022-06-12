@@ -1,30 +1,34 @@
 #include "AnkrClient.h"
 #include "AnkrSaveGame.h"
 #include "AnkrUtility.h"
-#include "AdvertisementData.h"
-#include "Containers/UnrealString.h"
-#include "RequestBodyStructure.h"
 
-// -----------
-// Constructor
-// -----------
-// First of all a deviceId is generated and saved which will be associated with requests that are send to backend http://45.77.189.28:5000/{endpoint}. Secondly updateNFTExample and wearableNFTExample objects are instantiated.
+// First of all a deviceId is generated and saved for the user. Secondly updateNFTExample and wearableNFTExample objects are instantiated.
 UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	if (UAnkrSaveGame::Load() == nullptr) UAnkrSaveGame::Save(FGuid::NewGuid().ToString());
+	if (UAnkrSaveGame::Load() == nullptr)
+	{
+		UAnkrSaveGame::Save(FGuid::NewGuid().ToString());
+	}
+
 	UAnkrSaveGame* load = UAnkrSaveGame::Load();
 	deviceId = load->UniqueId;
-	UE_LOG(LogTemp, Warning, TEXT("AnkrSDK initialized - deviceId: %s | ApiBaseUrl: %s"), *deviceId, *API_BASE_URL);
+	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - AnkrSDK will use device id: %s."), *deviceId);
 
-	if (updateNFTExample	 == nullptr) updateNFTExample     = NewObject<UUpdateNFTExample>();
-	if (wearableNFTExample   == nullptr) wearableNFTExample   = NewObject<UWearableNFTExample>();
-	if (advertisementManager == nullptr) advertisementManager = NewObject<UAdvertisementManager>();
+	if (updateNFTExample == nullptr)
+	{
+		updateNFTExample = NewObject<UUpdateNFTExample>();
+	}
+	if (wearableNFTExample == nullptr)
+	{
+		wearableNFTExample = NewObject<UWearableNFTExample>();
+	}
+	if (advertisementManager == nullptr)
+	{
+		advertisementManager = NewObject<UAdvertisementManager>();
+	}
 }
 
-// ----
-// Ping
-// ----
-// Ping is a request sent at http://45.77.189.28:5000/ping to check if a response is obtained from server.
+// Ping is to make sure if we can ping the Ankr API.
 void UAnkrClient::Ping(FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -50,13 +54,9 @@ void UAnkrClient::Ping(FAnkrDelegate Result)
 	Request->ProcessRequest();
 }
 
-// ---------
-// GetClient
-// ---------
-// GetClient is used to send a request with 'device_id' as a raw body parameter at http://45.77.189.28:5000/connect to get a response having a 'uri' deeplink to openmetamask, a 'session' and a 'login' information if required.
-// The 'uri' deeplink will only work on mobile devices as on desktop a QR Code will be generated at the time the login button is pressed.
-// The session is saved to a variable for later use.
-void UAnkrClient::GetClient(FAnkrConnectionStatus Status)
+// ConnectWallet is used to connect wallet (Metamask). 
+// Wallet app will be opened on mobile devices only, as on desktop (Windows/Mac) a QR Code will be generated at the time the login button is pressed. Scan the QR Code with your Wallet app from mobile.
+void UAnkrClient::ConnectWallet(FAnkrConnectionStatus Status)
 {
 	http = &FHttpModule::Get();
 
@@ -65,40 +65,6 @@ void UAnkrClient::GetClient(FAnkrConnectionStatus Status)
 #else
 	TSharedRef<IHttpRequest> Request = http->CreateRequest();
 #endif
-	Request->OnProcessRequestComplete().BindLambda([Status, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetClient - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-		
-		needLogin = false;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
-		{
-			bool result			  = JsonObject->GetBoolField("result");
-			FString recievedUri	  = JsonObject->GetStringField("uri");
-			FString sessionId	  = JsonObject->GetStringField("session");
-			needLogin			  = JsonObject->GetBoolField("login");
-			session				  = sessionId;
-			walletConnectDeeplink = recievedUri;
-
-			updateNFTExample->Init(deviceId, session);
-			wearableNFTExample->Init(deviceId, session);
-			advertisementManager->Init(deviceId, session);
-
-			if (needLogin)
-			{
-#if PLATFORM_ANDROID
-				AnkrUtility::SetLastRequest("GetClient");
-				FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
-#endif
-			}
-		}
-
-		Status.ExecuteIfBound(needLogin);
-	});
-
 	FString url = API_BASE_URL + ENDPOINT_CONNECT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
@@ -106,12 +72,55 @@ void UAnkrClient::GetClient(FAnkrConnectionStatus Status)
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
 	Request->ProcessRequest();
+	Request->OnProcessRequestComplete().BindLambda([Status, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			const FString content = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - ConnectWallet - GetContentAsString: %s"), *content);
+			
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+			needLogin = false;
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				bool result = JsonObject->GetBoolField("result");
+				if (result)
+				{
+					FString recievedUri = JsonObject->GetStringField("uri");
+					FString sessionId = JsonObject->GetStringField("session");
+					needLogin = JsonObject->GetBoolField("login");
+					session = sessionId;
+					walletConnectDeeplink = recievedUri;
+
+					updateNFTExample->Init(deviceId, session);
+					wearableNFTExample->Init(deviceId, session);
+
+					if (needLogin)
+					{
+#if PLATFORM_ANDROID
+						AnkrUtility::SetLastRequest("ConnectWallet");
+						FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
+#endif
+					}
+
+					Status.ExecuteIfBound(needLogin);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("AnkrClient - ConnectWallet - Couldn't connect, when result is false, see details:\n%s"), *content);
+				}
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("AnkrClient - ConnectWallet - Couldn't get a valid response, deserialization failed, see details:\n%s"), *content);
+			}
+		
+	});
+
+	
 }
 
-// ---------
-// GetClient
-// ---------
-// GetWalletInfo is used to send a request with 'device_id' as a raw body parameter at http://45.77.189.28:5000/wallet/info to get a response having a 'accounts' which is connected wallet address and 'chainId'.
+// GetWalletInfo is used to get the connected wallet account and the chainId.
 // The account can be used whenever the user's public address is needed in any transactions.
 void UAnkrClient::GetWalletInfo(FAnkrDelegate Result)
 {
@@ -125,7 +134,7 @@ void UAnkrClient::GetWalletInfo(FAnkrDelegate Result)
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 	{
 		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetWalletInfo - GetContentAsString: %s"), *content);
+		//UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetWalletInfo - GetContentAsString: %s"), *content);
 
 		TSharedPtr<FJsonObject> JsonObject;
 		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
@@ -137,27 +146,39 @@ void UAnkrClient::GetWalletInfo(FAnkrDelegate Result)
 			if (result)
 			{
 				TArray<TSharedPtr<FJsonValue>> accountsObject = JsonObject->GetArrayField("accounts");
-				for (int32 i = 0; i < accountsObject.Num(); i++)
+
+				if (accountsObject.Num() > 0)
 				{
-					accounts.Add(accountsObject[i]->AsString());
+					for (int32 i = 0; i < accountsObject.Num(); i++)
+					{
+						accounts.Add(accountsObject[i]->AsString());
+					}
+
+					activeAccount = accounts[0];
+					chainId = JsonObject->GetIntegerField("chainId");
+
+					updateNFTExample->SetAccount(activeAccount, chainId);
+					wearableNFTExample->SetAccount(activeAccount, chainId);
+
+					data = FString("Active Account: ").Append(activeAccount).Append(" | Chain Id: ").Append(FString::FromInt(chainId));
 				}
-				activeAccount = accounts[0];
-
-				chainId = JsonObject->GetIntegerField("chainId");
-
-				updateNFTExample->SetAccount(activeAccount, chainId);
-				wearableNFTExample->SetAccount(activeAccount, chainId);
-				advertisementManager->SetAccount(activeAccount, chainId);
-
-				data = FString("Active Account: ").Append(activeAccount).Append(" | Chain Id: ").Append(FString::FromInt(chainId));
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("AnkrClient - GetWalletInfo - Couldn't get an account, wallet is not connected: %s"), *content);
+				}
 			}
 			else
 			{
+				UE_LOG(LogTemp, Error, TEXT("AnkrClient - GetWalletInfo - Couldn't get a valid response: %s"), *content);
 				data = JsonObject->GetStringField("msg");
 			}
-		}
 
-		Result.ExecuteIfBound(data);
+			Result.ExecuteIfBound(data);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("AnkrClient - GetWalletInfo - Couldn't get a valid response:\n%s"), *content);
+		}
 	});
 
 	FString url = API_BASE_URL + ENDPOINT_WALLET_INFO;
@@ -169,26 +190,13 @@ void UAnkrClient::GetWalletInfo(FAnkrDelegate Result)
 	Request->ProcessRequest();
 }
 
-// ----------------
-// GetActiveAccount
-// ----------------
-// Returns the currently connected wallet account's public address.
+// Returns the currently connected wallet address.
 FString UAnkrClient::GetActiveAccount()
 {
-	if (!activeAccount.IsEmpty())
-	{
-		return activeAccount;
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetActiveAccount - Please Connect Wallet on the main screen to get the account address."));
-	//GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Green, *FString("AnkrClient - GetActiveAccount - Please Connect Wallet on the main screen to get the account address."));
-	return "";
+	return !activeAccount.IsEmpty() ? activeAccount : "";
 }
 
-// -------
-// SendABI
-// -------
-// SendABI is used to send a request with 'abi' as a raw body parameter at http://45.77.189.28:5000/abi to get a response 'abi' which is the abi hash generated by the backend.
+// SendABI is used to get the abi hash.
 void UAnkrClient::SendABI(FString abi, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -211,6 +219,10 @@ void UAnkrClient::SendABI(FString abi, FAnkrDelegate Result)
 		{
 			Result.ExecuteIfBound(JsonObject->GetStringField("abi"));
 		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("AnkrClient - SendABI - Couldn't get a valid response:\n%s"), *content);
+		}
 	});
 
 	const TCHAR* find = TEXT("\"");
@@ -226,12 +238,7 @@ void UAnkrClient::SendABI(FString abi, FAnkrDelegate Result)
 	Request->ProcessRequest();
 }
 
-// ---------------
-// SendTransaction
-// ---------------
-// SendTransaction is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args' } as a raw body parameter at http://45.77.189.28:5000/send/transaction to get a response having a 'ticket'.
-// The session saved during GetClient will be used to open metamask.
-// Metamask will show popup to sign or confirm the transaction for that ticket.
+// SendTransaction is used to send a trasaction provided that the paramters are entered correctly.
 void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, FAnkrTicket Ticket)
 {
 	http = &FHttpModule::Get();
@@ -260,6 +267,10 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
 		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("AnkrClient - SendTransaction - Couldn't get a valid response:\n%s"), *content);
+		}
 
 		Ticket.ExecuteIfBound(data);
 	});
@@ -276,10 +287,7 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 	});
 }
 
-// ---------------
-// GetTicketResult
-// ---------------
-// GetTicketResult is used to send a request with { 'device_id', 'ticket' } as a raw body parameter at http://45.77.189.28:5000/result to get a response having a 'code' and 'status'.
+// GetTicketResult is used to get the status of the ticket having a 'code' and 'status'.
 // The 'status' shows whether the result for the ticket signed has a success or failure.
 // The 'code' shows a code number related to a specific failure or success.
 void UAnkrClient::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
@@ -323,10 +331,7 @@ void UAnkrClient::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
 	}
 }
 
-// -------
-// GetData
-// -------
-// GetData is used to send a request with { 'device_id', 'contract_address', 'abi_hash', 'method', 'args' } as a raw body parameter at http://45.77.189.28:5000/wallet/call/method to get a response data from readable functions from the contract.
+// GetData is used to get data from readable functions from the contract provided that the parameters are entered correctly.
 void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FString args, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -356,11 +361,7 @@ void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FS
 	Request->ProcessRequest();
 }
 
-// -----------
-// SignMessage
-// -----------
-// SignMessage is used to send a request with { 'device_id', 'message' } as a raw body parameter at http://45.77.189.28:5000/sign/message to get a response having a 'ticket'.
-// The session saved during GetClient will be used to open metamask.
+// SignMessage is used to to sign and message, the ticket will be generated.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
 void UAnkrClient::SignMessage(FString message, FAnkrDelegate Result)
 {
@@ -401,11 +402,7 @@ void UAnkrClient::SignMessage(FString message, FAnkrDelegate Result)
 	Request->ProcessRequest();
 }
 
-// ------------
-// GetSignature
-// ------------
-// GetSignature is used to send a request with { 'device_id', 'ticket' } as a raw body parameter at http://45.77.189.28:5000/result to get a response having a 'data' object with 'signature' string field.
-// The signature will used in addition to the message for verification.
+// GetSignature is used to get the result of the signed message ticket and a 'data' object with 'signature' string field will be received.
 void UAnkrClient::GetSignature(FString ticket, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -440,11 +437,8 @@ void UAnkrClient::GetSignature(FString ticket, FAnkrDelegate Result)
 	Request->ProcessRequest();
 }
 
-// -------------
-// VerifyMessage
-// -------------
-// VerifyMessage is used to send a request with { 'device_id', 'message', 'signature' } as a raw body parameter at http://45.77.189.28:5000/verify/message to get a response having an account 'address'.
-// The account address will the connected wallet's public address.
+// VerifyMessage is used to confirm whether the user signed the message, an account 'address' will be received.
+// The account address will be the connected wallet address.
 void UAnkrClient::VerifyMessage(FString message, FString signature, FAnkrDelegate Result)
 {
 	http = &FHttpModule::Get();
