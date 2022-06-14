@@ -59,17 +59,13 @@ public class AnkrSDK : ModuleRules
 		if (Target.Platform == UnrealTargetPlatform.IOS)
 		{
 			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/iOS"));
-			PublicFrameworks.AddRange(
-			new string[] { "" }
-			);
+			//PublicFrameworks.AddRange(new string[] { "" });
 		}
 
 		if (Target.Platform == UnrealTargetPlatform.Mac)
 		{
 			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Mac"));
-			PublicFrameworks.AddRange(
-			new string[] { "" }
-			);
+            //PublicFrameworks.AddRange(new string[] { "" });
 		}
 
 		if (Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Android)
