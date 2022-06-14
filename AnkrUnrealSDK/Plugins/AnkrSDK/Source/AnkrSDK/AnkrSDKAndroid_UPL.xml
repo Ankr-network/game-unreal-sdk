@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+	
+  <init>
+		<log text="AnkrSDK Initialization"/>
+	</init>
+
+	<resourceCopies>
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>-->
+	<!---<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-debug.aar" dst="$S(BuildDir)/Android/Java/libs/nativeads-debug.aar"/>-->
+	</resourceCopies>
+	<gameActivityImportAdditions>
+		<insert>
+			<!--import com.ankr.libankradvertisement.AnkrClient;-->
+			<!--import com.ankr.nativeads.AnkrAds;-->
+
+		</insert>
+	</gameActivityImportAdditions>
+
+	<!-- optional additions to proguard
+	<proguardAdditions>
+		<insert>
+			-keep public class com.ankr.mirage1.** {
+			public protected *;
+			}
+		</insert>
+	</proguardAdditions>-->
+	<!-- optional updates applied to AndroidManifest.xml -->
+	<androidManifestUpdates>
+		<!-- Add permissions -->
+		
+    <addPermission android:name="android.permission.READ_EXTERNAL_STORAGE" android:required="true"/>
+    <addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:required="true"/>    
+   
+	</androidManifestUpdates>
+
+	<!--<AARImports>
+		<insertValue value="repository $S(PluginDir)/Private/Android/Libraries"/>
+		<insertNewline/>
+		<insert>com.ankr.nativeads,nativeads-debug,1.0</insert>
+		<insertNewline/>
+	</AARImports>-->
+
+	<buildGradleAdditions>
+		<insert>
+			dependencies {
+				implementation('androidx.annotation:annotation:1.0.0')
+				<!--implementation ('com.ankr.nativeads:nativeads-debug:1.0')-->
+                <!--implementation('com.firebaseui:firebase-ui-auth:4.3.2')-->
+			<!--implementation('com.ankr.nativeads:nativeads-release:1.0.0')-->
+			}
+		</insert>
+	</buildGradleAdditions>
+    
+    <compilerArgument>-Xlint:deprecation</compilerArgument>
+    
+    <gradleProperties>
+        <insert>
+          android.useAndroidX=true
+          android.enableJetifier=true
+          <!--android.enableSeparateAnnotationProcessing=true-->
+        </insert>
+    </gradleProperties>
+</root>
