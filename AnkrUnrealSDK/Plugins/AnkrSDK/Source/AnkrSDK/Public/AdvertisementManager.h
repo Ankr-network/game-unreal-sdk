@@ -5,6 +5,11 @@
 #include "Runtime/Online/HTTP/Public/Http.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "AnkrDelegates.h"
+
+#if PLATFORM_IOS
+#import "../Private/iOS/LibraryManager.h"
+#endif
+
 #include "AdvertisementManager.generated.h"
 
 #define AD_SUCCESS			  0	   // Success, show the ad.
@@ -55,4 +60,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void EngageAdvertisement(FAdvertisementDataStructure _data);
+    
+    UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+    void LoadAd(FString _unitId);
+    
+    UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+    void Show(FString _unitId);
+    
+#if PLATFORM_IOS
+    LibraryManager* libraryManageriOS;
+#endif
 };

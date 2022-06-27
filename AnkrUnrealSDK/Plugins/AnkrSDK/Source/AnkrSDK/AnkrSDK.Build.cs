@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 public class AnkrSDK : ModuleRules
@@ -56,31 +58,32 @@ public class AnkrSDK : ModuleRules
 			}
 			);
 
-		if (Target.Platform == UnrealTargetPlatform.IOS)
-		{
-			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/iOS"));
-			//PublicFrameworks.AddRange(new string[] { "" });
-		}
-
+        if(Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Windows"));
+        }
+}
 		if (Target.Platform == UnrealTargetPlatform.Mac)
 		{
 			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Mac"));
-            //PublicFrameworks.AddRange(new string[] { "" });
 		}
 
-		if (Target.Platform == UnrealTargetPlatform.IOS || Target.Platform == UnrealTargetPlatform.Android)
+		if (Target.Platform == UnrealTargetPlatform.IOS)
 		{
 			PrivateDependencyModuleNames.AddRange(new string[] { "Launch" });
+            
+            PublicIncludePaths.Add(ModuleDirectory + "/Private/iOS/Libraries/AdsBridge.framework/Headers");
+            PublicAdditionalFrameworks.Add(new Framework("AdsBridge", ModuleDirectory + "/Private/iOS/Libraries/AdsBridge.framework"));
 
-			if (Target.Platform == UnrealTargetPlatform.IOS)
-			{
-				string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
-				AdditionalPropertiesForReceipt.Add("IOSPlugin", Path.Combine(PluginPath, "AnkrSDKiOS_UPL.xml"));
-			}
+            PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/iOS"));
+            string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
+            AdditionalPropertiesForReceipt.Add("IOSPlugin", Path.Combine(PluginPath, "AnkrSDKiOS_UPL.xml"));
 		}
 
 		if (Target.Platform == UnrealTargetPlatform.Android)
 		{
+            PrivateDependencyModuleNames.AddRange(new string[] { "Launch" });
+
 			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Android"));
 			string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
 			AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "AnkrSDKAndroid_UPL.xml"));

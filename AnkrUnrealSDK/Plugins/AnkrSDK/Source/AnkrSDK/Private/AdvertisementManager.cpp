@@ -1,17 +1,68 @@
 #include "AdvertisementManager.h"
 #include "AnkrUtility.h"
+#include <string>
 
 UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	UE_LOG(LogTemp, Warning, TEXT("UAdvertisementManager - Constructor"));
+    
+#if PLATFORM_IOS
+    if(libraryManageriOS == nullptr)
+    {
+        libraryManageriOS = [[LibraryManager alloc] init];
+    }
+#endif
 }
 
 void UAdvertisementManager::InitializeAdvertisement(FString _deviceId, FString _appId, FString _publicAddress, FString _language)
 {
+#if PLATFORM_IOS
+    std::string _deviceIdStr = std::string(TCHAR_TO_UTF8(*_deviceId));
+    NSString* _deviceIdNSString = [[NSString alloc] initWithUTF8String:_deviceIdStr.c_str()];
+    
+    std::string _appIdStr = std::string(TCHAR_TO_UTF8(*_appId));
+    NSString* _appIdNSString = [[NSString alloc] initWithUTF8String:_appIdStr.c_str()];
+    
+    std::string _publicAddressStr = std::string(TCHAR_TO_UTF8(*_publicAddress));
+    NSString* _publicAddressNSString = [[NSString alloc] initWithUTF8String:_publicAddressStr.c_str()];
+    
+    std::string _languageStr = std::string(TCHAR_TO_UTF8(*_language));
+    NSString* _languageNSString = [[NSString alloc] initWithUTF8String:_languageStr.c_str()];
+    
+    [libraryManageriOS Initialize:_appIdNSString deviceId:_deviceIdNSString publicAddress:_deviceIdNSString language:_languageNSString];
+#else
+    
 	deviceId = _deviceId;
 	appId = _appId;
 	activeAccount = _publicAddress;
 	language = _language;
+#endif
+}
+
+void UAdvertisementManager::LoadAd(FString _unitId)
+{
+#if PLATFORM_IOS
+    std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
+    NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
+    
+    [libraryManageriOS LoadAd:_unitIdNSString];
+#else
+    
+    
+#endif
+}
+
+void UAdvertisementManager::Show(FString _unitId)
+{
+#if PLATFORM_IOS
+    std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
+    NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
+    
+    [libraryManageriOS Show:_unitIdNSString];
+#else
+    
+    
+#endif
 }
 
 void UAdvertisementManager::StartSession()
