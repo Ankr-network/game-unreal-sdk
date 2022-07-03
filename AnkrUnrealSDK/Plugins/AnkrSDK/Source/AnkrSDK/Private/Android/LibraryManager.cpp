@@ -1,5 +1,3 @@
-#if PLATFORM_ANDROID
-
 #include "LibraryManager.h"
 #include "AnkrSaveGame.h"
 
@@ -18,12 +16,60 @@ void LibraryManager::Load()
 	JCM_CallMethod					= JCO_AnkrClient->GetClassMethod("CallMethod", "(Ljava/lang/String;)V");
 	JCM_SignMessage					= JCO_AnkrClient->GetClassMethod("SignMessage", "(Ljava/lang/String;)V");
 	JCM_GetResult					= JCO_AnkrClient->GetClassMethod("GetResult", "(Ljava/lang/String;)V");
+	JCM_GetSignature				= JCO_AnkrClient->GetClassMethod("GetSignature", "(Ljava/lang/String;)V");
 	JCM_VerifyMessage				= JCO_AnkrClient->GetClassMethod("VerifyMessage", "(Ljava/lang/String;)V");
 }
+
+
 
 void LibraryManager::Unload()
 {
 	// Nothing to do here for now.
+}
+
+void LibraryManager::Initialize(bool _isDevelopment, FString _device_id)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_Initialize, _isDevelopment, GetJString(_device_id));
+}
+void LibraryManager::Ping()
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_Ping);
+}
+void LibraryManager::ConnectWallet(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_ConnectWallet, GetJString(_content));
+}
+void LibraryManager::GetWallet(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_GetWallet, GetJString(_content));
+}
+void LibraryManager::SendABI(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_SendABI, GetJString(_content));
+}
+void LibraryManager::SendTransaction(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_SendTransaction, GetJString(_content));
+}
+void LibraryManager::GetResult(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_GetResult, GetJString(_content));
+}
+void LibraryManager::CallMethod(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_CallMethod, GetJString(_content));
+}
+void LibraryManager::SignMessage(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_SignMessage, GetJString(_content));
+}
+void LibraryManager::GetSignature(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_GetSignature, GetJString(_content));
+}
+void LibraryManager::VerifyMessage(FString _content)
+{
+	JCO_AnkrClient->CallMethod<void>(JCM_VerifyMessage, GetJString(_content));
 }
 
 jobject LibraryManager::GetJString(FString string)
@@ -70,13 +116,13 @@ int LibraryManager::GetGlobalCallIndex()
 	GlobalCallIndex++; if (GlobalCallIndex > INT_MAX) GlobalCallIndex = 0;
 	return GlobalCallIndex;
 }
-bool LibraryManager::AddCall(const char* _sender, const FAnkrCallCompleteDynamicMulticastDelegate _callComplete)
+bool LibraryManager::AddCall(const char* _sender, const FAnkrCallCompleteDynamicDelegate _callComplete)
 {
 	std::string caller = std::string(_sender);
 
 	if (CallList.count(caller) > 0)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not be added again."), *FString(caller.c_str()));
+		//UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not add again."), *FString(caller.c_str()));
 		return false;
 	}
 
@@ -108,5 +154,3 @@ void LibraryManager::FlushCall(const char* _sender, bool _success, const char* _
 
 	//UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call is pushed to queue successfully."), *call.sender);
 }
-
-#endif

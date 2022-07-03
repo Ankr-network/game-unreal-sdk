@@ -149,7 +149,7 @@ bool LibraryManager::AddCall(const char* _sender, const FAnkrCallCompleteDynamic
     
     if (CallList.count(caller) > 0)
     {
-        //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not be added again."), *FString(caller.c_str()));
+        //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not add again."), *FString(caller.c_str()));
         return false;
     }
 

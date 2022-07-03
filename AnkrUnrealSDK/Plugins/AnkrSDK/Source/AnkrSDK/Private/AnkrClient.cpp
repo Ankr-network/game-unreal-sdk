@@ -39,16 +39,16 @@ UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(Ob
 
 #if PLATFORM_WINDOWS
 	LibraryManager::GetInstance().Load();
-	LibraryManager::GetInstance().InitializeFunction(false, TCHAR_TO_UTF8(*deviceId), [](const char* _message) { UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(_message)); });
+	LibraryManager::GetInstance().Initialize(false, deviceId);
 #elif PLATFORM_MAC
 	LibraryManager::GetInstance().Load();
 	LibraryManager::GetInstance().Initialize(false, deviceId);
 #elif PLATFORM_IOS
 	LibraryManager::GetInstance().Load();
-	LibraryManager::GetInstance().Inialize(false, deviceId);
+	LibraryManager::GetInstance().Initialize(false, deviceId);
 #elif PLATFORM_ANDROID
 	LibraryManager::GetInstance().Load();
-	LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(JCM_Initialize, false, GetJString(deviceId));
+	LibraryManager::GetInstance().Initialize(false, deviceId);
 #endif
 }
 
@@ -59,10 +59,7 @@ void UAnkrClient::Ping(const FAnkrCallCompleteDynamicDelegate& Result)
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().PingFunction([](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("Ping", _success, _data);
-			});
+		LibraryManager::GetInstance().Ping();
 
 #elif PLATFORM_MAC
 
@@ -74,8 +71,7 @@ void UAnkrClient::Ping(const FAnkrCallCompleteDynamicDelegate& Result)
 
 #elif PLATFORM_ANDROID
 
-		LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_Ping);
-
+		LibraryManager::GetInstance().Ping();
 #endif
 		}
 }
@@ -90,10 +86,7 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 	{
 #if PLATFORM_WINDOWS
 	
-		LibraryManager::GetInstance().ConnectWalletFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("ConnectWallet", _success, _data);
-			});
+		LibraryManager::GetInstance().ConnectWallet(body);
 	
 #elif PLATFORM_MAC
 
@@ -106,8 +99,7 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 
 #elif PLATFORM_ANDROID
 	
-		LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_ConnectWallet, LibraryManager::GetInstance().GetJString(body));
-	
+		LibraryManager::GetInstance().ConnectWallet(body);
 #endif
 	}
 }
@@ -122,10 +114,7 @@ void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 	{
 #if PLATFORM_WINDOWS
 	
-		LibraryManager::GetInstance().GetWalletFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("GetWallet", _success, _data);
-			});
+		LibraryManager::GetInstance().GetWallet(body);
 
 #elif PLATFORM_MAC
 
@@ -137,7 +126,7 @@ void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 	
 #elif PLATFORM_ANDROID
 
-		LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_GetWallet, LibraryManager::GetInstance().GetJString(body));
+		LibraryManager::GetInstance().GetWallet(body);
 #endif
 	}
 }
@@ -159,10 +148,7 @@ void UAnkrClient::SendABI(FString abi, const FAnkrCallCompleteDynamicDelegate& R
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().SendABIFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("SendABI", _success, _data);
-			});
+		LibraryManager::GetInstance().SendABI(body);
 
 #elif PLATFORM_MAC
 
@@ -174,7 +160,7 @@ void UAnkrClient::SendABI(FString abi, const FAnkrCallCompleteDynamicDelegate& R
 
 #elif PLATFORM_ANDROID
 
-		LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_SendABI, LibraryManager::GetInstance().GetJString(body));
+		LibraryManager::GetInstance().SendABI(body);
 #endif
 	}
 }
@@ -188,10 +174,7 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().SendTransactionFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("SendTransaction", _success, _data);
-			});
+		LibraryManager::GetInstance().SendTransaction(body);
 
 #elif PLATFORM_MAC
 
@@ -203,7 +186,7 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 
 #elif PLATFORM_ANDROID
 
-		LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_SendTransaction, LibraryManager::GetInstance().GetJString(body));
+		LibraryManager::GetInstance().SendTransaction(body);
 #endif
 	}
 }
@@ -215,14 +198,11 @@ void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynam
 {
 	FString body = FString("{\"device_id\": \"" + deviceId + "\", \"ticket\": \"" + ticketId + "\" }");
 
-	if (LibraryManager::GetInstance().AddCall("GetTicketResult", Result))
+	if (LibraryManager::GetInstance().AddCall("GetResult", Result))
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().GetResultFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("GetTicketResult", _success, _data);
-			});
+		LibraryManager::GetInstance().GetResult(body);
 
 #elif PLATFORM_MAC
 
@@ -234,7 +214,7 @@ void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynam
 
 #elif PLATFORM_ANDROID
 		
-			LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_GetResult, LibraryManager::GetInstance().GetJString(body));
+		LibraryManager::GetInstance().GetResult(body);
 #endif
 	}
 }
@@ -248,10 +228,7 @@ void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FS
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().CallMethodFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("CallMethod", _success, _data);
-			});
+		LibraryManager::GetInstance().CallMethod(body);
 
 #elif PLATFORM_MAC
 
@@ -263,7 +240,7 @@ void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FS
 
 #elif PLATFORM_ANDROID
 	
-			LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_CallMethod, LibraryManager::GetInstance().GetJString(body));
+		LibraryManager::GetInstance().CallMethod(body);
 #endif
 	}
 }
@@ -277,10 +254,7 @@ void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDel
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().SignMessageFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("SignMessage", _success, _data);
-			});
+		LibraryManager::GetInstance().SignMessage(body);
 
 #elif PLATFORM_MAC
 
@@ -292,7 +266,7 @@ void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDel
 
 #elif PLATFORM_ANDROID
 
-		LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_SignMessage, LibraryManager::GetInstance().GetJString(body));
+		LibraryManager::GetInstance().SignMessage(body);
 #endif
 	}
 }
@@ -305,10 +279,7 @@ void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDel
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().GetResultFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("GetSignature", _success, _data);
-			});
+		LibraryManager::GetInstance().GetResult(body);
 
 #elif PLATFORM_MAC
 
@@ -319,10 +290,8 @@ void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDel
 		LibraryManager::GetInstance().GetResult(body);
 
 #elif PLATFORM_ANDROID
-		if (LibraryManager::GetInstance().AddCall("GetResult", Result))
-		{
-			LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_GetResult, LibraryManager::GetInstance().GetJString(body));
-		}
+
+		LibraryManager::GetInstance().GetResult(body);
 #endif
 	}
 }
@@ -336,10 +305,7 @@ void UAnkrClient::VerifyMessage(FString message, FString signature, const FAnkrC
 	{
 #if PLATFORM_WINDOWS
 
-		LibraryManager::GetInstance().VerifyMessageFunction(TCHAR_TO_UTF8(*body), [](bool _success, const char* _data)
-			{
-				LibraryManager::GetInstance().FlushCall("VerifyMessage", _success, _data);
-			});
+		LibraryManager::GetInstance().VerifyMessage(body);
 
 #elif PLATFORM_MAC
 
@@ -351,7 +317,7 @@ void UAnkrClient::VerifyMessage(FString message, FString signature, const FAnkrC
 
 #elif PLATFORM_ANDROID
 
-			LibraryManager::GetInstance().JCO_AnkrClient->CallMethod<void>(LibraryManager::GetInstance().JCM_VerifyMessage, LibraryManager::GetInstance().GetJString(body));
+		LibraryManager::GetInstance().VerifyMessage(body);
 #endif
 	}
 }
@@ -506,6 +472,14 @@ void UAnkrClient::HandleGetTicketResult(FAnkrCallStruct call)
 
 	TSharedPtr<FJsonObject> JsonObject;
 	TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+	if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	{
+		int code = JsonObject->GetIntegerField("code");
+		FString status = JsonObject->GetStringField("status");
+
+		call.CallComplete.ExecuteIfBound(call.success, true, !activeAccount.IsEmpty(), !activeAccount.IsEmpty() ? activeAccount : "", JsonObject->GetStringField("ticket"), status, code, content);
+	}
 }
 void UAnkrClient::HandleCallMethod(FAnkrCallStruct call)
 {

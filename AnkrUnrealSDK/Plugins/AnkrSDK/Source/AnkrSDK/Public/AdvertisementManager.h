@@ -68,6 +68,6 @@ public:
     void Show(FString _unitId);
     
 #if PLATFORM_IOS
-    LibraryManager* libraryManageriOS;
+    //LibraryManager* libraryManageriOS;
 #endif
 };

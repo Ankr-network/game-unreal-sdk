@@ -1,36 +1,10 @@
-//#if PLATFORM_WINDOWS
-
 #include "LibraryManager.h"
 #include <codecvt>
 
-
-
 void LibraryManager::Load()
 {
-	FString dllPath = *FPaths::ProjectPluginsDir() + FString("AnkrSDK/Source/AnkrSDK/Private/Windows/Libraries/AnkrSDKLibraryWindows.dll");
+	FString dllPath = *FPaths::ProjectPluginsDir() + FString("AnkrSDK/Source/AnkrSDK/Private/Windows/Libraries/AnkrSDKUnrealWindows.dll");
 	bool exists = FPaths::FileExists(dllPath);
-
-	/*std::string path = std::string(TCHAR_TO_UTF8(*dllPath));
-	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	std::wstring conversion = converter.from_bytes(path);*/
-	
-	/*HNDL_DLL = LoadLibrary(GetWString(dllPath).c_str());
-	if (!HNDL_DLL)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("LibraryManager - HNDL_DLL can not be loaded."));
-		return;
-	}
-	UE_LOG(LogTemp, Warning, TEXT("LibraryManager - HNDL_DLL loaded."));*/
-
-	/*dumpMethod = reinterpret_cast<dll_DumpMethod>(reinterpret_cast<void*>(GetProcAddress(HNDL_DLL, "dumpMethod")));
-	if (!dumpMethod)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("dumpMethod can not be loaded."));
-		return;
-	}*/
-
-	//PingFunctionCplusplus		   = reinterpret_cast<PingCplusplus>(reinterpret_cast<void*>(GetProcAddress(HNDL_DLL, "Ping")));
-	//ConnectWalletFunctionCplusplus = reinterpret_cast<ConnectWalletCplusplus>(reinterpret_cast<void*>(GetProcAddress(HNDL_DLL, "ConnectWallet")));
 
 	HNDL = FPlatformProcess::GetDllHandle(*dllPath);
 	if (!HNDL)
@@ -56,33 +30,8 @@ void LibraryManager::Load()
 	VerifyMessageFunction   = (VerifyMessageImport)   FPlatformProcess::GetDllExport(HNDL, *FString("VerifyMessage"));
 }
 
-void LibraryManager::DumpMethod(FString _dump)
-{
-	/*dumpMethod(GetWString(_dump).c_str(), [](bool success, const wchar_t* data)
-		{
-
-		});*/
-	
-	/*UE_LOG(LogTemp, Warning, TEXT("DumpMethod"));
-	PingFunction([](bool success, const char* data)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("C++ - LibraryManager - DumpMethod - data: %s"), *FString(data));
-		});*/
-}
-
 void LibraryManager::Unload()
 {
-	/*if (HNDL_DLL)
-	{
-		dumpMethod = NULL;
-
-		bool success = FreeLibrary(HNDL_DLL);
-		if (success)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("LibraryManager - UnloadLibrary - Library unloaded successfully."));
-		}
-	}*/
-
 	if (HNDL)
 	{
 		InitializeFunction = NULL;
@@ -107,41 +56,84 @@ void LibraryManager::Unload()
 	}
 }
 
-std::wstring LibraryManager::GetWString(FString input)
-{
-	std::string raw = std::string(TCHAR_TO_UTF8(*input));
-	/*std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	std::wstring conversion = converter.from_bytes(raw);
-
-	return conversion;*/
-
-	int count = MultiByteToWideChar(CP_UTF8, 0, raw.c_str(), raw.length(), NULL, 0);
-	std::wstring wstr(count, 0);
-	MultiByteToWideChar(CP_UTF8, 0, raw.c_str(), raw.length(), &wstr[0], count);
-	return wstr;
-}
-
-std::string LibraryManager::GetString(std::wstring _wstring)
-{
-	/*std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-	std::string conversion = converter.to_bytes(_wstring);
-	return conversion;*/
-
-	int count = WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), _wstring.length(), NULL, 0, NULL, NULL);
-	std::string str(count, 0);
-	WideCharToMultiByte(CP_UTF8, 0, _wstring.c_str(), -1, &str[0], count, NULL, NULL);
-	return str;
-}
-
-FString LibraryManager::GetFString(std::wstring _wstring)
-{
-	FString conversion = FString(GetString(_wstring).c_str());
-	return conversion;
-}
-
 void LibraryManager::Log(FString _message)
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s"), *_message);
+}
+
+void LibraryManager::Initialize(bool _isDevelopment, FString _device_id)
+{
+	InitializeFunction(false, TCHAR_TO_UTF8(*_device_id), [](const char* _message) { UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(_message)); });
+}
+void LibraryManager::Ping()
+{
+	PingFunction([](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("Ping", _success, _data);
+		});
+}
+void LibraryManager::ConnectWallet(FString _content)
+{
+	ConnectWalletFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("ConnectWallet", _success, _data);
+		});
+}
+void LibraryManager::GetWallet(FString _content)
+{
+	GetWalletFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("GetWallet", _success, _data);
+		});
+}
+void LibraryManager::SendABI(FString _content)
+{
+	SendABIFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("SendABI", _success, _data);
+		});
+}
+void LibraryManager::SendTransaction(FString _content)
+{
+	SendTransactionFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("SendTransaction", _success, _data);
+		});
+}
+void LibraryManager::GetResult(FString _content)
+{
+	GetResultFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("GetResult", _success, _data);
+		});
+}
+void LibraryManager::CallMethod(FString _content)
+{
+	CallMethodFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("CallMethod", _success, _data);
+		});
+}
+void LibraryManager::SignMessage(FString _content)
+{
+	SignMessageFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("SignMessage", _success, _data);
+		});
+}
+void LibraryManager::GetSignature(FString _content)
+{
+	GetResultFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("GetSignature", _success, _data);
+		});
+}
+void LibraryManager::VerifyMessage(FString _content)
+{
+	VerifyMessageFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+		{
+			LibraryManager::GetInstance().FlushCall("VerifyMessage", _success, _data);
+		});
 }
 
 int LibraryManager::GetGlobalCallIndex()
@@ -155,7 +147,7 @@ bool LibraryManager::AddCall(const char* _sender, const FAnkrCallCompleteDynamic
 	
 	if (CallList.count(caller) > 0)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not be added again."), *FString(caller.c_str()));
+		//UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not add again."), *FString(caller.c_str()));
 		return false;
 	}
 
@@ -187,4 +179,3 @@ void LibraryManager::FlushCall(const char* _sender, bool _success, const char* _
 
 	//UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call is pushed to queue successfully."), *call.sender);
 }
-//#endif

@@ -1,10 +1,5 @@
 #pragma once
 
-//#if PLATFORM_WINDOWS
-
-#define WIN32_LEAN_AND_MEAN
-
-#include <windows.h>
 #include <iostream>
 #include <string>
 #include <functional>
@@ -12,11 +7,6 @@
 #include "RequestBodyStructure.h"
 #include "../../Public/AnkrDelegates.h"
 
-// C++ DLL
-//typedef void(__cdecl* PingCplusplus)(std::function<void(bool, const wchar_t*)>);
-//typedef void(__cdecl* ConnectWalletCplusplus)(const wchar_t*, std::function<void(bool, const wchar_t*)>);
-
-// C# DLL
 typedef void(*LogCallbackDelegate)(const char* _message);
 typedef void(*Callback)(bool success, const char* data);
 
@@ -54,17 +44,8 @@ class ANKRSDK_API LibraryManager
 
 	public:
 
-		//HINSTANCE HNDL_DLL = NULL;
-		//PingCplusplus PingFunctionCplusplus = NULL;
-		//ConnectWalletCplusplus ConnectWalletFunctionCplusplus = NULL;
-
-		void DumpMethod(FString _dump);
 		void Load();
 		void Unload();
-
-		static std::wstring GetWString(FString input);
-		static std::string GetString(std::wstring _wstring);
-		static FString GetFString(std::wstring _wstring);
 
 		void Log(FString _message);
 
@@ -85,6 +66,18 @@ class ANKRSDK_API LibraryManager
 		GetResultImport		  GetResultFunction       = NULL;
 		VerifyMessageImport	  VerifyMessageFunction   = NULL;
 
+		void Initialize(bool, FString);
+		void Ping();
+		void ConnectWallet(FString);
+		void GetWallet(FString);
+		void SendABI(FString);
+		void SendTransaction(FString);
+		void GetResult(FString);
+		void CallMethod(FString);
+		void SignMessage(FString);
+		void GetSignature(FString _content);
+		void VerifyMessage(FString);
+
 		int GlobalCallIndex;
 		std::unordered_map<std::string, FAnkrCallStruct> CallList;
 		std::queue<FAnkrCallStruct> CallQueue;
@@ -93,5 +86,3 @@ class ANKRSDK_API LibraryManager
 		bool AddCall(const char* _sender, const FAnkrCallCompleteDynamicDelegate _callComplete);
 		void FlushCall(const char* _sender, bool _success, const char* _data);
 };
-	
-//#endif

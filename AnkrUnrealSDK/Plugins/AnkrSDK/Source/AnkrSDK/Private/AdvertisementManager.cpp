@@ -7,17 +7,17 @@ UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectIni
 	UE_LOG(LogTemp, Warning, TEXT("UAdvertisementManager - Constructor"));
     
 #if PLATFORM_IOS
-    if(libraryManageriOS == nullptr)
-    {
-        libraryManageriOS = [[LibraryManager alloc] init];
-    }
+    //if(libraryManageriOS == nullptr)
+    //{
+        //libraryManageriOS = [[LibraryManager alloc] init];
+    //}
 #endif
 }
 
 void UAdvertisementManager::InitializeAdvertisement(FString _deviceId, FString _appId, FString _publicAddress, FString _language)
 {
 #if PLATFORM_IOS
-    std::string _deviceIdStr = std::string(TCHAR_TO_UTF8(*_deviceId));
+    /*std::string _deviceIdStr = std::string(TCHAR_TO_UTF8(*_deviceId));
     NSString* _deviceIdNSString = [[NSString alloc] initWithUTF8String:_deviceIdStr.c_str()];
     
     std::string _appIdStr = std::string(TCHAR_TO_UTF8(*_appId));
@@ -29,7 +29,7 @@ void UAdvertisementManager::InitializeAdvertisement(FString _deviceId, FString _
     std::string _languageStr = std::string(TCHAR_TO_UTF8(*_language));
     NSString* _languageNSString = [[NSString alloc] initWithUTF8String:_languageStr.c_str()];
     
-    [libraryManageriOS Initialize:_appIdNSString deviceId:_deviceIdNSString publicAddress:_deviceIdNSString language:_languageNSString];
+    [libraryManageriOS Initialize:_appIdNSString deviceId:_deviceIdNSString publicAddress:_deviceIdNSString language:_languageNSString];*/
 #else
     
 	deviceId = _deviceId;
@@ -42,10 +42,10 @@ void UAdvertisementManager::InitializeAdvertisement(FString _deviceId, FString _
 void UAdvertisementManager::LoadAd(FString _unitId)
 {
 #if PLATFORM_IOS
-    std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
-    NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
+    //std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
+    //NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
     
-    [libraryManageriOS LoadAd:_unitIdNSString];
+    //[libraryManageriOS LoadAd:_unitIdNSString];
 #else
     
     
@@ -55,10 +55,10 @@ void UAdvertisementManager::LoadAd(FString _unitId)
 void UAdvertisementManager::Show(FString _unitId)
 {
 #if PLATFORM_IOS
-    std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
-    NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
+    //std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
+    //NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
     
-    [libraryManageriOS Show:_unitIdNSString];
+    //[libraryManageriOS Show:_unitIdNSString];
 #else
     
     

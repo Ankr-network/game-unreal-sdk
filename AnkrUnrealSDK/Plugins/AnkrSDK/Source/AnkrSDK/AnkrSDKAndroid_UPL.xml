@@ -17,7 +17,7 @@
 
 	<resourceCopies>
 		<log text="AnkrSDKAndroid - resourceCopies - resources to be copied"/>
-		<copyFile src="$S(PluginDir)/Private/Android/Libraries/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>
+		<copyFile src="$S(PluginDir)/Private/Android/Libraries/AnkrSDKUnrealAndroid.jar" dst="$S(BuildDir)/libs/AnkrSDKUnrealAndroid.jar"/>
 		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-debug.aar" dst="$S(BuildDir)/Android/Java/libs/nativeads-debug.aar"/>-->
 	</resourceCopies>
 
