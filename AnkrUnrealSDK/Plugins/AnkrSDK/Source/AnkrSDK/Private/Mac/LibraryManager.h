@@ -37,6 +37,7 @@ public:
     void Initialize(bool, FString);
     void Ping();
     void ConnectWallet(FString);
+    void GetWallet(FString);
     void SendABI(FString);
     void SendTransaction(FString);
     void CallMethod(FString);

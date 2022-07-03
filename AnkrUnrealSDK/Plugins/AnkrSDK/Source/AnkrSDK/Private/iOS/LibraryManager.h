@@ -9,7 +9,6 @@
 #include "RequestBodyStructure.h"
 
 #import <Foundation/Foundation.h>
-#import "AdsBridge-Swift.h"
 #import "AnkrSDKUnreal-Swift.h"
 
 class ANKRSDK_API LibraryManager
@@ -38,6 +37,7 @@ public:
     void Initialize(bool, FString);
     void Ping();
     void ConnectWallet(FString);
+    void GetWallet(FString);
     void SendABI(FString);
     void SendTransaction(FString);
     void CallMethod(FString);
@@ -60,20 +60,3 @@ public:
     bool AddCall(const char* _sender, const FAnkrCallCompleteDynamicDelegate _callComplete);
     void FlushCall(const char* _sender, bool _success, const char* _data);
 };
-
-/*#pragma once
-
-#import <Foundation/Foundation.h>
-#import "AdsBridge-Swift.h"
-#import "AnkrSDKUnreal-Swift.h"
-
-@interface LibraryManager : NSObject
-{
-    @public AnkrClient* client;
-}
-
--(void)Initialize:(NSString*)appId deviceId:(NSString*)deviceId publicAddress:(NSString*)publicAddress language:(NSString*)language;
--(void)LoadAd:(NSString*)unitId;
--(void)Show:(NSString*)unitId;
-
-@end*/

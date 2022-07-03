@@ -3,63 +3,95 @@
 <root xmlns:android="http://schemas.android.com/apk/res/android">
 	
   <init>
-		<log text="AnkrSDK Initialization"/>
+		<log text="AnkrSDKAndroid - AnkrSDK UPL Initialization"/>
 	</init>
 
+	<gradleCopies>
+		<log text="AnkrSDKAndroid - gradleCopies - optional files or directories to be copied to Intermediate/Android/APK"/>
+		<copyDir src="" std=""/>
+	</gradleCopies>
+
+	<prebuildCopies>
+		<log text="AnkrSDKAndroid - prebuildCopies - Files to be copied before the build so they can be used in the build"/>
+	</prebuildCopies>
+
 	<resourceCopies>
-		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>-->
-	<!---<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-debug.aar" dst="$S(BuildDir)/Android/Java/libs/nativeads-debug.aar"/>-->
+		<log text="AnkrSDKAndroid - resourceCopies - resources to be copied"/>
+		<copyFile src="$S(PluginDir)/Private/Android/Libraries/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-debug.aar" dst="$S(BuildDir)/Android/Java/libs/nativeads-debug.aar"/>-->
 	</resourceCopies>
-	<gameActivityImportAdditions>
+
+	<gradleProperties>
 		<insert>
-			<!--import com.ankr.libankradvertisement.AnkrClient;-->
-			<!--import com.ankr.nativeads.AnkrAds;-->
-
+			<log text="AnkrSDKAndroid - gradleProperties -"/>
+			android.useAndroidX=true
+			android.enableJetifier=true
 		</insert>
-	</gameActivityImportAdditions>
+	</gradleProperties>
 
-	<!-- optional additions to proguard
+	<AARImports>
+		<log text="AnkrSDKAndroid - AARImports -"/>
+		<!--<insertValue value="repository $S(PluginDir)/Private/Android/Libraries"/><insertNewline/>-->
+
+		<!--<insert>com.ankr.nativeads,nativeads-debug,1.0</insert>-->
+		<insertNewline/>
+	</AARImports>
+
+	<gameActivityReplacement>
+		<log text="AnkrSDKAndroid - AARImports -"/>
+		<!--<setString result="Output" value="$S(PluginDir)/../ThirdParty/Android/GameActivity.java.template"/>-->
+	</gameActivityReplacement>
+
+	<buildscriptGradleAdditions>
+		<insert>
+			dependencies {
+			classpath 'com.google.gms:google-services:4.3.4' // google-services plugin
+			classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+			}
+		</insert>
+	</buildscriptGradleAdditions>
+
+	<buildGradleAdditions>
+		<insert>
+			dependencies {
+			implementation('androidx.annotation:annotation:1.0.0')
+			<!--implementation ('com.ankr.nativeads:nativeads-debug:1.0')-->
+			<!--implementation('com.firebaseui:firebase-ui-auth:4.3.2')-->
+			<!--implementation('com.ankr.nativeads:nativeads-release:1.0.0')-->
+			}
+		</insert>
+	</buildGradleAdditions>
+	
+	
+
+	<androidManifestUpdates>
+		<!-- Add permissions -->
+
+		<addPermission android:name="android.permission.READ_EXTERNAL_STORAGE" android:required="true"/>
+		<addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:required="true"/>
+
+	</androidManifestUpdates>
+
+	<!-- optional additions to proguard-->
 	<proguardAdditions>
 		<insert>
 			-keep public class com.ankr.mirage1.** {
 			public protected *;
 			}
 		</insert>
-	</proguardAdditions>-->
+	</proguardAdditions>
 	<!-- optional updates applied to AndroidManifest.xml -->
-	<androidManifestUpdates>
-		<!-- Add permissions -->
-		
-    <addPermission android:name="android.permission.READ_EXTERNAL_STORAGE" android:required="true"/>
-    <addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:required="true"/>    
-   
-	</androidManifestUpdates>
 
-	<!--<AARImports>
-		<insertValue value="repository $S(PluginDir)/Private/Android/Libraries"/>
-		<insertNewline/>
-		<insert>com.ankr.nativeads,nativeads-debug,1.0</insert>
-		<insertNewline/>
-	</AARImports>-->
-
-	<buildGradleAdditions>
+	<gameActivityImportAdditions>
 		<insert>
-			dependencies {
-				implementation('androidx.annotation:annotation:1.0.0')
-				<!--implementation ('com.ankr.nativeads:nativeads-debug:1.0')-->
-                <!--implementation('com.firebaseui:firebase-ui-auth:4.3.2')-->
-			<!--implementation('com.ankr.nativeads:nativeads-release:1.0.0')-->
-			}
+			import com.ankr.ankrsdkunreal.AnkrClient;
+			<!--import com.ankr.nativeads.AnkrAds;-->
+
 		</insert>
-	</buildGradleAdditions>
+	</gameActivityImportAdditions>
+	
     
     <compilerArgument>-Xlint:deprecation</compilerArgument>
     
-    <gradleProperties>
-        <insert>
-          android.useAndroidX=true
-          android.enableJetifier=true
-          <!--android.enableSeparateAnnotationProcessing=true-->
-        </insert>
-    </gradleProperties>
+    
 </root>

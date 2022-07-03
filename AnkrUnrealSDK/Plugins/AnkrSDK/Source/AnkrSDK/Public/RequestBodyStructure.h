@@ -5,6 +5,8 @@
 #include "GenericPlatform/GenericPlatform.h"
 #include <JsonObjectConverter.h>
 #include "ItemInfo.h"
+#include <string>
+#include "AnkrDelegates.h"
 #include "RequestBodyStructure.generated.h"
 
 USTRUCT(BlueprintType)
@@ -31,6 +33,18 @@ struct FRequestBodyStruct
 		FJsonObjectConverter::JsonObjectStringToUStruct(json, &object, 0, 0);
 		return object;
 	}
+};
+
+USTRUCT(BlueprintType)
+struct FAnkrCallStruct
+{
+	GENERATED_BODY()
+	
+	int callIndex;
+	FString sender;
+	bool success;
+	FString data;
+	FAnkrCallCompleteDynamicDelegate CallComplete;
 };
 
 UCLASS()

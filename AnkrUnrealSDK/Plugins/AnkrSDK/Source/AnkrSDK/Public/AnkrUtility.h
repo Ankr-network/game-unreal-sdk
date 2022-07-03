@@ -4,6 +4,7 @@
 
 const FString SLASH = FString(TEXT("/"));
 const FString API_BASE_URL				= FString(TEXT("https://ue-service.game.ankr.com/"));
+const FString API_DEVELOPMENT_BASE_URL  = FString(TEXT("https://demo-ue-service.game.ankr.com/"));
 const FString API_AD_URL				= FString(TEXT(""));
 const FString USER_AGENT_KEY			= FString(TEXT("User-Agent"));
 const FString USER_AGENT_VALUE			= FString(TEXT("X-MirageSDK-Agent"));

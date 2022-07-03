@@ -19,14 +19,12 @@ void LibraryManager::Initialize(bool _isDevelopment, FString _device_id)
 }
 void LibraryManager::Ping()
 {
-    UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - 1"));
     [ankrClient PingWithFunction:^(BOOL _success, NSString* _sender, NSString* _data)
      {
         UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
         
         FlushCall([_sender UTF8String], _success, [_data UTF8String]);
      }];
-           UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - 2"));
 }
 void LibraryManager::ConnectWallet(FString _content)
 {
@@ -36,6 +34,15 @@ void LibraryManager::ConnectWallet(FString _content)
         
         FlushCall([_sender UTF8String], _success, [_data UTF8String]);
      }];
+}
+void LibraryManager::GetWallet(FString _content)
+{
+    [ankrClient GetWalletWith_content : FStringToNSString(_content) function : ^ (BOOL _success, NSString * _sender, NSString * _data)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
+
+        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
+    }] ;
 }
 void LibraryManager::SendABI(FString _content)
 {
@@ -142,7 +149,7 @@ bool LibraryManager::AddCall(const char* _sender, const FAnkrCallCompleteDynamic
     
     if (CallList.count(caller) > 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not be added again."), *FString(caller.c_str()));
+        //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not be added again."), *FString(caller.c_str()));
         return false;
     }
 
@@ -152,7 +159,7 @@ bool LibraryManager::AddCall(const char* _sender, const FAnkrCallCompleteDynamic
     call.CallComplete = _callComplete;
     CallList[caller] = call;
 
-    UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is added to the call list successfully."), *call.sender);
+    //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is added to the call list successfully."), *call.sender);
     return true;
 }
 
@@ -162,7 +169,7 @@ void LibraryManager::FlushCall(const char* _sender, bool _success, const char* _
 
     if (CallList.count(caller) <= 0)
     {
-        UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call doesn't exist in the call list."), *FString(caller.c_str()));
+        //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call doesn't exist in the call list."), *FString(caller.c_str()));
         return;
     }
 
@@ -172,5 +179,5 @@ void LibraryManager::FlushCall(const char* _sender, bool _success, const char* _
     CallQueue.push(call);
     CallList.erase(caller);
 
-    UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call is pushed to queue successfully."), *call.sender);
+    //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call is pushed to queue successfully."), *call.sender);
 }
