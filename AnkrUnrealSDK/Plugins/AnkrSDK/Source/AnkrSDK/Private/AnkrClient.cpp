@@ -84,6 +84,8 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 
 	if (LibraryManager::GetInstance().AddCall("ConnectWallet", Result))
 	{
+		SetLastRequest("ConnectWallet");
+
 #if PLATFORM_WINDOWS
 	
 		LibraryManager::GetInstance().ConnectWallet(body);
@@ -172,6 +174,8 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 
 	if (LibraryManager::GetInstance().AddCall("SendTransaction", Result))
 	{
+		SetLastRequest("SendTransaction");
+
 #if PLATFORM_WINDOWS
 
 		LibraryManager::GetInstance().SendTransaction(body);
@@ -252,6 +256,8 @@ void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDel
 	FString body = FString("{\"device_id\": \"" + deviceId + "\", \"message\":\"" + message + "\"}");
 	if (LibraryManager::GetInstance().AddCall("SignMessage", Result))
 	{
+		SetLastRequest("SignMessage");
+
 #if PLATFORM_WINDOWS
 
 		LibraryManager::GetInstance().SignMessage(body);
@@ -353,9 +359,8 @@ void UAnkrClient::HandleConnectWallet(FAnkrCallStruct call)
 
 			if (needLogin)
 			{
-#if PLATFORM_ANDROID
+#if PLATFORM_ANDROID || PLATFORM_IOS
 				AnkrUtility::SetLastRequest("ConnectWallet");
-				//FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
 #endif
 			}
 
@@ -453,9 +458,8 @@ void UAnkrClient::HandleSendTransaction(FAnkrCallStruct call)
 		FString ticketId = JsonObject->GetStringField("ticket");
 		data = ticketId;
 
-#if PLATFORM_ANDROID
+#if PLATFORM_ANDROID || PLATFORM_IOS
 		AnkrUtility::SetLastRequest("SendTransaction");
-		FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
 	}
 	else
@@ -503,9 +507,8 @@ void UAnkrClient::HandleSignMessage(FAnkrCallStruct call)
 	{
 		FString ticketId = JsonObject->GetStringField("ticket");
 
-#if PLATFORM_ANDROID
+#if PLATFORM_ANDROID || PLATFORM_IOS
 		AnkrUtility::SetLastRequest("SignMessage");
-		FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
 #endif
 
 		call.CallComplete.ExecuteIfBound(call.success, true, !activeAccount.IsEmpty(), !activeAccount.IsEmpty() ? activeAccount : "", ticketId, "", -1, content);
