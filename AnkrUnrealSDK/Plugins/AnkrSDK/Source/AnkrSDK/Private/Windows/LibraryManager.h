@@ -44,6 +44,7 @@ class ANKRSDK_API LibraryManager
 
 	public:
 
+		bool isInitialized;
 		void Load();
 		void Unload();
 

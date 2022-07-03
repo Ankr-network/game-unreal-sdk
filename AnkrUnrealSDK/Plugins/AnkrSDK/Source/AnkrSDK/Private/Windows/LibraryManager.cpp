@@ -3,31 +3,46 @@
 
 void LibraryManager::Load()
 {
+	isInitialized = false;
+
 	FString dllPath = *FPaths::ProjectPluginsDir() + FString("AnkrSDK/Source/AnkrSDK/Private/Windows/Libraries/AnkrSDKUnrealWindows.dll");
 	bool exists = FPaths::FileExists(dllPath);
 
-	HNDL = FPlatformProcess::GetDllHandle(*dllPath);
-	if (!HNDL)
+	if (exists)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("HNDL could not be loaded."));
-		return;
-	}
+		HNDL = FPlatformProcess::GetDllHandle(*dllPath);
+		if (!HNDL)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("HNDL could not be loaded."));
+			return;
+		}
 
-	InitializeFunction      = (InitializeImport)      FPlatformProcess::GetDllExport(HNDL, *FString("Initialize"));
-	GetDeviceIdFunction     = (GetDeviceIdImport)     FPlatformProcess::GetDllExport(HNDL, *FString("GetDeviceId"));
-	GetQRCodeTextFunction   = (GetQRCodeTextImport)   FPlatformProcess::GetDllExport(HNDL, *FString("GetQRCodeText"));
-	GetSessionFunction      = (GetSessionImport)      FPlatformProcess::GetDllExport(HNDL, *FString("GetSession"));
-	GetAccountFunction      = (GetAccountImport)      FPlatformProcess::GetDllExport(HNDL, *FString("GetAccount"));
-	GetChainIdFunction      = (GetChainIdImport)      FPlatformProcess::GetDllExport(HNDL, *FString("GetChainId"));
-	PingFunction		    = (PingImport)            FPlatformProcess::GetDllExport(HNDL, *FString("Ping"));
-	ConnectWalletFunction   = (ConnectWalletImport)   FPlatformProcess::GetDllExport(HNDL, *FString("ConnectWallet"));
-	GetWalletFunction       = (GetWalletImport)       FPlatformProcess::GetDllExport(HNDL, *FString("GetWallet"));
-	SendABIFunction         = (SendABIImport)         FPlatformProcess::GetDllExport(HNDL, *FString("SendABI"));
-	SendTransactionFunction = (SendTransactionImport) FPlatformProcess::GetDllExport(HNDL, *FString("SendTransaction"));
-	CallMethodFunction      = (CallMethodImport)      FPlatformProcess::GetDllExport(HNDL, *FString("CallMethod"));
-	SignMessageFunction     = (SignMessageImport)     FPlatformProcess::GetDllExport(HNDL, *FString("SignMessage"));
-	GetResultFunction       = (GetResultImport)       FPlatformProcess::GetDllExport(HNDL, *FString("GetResult"));
-	VerifyMessageFunction   = (VerifyMessageImport)   FPlatformProcess::GetDllExport(HNDL, *FString("VerifyMessage"));
+		InitializeFunction = (InitializeImport)FPlatformProcess::GetDllExport(HNDL, *FString("Initialize"));
+		GetDeviceIdFunction = (GetDeviceIdImport)FPlatformProcess::GetDllExport(HNDL, *FString("GetDeviceId"));
+		GetQRCodeTextFunction = (GetQRCodeTextImport)FPlatformProcess::GetDllExport(HNDL, *FString("GetQRCodeText"));
+		GetSessionFunction = (GetSessionImport)FPlatformProcess::GetDllExport(HNDL, *FString("GetSession"));
+		GetAccountFunction = (GetAccountImport)FPlatformProcess::GetDllExport(HNDL, *FString("GetAccount"));
+		GetChainIdFunction = (GetChainIdImport)FPlatformProcess::GetDllExport(HNDL, *FString("GetChainId"));
+		PingFunction = (PingImport)FPlatformProcess::GetDllExport(HNDL, *FString("Ping"));
+		ConnectWalletFunction = (ConnectWalletImport)FPlatformProcess::GetDllExport(HNDL, *FString("ConnectWallet"));
+		GetWalletFunction = (GetWalletImport)FPlatformProcess::GetDllExport(HNDL, *FString("GetWallet"));
+		SendABIFunction = (SendABIImport)FPlatformProcess::GetDllExport(HNDL, *FString("SendABI"));
+		SendTransactionFunction = (SendTransactionImport)FPlatformProcess::GetDllExport(HNDL, *FString("SendTransaction"));
+		CallMethodFunction = (CallMethodImport)FPlatformProcess::GetDllExport(HNDL, *FString("CallMethod"));
+		SignMessageFunction = (SignMessageImport)FPlatformProcess::GetDllExport(HNDL, *FString("SignMessage"));
+		GetResultFunction = (GetResultImport)FPlatformProcess::GetDllExport(HNDL, *FString("GetResult"));
+		VerifyMessageFunction = (VerifyMessageImport)FPlatformProcess::GetDllExport(HNDL, *FString("VerifyMessage"));
+
+		if (InitializeFunction != NULL)
+		{
+			isInitialized = true;
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AnkrSDKUnrealWindows.dll is missing, please download the SDK for Windows platform and copy the dll to the following path 'Plugins/AnkrSDK/Source/AnkrSDK/Private/Windows/Libraries'"));
+		isInitialized = false;
+	}
 }
 
 void LibraryManager::Unload()
@@ -53,6 +68,7 @@ void LibraryManager::Unload()
 		FPlatformProcess::FreeDllHandle(HNDL);
 		HNDL = NULL;
 
+		isInitialized = false;
 	}
 }
 
@@ -63,77 +79,110 @@ void LibraryManager::Log(FString _message)
 
 void LibraryManager::Initialize(bool _isDevelopment, FString _device_id)
 {
-	InitializeFunction(false, TCHAR_TO_UTF8(*_device_id), [](const char* _message) { UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(_message)); });
+	if (isInitialized)
+	{
+		InitializeFunction(false, TCHAR_TO_UTF8(*_device_id), [](const char* _message) { UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(_message)); });
+	}
 }
 void LibraryManager::Ping()
 {
-	PingFunction([](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("Ping", _success, _data);
-		});
+	if (isInitialized)
+	{
+		PingFunction([](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("Ping", _success, _data);
+			});
+	}
 }
 void LibraryManager::ConnectWallet(FString _content)
 {
-	ConnectWalletFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("ConnectWallet", _success, _data);
-		});
+	if (isInitialized)
+	{
+		ConnectWalletFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("ConnectWallet", _success, _data);
+			});
+	}
 }
 void LibraryManager::GetWallet(FString _content)
 {
-	GetWalletFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("GetWallet", _success, _data);
-		});
+	if (isInitialized)
+	{
+		GetWalletFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("GetWallet", _success, _data);
+			});
+	}
 }
 void LibraryManager::SendABI(FString _content)
 {
-	SendABIFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("SendABI", _success, _data);
-		});
+	if (isInitialized)
+	{
+		SendABIFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("SendABI", _success, _data);
+			});
+	}
 }
 void LibraryManager::SendTransaction(FString _content)
 {
-	SendTransactionFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("SendTransaction", _success, _data);
-		});
+	if (isInitialized)
+	{
+		SendTransactionFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("SendTransaction", _success, _data);
+			});
+	}
 }
 void LibraryManager::GetResult(FString _content)
 {
-	GetResultFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("GetResult", _success, _data);
-		});
+	if (isInitialized)
+	{
+		GetResultFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("GetResult", _success, _data);
+			});
+	}
 }
 void LibraryManager::CallMethod(FString _content)
 {
-	CallMethodFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("CallMethod", _success, _data);
-		});
+	if (isInitialized)
+	{
+		CallMethodFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("CallMethod", _success, _data);
+			});
+	}
 }
 void LibraryManager::SignMessage(FString _content)
 {
-	SignMessageFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("SignMessage", _success, _data);
-		});
+	if (isInitialized)
+	{
+		SignMessageFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("SignMessage", _success, _data);
+			});
+	}
 }
 void LibraryManager::GetSignature(FString _content)
 {
-	GetResultFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("GetSignature", _success, _data);
-		});
+	if (isInitialized)
+	{
+		GetResultFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("GetSignature", _success, _data);
+			});
+	}
 }
 void LibraryManager::VerifyMessage(FString _content)
 {
-	VerifyMessageFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
-		{
-			LibraryManager::GetInstance().FlushCall("VerifyMessage", _success, _data);
-		});
+	if (isInitialized)
+	{
+		VerifyMessageFunction(TCHAR_TO_UTF8(*_content), [](bool _success, const char* _data)
+			{
+				LibraryManager::GetInstance().FlushCall("VerifyMessage", _success, _data);
+			});
+	}
 }
 
 int LibraryManager::GetGlobalCallIndex()
