@@ -42,7 +42,7 @@ UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	LibraryManager::GetInstance().InitializeFunction(false, TCHAR_TO_UTF8(*deviceId), [](const char* _message) { UE_LOG(LogTemp, Warning, TEXT("%s"), *FString(_message)); });
 #elif PLATFORM_MAC
 	LibraryManager::GetInstance().Load();
-	LibraryManager::GetInstance().Inialize(false, deviceId);
+	LibraryManager::GetInstance().Initialize(false, deviceId);
 #elif PLATFORM_IOS
 	LibraryManager::GetInstance().Load();
 	LibraryManager::GetInstance().Inialize(false, deviceId);
@@ -312,11 +312,11 @@ void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDel
 
 #elif PLATFORM_MAC
 
-		LibraryManager::GetInstance().GetSignature(body);
+		LibraryManager::GetInstance().GetResult(body);
 
 #elif PLATFORM_IOS
 
-		LibraryManager::GetInstance().GetSignature(body);
+		LibraryManager::GetInstance().GetResult(body);
 
 #elif PLATFORM_ANDROID
 		if (LibraryManager::GetInstance().AddCall("GetResult", Result))
