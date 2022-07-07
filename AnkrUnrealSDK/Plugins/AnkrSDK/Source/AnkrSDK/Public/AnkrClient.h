@@ -12,7 +12,7 @@
 #include "AnkrClient.generated.h"
 
 UCLASS(Blueprintable, BlueprintType)
-class ANKRSDK_API UAnkrClient : public UObject, public FTickableGameObject
+class ANKRSDK_API UAnkrClient : public UObject
 {
 	GENERATED_UCLASS_BODY()
 
@@ -67,27 +67,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
     void VerifyMessage(FString message, FString signature, const FAnkrCallCompleteDynamicDelegate& Result);
 
-	void HandlePing(FAnkrCallStruct call);
-	void HandleConnectWallet(FAnkrCallStruct call);
-	void HandleGetWallet(FAnkrCallStruct call);
-	void HandleSendABI(FAnkrCallStruct call);
-	void HandleSendTransaction(FAnkrCallStruct call);
-	void HandleGetTicketResult(FAnkrCallStruct call);
-	void HandleCallMethod(FAnkrCallStruct call);
-	void HandleSignMessage(FAnkrCallStruct call);
-	void HandleGetSignature(FAnkrCallStruct call);
-	void HandleVerifyMessage(FAnkrCallStruct call);
-
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	FString GetLastRequest();
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void SetLastRequest(FString _lastRequest);
-
-	void Tick(float DeltaTime) override;
-	bool IsTickable() const override;
-	bool IsTickableInEditor() const override;
-	bool IsTickableWhenPaused() const override;
-	TStatId GetStatId() const override;
-	UWorld* GetWorld() const override;
 };

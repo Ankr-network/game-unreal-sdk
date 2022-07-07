@@ -83,7 +83,6 @@ void UAdvertisementManager::StartSession()
 	FString url = API_AD_URL + ENDPOINT_START_SESSION;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"app_id\": \"" + appId + "\", \"device_id\": \"" + deviceId + "\", \"public_address\":\"" + activeAccount + "\", \"language\":\"" + language + "\"}");
 	Request->ProcessRequest();
@@ -125,7 +124,6 @@ void UAdvertisementManager::GetAdvertisement(FString _unit_id, FAdvertisementRec
 	FString url = API_AD_URL + ENDPOINT_AD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"unit_id\":\"" + _unit_id + "\"}");
 	Request->ProcessRequest();
@@ -152,7 +150,6 @@ void UAdvertisementManager::DownloadVideoAdvertisement(FAdvertisementDataStructu
 
 	Request->SetURL(advertisementData.result.texture_url);
 	Request->SetVerb("GET");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->ProcessRequest();
 }
@@ -178,7 +175,6 @@ void UAdvertisementManager::ShowAdvertisement(FAdvertisementDataStructure _data)
 	FString url = API_AD_URL + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("show");
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"started_at\": \"" + started_at + "\", \"finished_at\":\"" + finished_at + "\"}");
 	Request->ProcessRequest();
@@ -204,7 +200,6 @@ void UAdvertisementManager::RewardAdvertisement(FAdvertisementDataStructure _dat
 	FString url = API_AD_URL + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("reward");
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"rewarded_at\": \"" + rewarded_at + "\"}");
 	Request->ProcessRequest();
@@ -230,7 +225,6 @@ void UAdvertisementManager::EngageAdvertisement(FAdvertisementDataStructure _dat
 	FString url = API_AD_URL + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("engage");
 	Request->SetURL(url);
 	Request->SetVerb("GET");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"clicked_at\": \"" + clicked_at + "\"}");
 	Request->ProcessRequest();

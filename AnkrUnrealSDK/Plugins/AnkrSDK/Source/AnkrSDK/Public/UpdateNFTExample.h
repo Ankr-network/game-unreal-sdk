@@ -29,11 +29,11 @@ public:
 	void SetAccount(FString _account, int _chainId);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate Result);
+	void GetNFTInfo(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void UpdateNFT(FString abi_hash, FItemInfoStructure _item, FAnkrDelegate Result);
+	void UpdateNFT(FString abi_hash, FItemInfoStructure _item, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetTicketResult(FString ticketId, FAnkrTicketResult Result);
+	void GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result);
 };

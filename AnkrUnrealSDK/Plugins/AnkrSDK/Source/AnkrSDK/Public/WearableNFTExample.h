@@ -42,31 +42,31 @@ public:
 	void SetAccount(FString _account, int _chainId);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void MintItems(FString abi_hash, FString to, FAnkrDelegate Result);
+	void MintItems(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void MintCharacter(FString abi_hash, FString to, FAnkrDelegate Result);
+	void MintCharacter(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrDelegate Result);
+	void GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetCharacterBalance(FString abi_hash, FString address, FAnkrDelegate Result);
+	void GetCharacterBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FAnkrDelegate Result);
+	void GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrDelegate Result);
+	void ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetHat(FString abi_hash, int characterId, FAnkrDelegate Result);
+	void GetHat(FString abi_hash, int characterId, FAnkrCallCompleteDynamicDelegate Result);
 	
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetTicketResult(FString ticketId, FAnkrTicketResult Result);
+	void GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetItemsBalance(FString abi_hash, FString address, FAnkrDelegate Result);
+	void GetItemsBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	int GetItemValueFromBalances(FString data, int index);

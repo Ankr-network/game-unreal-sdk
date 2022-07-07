@@ -24,7 +24,7 @@ void UUpdateNFTExample::SetAccount(FString _account, int _chainId)
 }
 
 // GetNFTInfo is used to get the NFT metadata.
-void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate Result)
+void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -43,7 +43,7 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate 
 			
 		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			Result.ExecuteIfBound(content);
+			Result.ExecuteIfBound(content, content, "", -1, false);
 		}
 	});
 
@@ -53,7 +53,6 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate 
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString(body);
 	Request->ProcessRequest();
@@ -61,7 +60,7 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrDelegate 
 
 // UpdateNFT is used to update the metadata of an NFT.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
-void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FAnkrDelegate Result)
+void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -81,7 +80,7 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
 			FString ticket = JsonObject->GetStringField("ticket");
-			Result.ExecuteIfBound(ticket);
+			Result.ExecuteIfBound(content, ticket, "", -1, false);
 
 #if PLATFORM_ANDROID
 			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
@@ -105,7 +104,6 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
-		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		Request->SetContentAsString(FRequestBodyStruct::ToJson(body));
 		Request->ProcessRequest();
@@ -115,7 +113,7 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 // GetTicketResult is used to verify if the ticket was successfully confirmed.
 // The 'status' shows whether the result for the ticket signed has a success with a transaction hash.
 // The 'code' shows a code number related to a specific failure or success.
-void UUpdateNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
+void UUpdateNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
 {
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
@@ -123,25 +121,24 @@ void UUpdateNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Resu
 	TSharedRef<IHttpRequest> Request = http->CreateRequest();
 #endif
 	Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-				
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
 		{
-			FString data = JsonObject->GetStringField("data");
+			const FString content = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - GetTicketResult - GetContentAsString: %s"), *content);
 
-			Result.ExecuteIfBound("Transaction Hash: " + data, 1);
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				FString data = JsonObject->GetStringField("data");
+
+				Result.ExecuteIfBound(content, data, "", 1, false);// "Transaction Hash: " + data, 1);
 		}
 	});
 
 	FString url = API_BASE_URL + ENDPOINT_RESULT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
 	Request->ProcessRequest();

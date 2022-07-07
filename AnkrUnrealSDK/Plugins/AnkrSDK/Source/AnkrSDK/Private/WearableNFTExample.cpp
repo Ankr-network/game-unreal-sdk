@@ -44,7 +44,7 @@ void UWearableNFTExample::SetAccount(FString _account, int _chainId)
 
 // MintItems is used to mint items to the user specified in the parameter.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
-void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate Result)
+void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -69,7 +69,7 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate 
 		}
 			
 		AnkrUtility::SetLastRequest("MintItems");
-		Result.ExecuteIfBound(data);
+		Result.ExecuteIfBound(content, data, "", -1, false);
 	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, to]()
@@ -82,7 +82,6 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate 
 		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
-		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + mintBatchMethodName + "\", \"args\": " + args + "}");
 		Request->ProcessRequest();
@@ -95,7 +94,7 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrDelegate 
 
 // MintCharacter is used to mint character to the user specified in the parameter.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
-void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDelegate Result)
+void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -120,7 +119,7 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDeleg
 		}
 			
 		AnkrUtility::SetLastRequest("MintCharacter");
-		Result.ExecuteIfBound(data);
+		Result.ExecuteIfBound(content, data, "", -1, false);
 	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, to]()
@@ -130,7 +129,6 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDeleg
 		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
-		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + safeMintMethodName + "\", \"args\": [\"" + to + "\"]}");
 		Request->ProcessRequest();
@@ -143,7 +141,7 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrDeleg
 
 // GameItemSetApproval is used to give an approval for minting.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
-void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrDelegate Result)
+void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -172,7 +170,7 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 		}
 			
 		AnkrUtility::SetLastRequest("GameItemSetApproval");
-		Result.ExecuteIfBound(data);
+		Result.ExecuteIfBound(content, data, "", -1, false);
 	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, callOperator, approved]()
@@ -184,7 +182,6 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
-		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		Request->SetContentAsString(body);
 		Request->ProcessRequest();
@@ -197,7 +194,7 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 
 // GetCharacterBalance is used to get the number of token balances that the user holds.
 // The 'data' shows the number of tokens that the user holds.
-void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address, FAnkrDelegate Result)
+void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -220,7 +217,7 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 			data = JsonObject->GetStringField("data");
 		}
 			
-		Result.ExecuteIfBound(data);
+		Result.ExecuteIfBound(content, data, "", -1, false);
 	});
 
 	FString balanceOfMethodName = "balanceOf";
@@ -228,7 +225,6 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfMethodName + "\", \"args\": [\"" + address + "\"]}");
 	Request->ProcessRequest();
@@ -236,7 +232,7 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 
 // GetCharacterTokenId is used to get the token ids that the user holds.
 // The 'data' shows the id of the character.
-void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FAnkrDelegate Result)
+void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FAnkrCallCompleteDynamicDelegate Result)
 {
 	if (tokenBalance <= 0)
 	{
@@ -265,7 +261,7 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 			data = JsonObject->GetStringField("data");
 		}
 
-		Result.ExecuteIfBound(data);
+		Result.ExecuteIfBound(content, data, "", -1, false);
 	});
 
 	FString tokenOfOwnerByIndexMethodName = "tokenOfOwnerByIndex";
@@ -273,7 +269,6 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + tokenOfOwnerByIndexMethodName + "\", \"args\": [\"" + owner + "\", \"" + index + "\"]}");
 	Request->ProcessRequest();
@@ -281,7 +276,7 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 
 // ChangeHat is used to change the hat of a character.
 // Metamask will show popup to sign or confirm the transaction for that ticket.
-void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrDelegate Result)
+void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result)
 {
 	if (!hasHat || characterId == -1)
 	{
@@ -313,7 +308,7 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 		if		(hatAddress.Equals(BlueHatAddress)) AnkrUtility::SetLastRequest("ChangeHatBlue");
 		else if (hatAddress.Equals(RedHatAddress))  AnkrUtility::SetLastRequest("ChangeHatRed");
 			
-		Result.ExecuteIfBound(ticket);
+		Result.ExecuteIfBound(content, ticket, "", -1, false);
 	});
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, characterId, hasHat, hatAddress]()
@@ -325,7 +320,6 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
-		Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 		Request->SetContentAsString(body);
 		Request->ProcessRequest();
@@ -338,7 +332,7 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 
 // GetHat is used to get the hat of the user.
 // The 'data' shows the token address that the user has.
-void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegate Result)
+void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -361,7 +355,7 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegat
 			data = JsonObject->GetStringField("data");
 		}
 			
-		Result.ExecuteIfBound(data);
+		Result.ExecuteIfBound(content, data, "", -1, false);
 	});
 
 	FString getHatMethodName = "getHat";
@@ -369,7 +363,6 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegat
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\"]}");
 	Request->ProcessRequest();
@@ -378,7 +371,7 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrDelegat
 // GetTicketResult is used to get the result of a ticket.
 // The 'status' shows whether the result for the ticket signed has a success with a transaction hash.
 // The 'code' shows a code number related to a specific failure or success.
-void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Result)
+void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
 {
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
 	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
@@ -414,20 +407,19 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrTicketResult Re
 			}
 		}
 
-		Result.ExecuteIfBound(content, code);
+		Result.ExecuteIfBound(content, data, "", code, false);
 	});
 
 	FString url = API_BASE_URL + ENDPOINT_RESULT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
 	Request->ProcessRequest();
 }
 
 // GetItemsBalance is used to get the item balances that the user has.
-void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAnkrDelegate Result)
+void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
 
@@ -451,7 +443,7 @@ void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAn
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - Balance: %s"), *data);
 		}
 			
-		Result.ExecuteIfBound(data);
+		Result.ExecuteIfBound(content, data, "", -1, false);
 	});
 
 	FString balanceOfBatchMethodName = "balanceOfBatch";
@@ -461,7 +453,6 @@ void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAn
 	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
-	Request->SetHeader(USER_AGENT_KEY, USER_AGENT_VALUE);
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
 	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfBatchMethodName + "\", \"args\": " + args + "}");
 	Request->ProcessRequest();

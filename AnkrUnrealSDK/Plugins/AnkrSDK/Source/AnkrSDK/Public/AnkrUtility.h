@@ -6,8 +6,6 @@ const FString SLASH = FString(TEXT("/"));
 const FString API_BASE_URL				= FString(TEXT("https://ue-service.game.ankr.com/"));
 const FString API_DEVELOPMENT_BASE_URL  = FString(TEXT("https://demo-ue-service.game.ankr.com/"));
 const FString API_AD_URL				= FString(TEXT(""));
-const FString USER_AGENT_KEY			= FString(TEXT("User-Agent"));
-const FString USER_AGENT_VALUE			= FString(TEXT("X-MirageSDK-Agent"));
 const FString CONTENT_TYPE_KEY			= FString(TEXT("Content-Type"));
 const FString CONTENT_TYPE_VALUE		= FString(TEXT("application/json"));
 
@@ -33,5 +31,4 @@ public:
 
 	static FString GetLastRequest();
 	static void SetLastRequest(FString _lastRequest);
-	static void Process(FString _url, FString _verb, FString _body, TFunctionRef<void(const FString)> response);
 };

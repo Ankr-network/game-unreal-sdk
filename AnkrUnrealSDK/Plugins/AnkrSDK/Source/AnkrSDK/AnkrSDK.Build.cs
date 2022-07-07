@@ -61,12 +61,12 @@ public class AnkrSDK : ModuleRules
         if(Target.Platform == UnrealTargetPlatform.Win64)
         {
             PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Windows"));
-        }
+		}
 
 		if (Target.Platform == UnrealTargetPlatform.Mac)
 		{
-            PublicIncludePaths.Add(ModuleDirectory + "/Private/Mac/Libraries/AnkrSDKUnrealMac.framework/Headers");
-            PublicFrameworks.Add(ModuleDirectory + "/Private/Mac/Libraries/AnkrSDKUnrealMac.framework");
+            //PublicIncludePaths.Add(ModuleDirectory + "/Private/Mac/Libraries/Framework.framework/Headers");
+            //PublicFrameworks.Add(ModuleDirectory + "/Private/Mac/Libraries/Framework.framework");
            
 			PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Mac"));
 		}
@@ -78,8 +78,8 @@ public class AnkrSDK : ModuleRules
             PublicIncludePaths.Add(ModuleDirectory + "/Private/iOS/Libraries/AdsBridge.framework/Headers");
             PublicAdditionalFrameworks.Add(new Framework("AdsBridge", ModuleDirectory + "/Private/iOS/Libraries/AdsBridge.framework"));
             
-            PublicIncludePaths.Add(ModuleDirectory + "/Private/iOS/Libraries/AnkrSDKUnreal.framework/Headers");
-            PublicAdditionalFrameworks.Add(new Framework("AnkrSDKUnreal", ModuleDirectory + "/Private/iOS/Libraries/AnkrSDKUnreal.framework"));
+            //PublicIncludePaths.Add(ModuleDirectory + "/Private/iOS/Libraries/Framework.framework/Headers");
+            //PublicAdditionalFrameworks.Add(new Framework("Framework", ModuleDirectory + "/Private/iOS/Libraries/Framework.framework"));
 
             PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/iOS"));
             string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
