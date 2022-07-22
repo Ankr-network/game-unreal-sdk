@@ -3,6 +3,7 @@
 #include "ItemInfo.h"
 #include "AnkrUtility.h"
 #include "RequestBodyStructure.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 
 // Contract addresses, ABIs, transaction limit and some item tokens are assigned.
 UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -79,7 +80,7 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrCallCompl
 		FString args = "[\"" + to + "\", [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"], [1, 2, 3, 4, 5, 6], \"0x\"]";
 		args = args.Replace(TEXT(" "), TEXT(""));
 
-		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -126,7 +127,7 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrCallC
 	{
 		FString safeMintMethodName = "safeMint";
 
-		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -179,7 +180,7 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 
 		FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}";
 			
-		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -222,7 +223,7 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 
 	FString balanceOfMethodName = "balanceOf";
 
-	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -266,7 +267,7 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 
 	FString tokenOfOwnerByIndexMethodName = "tokenOfOwnerByIndex";
 
-	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -317,7 +318,7 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 
 		FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}";
 
-		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -360,7 +361,7 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrCallCom
 
 	FString getHatMethodName = "getHat";
 
-	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -410,7 +411,7 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDyn
 		Result.ExecuteIfBound(content, data, "", code, false);
 	});
 
-	FString url = API_BASE_URL + ENDPOINT_RESULT;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_RESULT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -450,7 +451,7 @@ void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAn
 
 	FString args = "[ [\"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
 	
-	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -477,4 +478,114 @@ int UWearableNFTExample::GetItemValueFromBalances(FString data, int index)
 
 
 	return FCString::Atoi(*tokens[index]);
+}
+
+void UWearableNFTExample::GetTokenURI(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result)
+{
+	http = &FHttpModule::Get();
+
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			const FString content = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - GetContentAsString: %s"), *content);
+
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+			FString data = content;
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				data = JsonObject->GetStringField("data");
+			}
+
+			Result.ExecuteIfBound(content, data, "", -1, false);
+		});
+
+	FString tokenURI = "tokenURI";
+
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + tokenURI + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}");
+	Request->ProcessRequest();
+}
+
+// GetCharacterTokenId is used to get the token ids that the user holds.
+// The 'data' shows the id of the character.
+void UWearableNFTExample::GetAllTokens(FString abi_hash, int tokenBalance, FString owner, FAnkrCallCompleteDynamicDelegate Result)
+{
+	if (tokenBalance <= 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetAllTokens - You don't own any token(s) - tokenBalance: %d"), tokenBalance);
+		return;
+	}
+
+	http = &FHttpModule::Get();
+
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
+
+	TArray<int32> tokens;
+	bool running = true;
+	bool wait = false;
+	int index = 0;
+	Request->OnProcessRequestComplete().BindLambda([Result, this, &tokens, &wait, &running](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			const FString content = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetAllTokens - GetContentAsString: %s"), *content);
+
+			TSharedPtr<FJsonObject> JsonObject;
+			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+
+			FString data = content;
+			if (FJsonSerializer::Deserialize(Reader, JsonObject))
+			{
+				data = JsonObject->GetStringField("data");
+				int32 item = FCString::Atoi(*data);
+				tokens.Add(item);
+				wait = false;
+			}
+			else
+			{
+				running = false;
+			}
+		});
+
+	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [=, &wait, &index, &running]()
+		{
+			while (running)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetAllTokens - endex: %d"), index);
+				if (wait) continue;
+				UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetAllTokens - index: %d"), index);
+				FString tokenOfOwnerByIndexMethodName = "tokenOfOwnerByIndex";
+
+				FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
+				Request->SetURL(url);
+				Request->SetVerb("POST");
+				Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+				Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + tokenOfOwnerByIndexMethodName + "\", \"args\": [\"" + owner + "\", \"" + FString::FromInt(index) + "\"]}");
+				Request->ProcessRequest();
+				index++;
+				wait = true;
+
+				if (index == tokenBalance) {
+					running = false;
+					break;
+				}
+			}});
+
+	for (int32 i = 0; i < tokens.Num(); i++)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetAllTokens - Token: [%d]->%d"), i, tokens[i]);
+	}
 }

@@ -17,13 +17,14 @@
 
 	<resourceCopies>
 		<log text="AnkrSDKAndroid - resourceCopies - resources to be copied"/>
-		<copyFile src="$S(PluginDir)/Private/Android/Libraries/AnkrSDKUnrealAndroid.jar" dst="$S(BuildDir)/libs/AnkrSDKUnrealAndroid.jar"/>
-		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-debug.aar" dst="$S(BuildDir)/Android/Java/libs/nativeads-debug.aar"/>-->
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/AnkrSDKUnrealAndroid.jar" dst="$S(BuildDir)/libs/AnkrSDKUnrealAndroid.jar"/>-->
+		<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-release.aar" dst="$S(BuildDir)/gradle/app/nativeads-release.aar"/>
 	</resourceCopies>
 
 	<gradleProperties>
 		<insert>
 			<log text="AnkrSDKAndroid - gradleProperties -"/>
+			
 			android.useAndroidX=true
 			android.enableJetifier=true
 		</insert>
@@ -31,9 +32,14 @@
 
 	<AARImports>
 		<log text="AnkrSDKAndroid - AARImports -"/>
-		<!--<insertValue value="repository $S(PluginDir)/Private/Android/Libraries"/><insertNewline/>-->
+		<insertValue value="repository $S(PluginDir)/Private/Android/Libraries"/><insertNewline/>
+		<insertNewline/>
+		<insert>
+			nativeads-release
+		</insert>
+		<insertNewline/>
 
-		<!--<insert>com.ankr.nativeads,nativeads-debug,1.0</insert>-->
+		<!--<insert>com.ankr.nativeads,nativeads-release,1.0</insert>-->
 		<insertNewline/>
 	</AARImports>
 
@@ -45,8 +51,8 @@
 	<buildscriptGradleAdditions>
 		<insert>
 			dependencies {
-			classpath 'com.google.gms:google-services:4.3.4' // google-services plugin
-			classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+			<!--classpath 'com.google.gms:google-services:4.3.4' // google-services plugin
+			classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'-->
 			}
 		</insert>
 	</buildscriptGradleAdditions>
@@ -55,9 +61,9 @@
 		<insert>
 			dependencies {
 			implementation('androidx.annotation:annotation:1.0.0')
-			<!--implementation ('com.ankr.nativeads:nativeads-debug:1.0')-->
+			implementation ('com.ankr.nativeads:nativeads-release:1.0.0')
 			<!--implementation('com.firebaseui:firebase-ui-auth:4.3.2')-->
-			<!--implementation('com.ankr.nativeads:nativeads-release:1.0.0')-->
+			implementation files('nativeads-release.aar')
 			}
 		</insert>
 	</buildGradleAdditions>
@@ -75,17 +81,17 @@
 	<!-- optional additions to proguard-->
 	<proguardAdditions>
 		<insert>
-			-keep public class com.ankr.mirage1.** {
+			<!--keep public class com.ankr.mirage1.** {
 			public protected *;
-			}
+			}-->
 		</insert>
 	</proguardAdditions>
 	<!-- optional updates applied to AndroidManifest.xml -->
 
 	<gameActivityImportAdditions>
 		<insert>
-			import com.ankr.ankrsdkunreal.AnkrClient;
-			<!--import com.ankr.nativeads.AnkrAds;-->
+			<!--->import com.ankr.ankrsdkunreal.AnkrClient;-->
+			import com.ankr.nativeads.AnkrAds;
 
 		</insert>
 	</gameActivityImportAdditions>

@@ -11,6 +11,8 @@ UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectIni
     //{
         //libraryManageriOS = [[LibraryManager alloc] init];
     //}
+#elif PLATFORM_ANDROID
+	LibraryManager::GetInstance().Load();
 #endif
 }
 
@@ -30,6 +32,10 @@ void UAdvertisementManager::InitializeAdvertisement(FString _deviceId, FString _
     NSString* _languageNSString = [[NSString alloc] initWithUTF8String:_languageStr.c_str()];
     
     [libraryManageriOS Initialize:_appIdNSString deviceId:_deviceIdNSString publicAddress:_deviceIdNSString language:_languageNSString];*/
+#elif PLATFORM_ANDROID
+
+
+
 #else
     
 	deviceId = _deviceId;

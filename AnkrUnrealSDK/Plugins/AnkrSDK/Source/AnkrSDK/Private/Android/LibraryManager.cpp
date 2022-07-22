@@ -3,7 +3,7 @@
 
 void LibraryManager::Load()
 {
-	JCO_AnkrClient					= MakeShareable(new FJavaClassObject("com/ankr/ankrsdkunreal/AnkrClient", "(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis));
+	/*JCO_AnkrClient = MakeShareable(new FJavaClassObject("com/ankr/ankrsdkunreal/AnkrClient", "(Landroid/app/Activity;)V", FJavaWrapper::GameActivityThis));
 
 	JCM_LaunchWalletForLogin		= JCO_AnkrClient->GetClassMethod("LaunchWalletForLogin", "()V");
 	JCM_LaunchWalletForTransaction	= JCO_AnkrClient->GetClassMethod("LaunchWalletForTransaction", "()V");
@@ -17,7 +17,15 @@ void LibraryManager::Load()
 	JCM_SignMessage					= JCO_AnkrClient->GetClassMethod("SignMessage", "(Ljava/lang/String;)V");
 	JCM_GetResult					= JCO_AnkrClient->GetClassMethod("GetResult", "(Ljava/lang/String;)V");
 	JCM_GetSignature				= JCO_AnkrClient->GetClassMethod("GetSignature", "(Ljava/lang/String;)V");
-	JCM_VerifyMessage				= JCO_AnkrClient->GetClassMethod("VerifyMessage", "(Ljava/lang/String;)V");
+	JCM_VerifyMessage				= JCO_AnkrClient->GetClassMethod("VerifyMessage", "(Ljava/lang/String;)V");*/
+
+	JNIEnv* env = AndroidJavaEnv::GetJavaEnv();
+	//jclass jclass_AnkrAds = FJavaWrapper::FindClass(env, "com/ankr/nativeads/AnkrAds", false);//MakeShareable(new FJavaClassObject("com/ankr/nativeads/AnkrAds", "()V"));
+	UE_LOG(LogTemp, Error, TEXT("LibraryManager.cpp - Load - Initialize"));
+	Native_AnkrClient = MakeShareable(new FJavaClassObject("com/ankr/nativeads/AnkrAds", "()V"));
+	jclass jclass_AnkrAds = env->GetObjectClass(Native_AnkrClient->GetJObject());
+	jmethodID jmethodID_Initialize = env->GetStaticMethodID(jclass_AnkrAds, "Initialize", "(Landroid/app/Activity;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V");
+	env->CallStaticVoidMethod(jclass_AnkrAds, jmethodID_Initialize, FJavaWrapper::GameActivityThis, GetJString("86fc9bc7-3f7a-46cf-9cab-a12935d1e4ad"), GetJString("123456"), GetJString("0x0E9E2a366F0d82502483380093867335a58025bF"), GetJString("EN"));
 }
 
 
@@ -29,7 +37,7 @@ void LibraryManager::Unload()
 
 void LibraryManager::Initialize(bool _isDevelopment, FString _device_id)
 {
-	JCO_AnkrClient->CallMethod<void>(JCM_Initialize, _isDevelopment, GetJString(_device_id));
+	//JCO_AnkrClient->CallMethod<void>(JCM_Initialize, _isDevelopment, GetJString(_device_id));
 }
 void LibraryManager::Ping()
 {

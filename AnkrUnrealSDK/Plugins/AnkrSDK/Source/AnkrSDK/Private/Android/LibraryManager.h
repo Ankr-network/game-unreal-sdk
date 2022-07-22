@@ -72,4 +72,7 @@ public:
 	int GetGlobalCallIndex();
 	bool AddCall(const char* _sender, const FAnkrCallCompleteDynamicDelegate _callComplete);
 	void FlushCall(const char* _sender, bool _success, const char* _data);
+
+	TSharedPtr<FJavaClassObject> Native_AnkrClient;
+	FJavaClassMethod Native_Initialize;
 };

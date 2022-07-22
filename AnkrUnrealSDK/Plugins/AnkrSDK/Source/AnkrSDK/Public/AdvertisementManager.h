@@ -8,6 +8,8 @@
 
 #if PLATFORM_IOS
 #import "../Private/iOS/LibraryManager.h"
+#elif PLATFORM_ANDROID
+#import "../Private/Android/LibraryManager.h"
 #endif
 
 #include "AdvertisementManager.generated.h"

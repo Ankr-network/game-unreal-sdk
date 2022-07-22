@@ -26,6 +26,8 @@ UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	{
 		advertisementManager = NewObject<UAdvertisementManager>();
 	}
+
+	AnkrUtility::SetDevelopment(true);
 }
 
 // Ping is to make sure if we can ping the Ankr API.
@@ -46,7 +48,7 @@ void UAnkrClient::Ping(const FAnkrCallCompleteDynamicDelegate& Result)
 			Result.ExecuteIfBound(content, "", "", -1, false);
 		});
 
-	FString url = API_BASE_URL + ENDPOINT_PING;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_PING;
 	Request->SetURL(url);
 	Request->SetVerb("GET");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -109,7 +111,7 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 
 });
 
-	FString url = API_BASE_URL + ENDPOINT_CONNECT;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CONNECT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -178,7 +180,7 @@ void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 			}
 	});
 
-	FString url = API_BASE_URL + ENDPOINT_WALLET_INFO;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_WALLET_INFO;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -225,7 +227,7 @@ void UAnkrClient::SendABI(FString abi, const FAnkrCallCompleteDynamicDelegate& R
 	const TCHAR* replace = TEXT("\\\"");
 	FString body = FString("{\"abi\": \"" + abi.Replace(find, replace, ESearchCase::IgnoreCase) + "\"}");
 
-	FString url = API_BASE_URL + ENDPOINT_ABI;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_ABI;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -272,7 +274,7 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 
 	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, contract, abi_hash, method, args]()
 		{
-			FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+			FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
 			Request->SetURL(url);
 			Request->SetVerb("POST");
 			Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -308,7 +310,7 @@ void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynam
 			}
 		});
 
-	FString url = API_BASE_URL + ENDPOINT_RESULT;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_RESULT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -316,8 +318,8 @@ void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynam
 	Request->ProcessRequest();
 }
 
-// GetData is used to get data from readable functions from the contract provided that the parameters are entered correctly.
-void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FString args, const FAnkrCallCompleteDynamicDelegate& Result)
+// CallMethod is used to get data from readable functions from the contract provided that the parameters are entered correctly.
+void UAnkrClient::CallMethod(FString contract, FString abi_hash, FString method, FString args, const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
 
@@ -329,7 +331,7 @@ void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FS
 	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 		{
 			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetData - GetContentAsString: %s"), *content);
+			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - CallMethod - GetContentAsString: %s"), *content);
 
 			TSharedPtr<FJsonObject> JsonObject;
 			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
@@ -337,7 +339,7 @@ void UAnkrClient::GetData(FString contract, FString abi_hash, FString method, FS
 			Result.ExecuteIfBound(content, content, "", -1, false);
 		});
 
-	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -377,7 +379,7 @@ void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDel
 			}
 		});
 
-	FString url = API_BASE_URL + ENDPOINT_SIGN_MESSAGE;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_SIGN_MESSAGE;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -411,7 +413,7 @@ void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDel
 			}
 		});
 
-	FString url = API_BASE_URL + ENDPOINT_RESULT;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_RESULT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -444,7 +446,7 @@ void UAnkrClient::VerifyMessage(FString message, FString signature, const FAnkrC
 			}
 		});
 
-	FString url = API_BASE_URL + ENDPOINT_VERIFY_MESSAGE;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_VERIFY_MESSAGE;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);

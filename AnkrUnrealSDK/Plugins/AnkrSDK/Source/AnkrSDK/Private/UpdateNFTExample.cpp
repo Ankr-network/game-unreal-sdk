@@ -50,7 +50,7 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrCallCompl
 	FString getTokenDetailsMethodName = "getTokenDetails";
 	FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + ContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getTokenDetailsMethodName + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}";
 	
-	FString url = API_BASE_URL + ENDPOINT_CALL_METHOD;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -101,7 +101,7 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 		body.method			  = "updateTokenWithSignedMessage";
 		body.args.Add(item);
 
-		FString url = API_BASE_URL + ENDPOINT_SEND_TRANSACTION;
+		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
 		Request->SetURL(url);
 		Request->SetVerb("POST");
 		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -136,7 +136,7 @@ void UUpdateNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDynam
 		}
 	});
 
-	FString url = API_BASE_URL + ENDPOINT_RESULT;
+	FString url = AnkrUtility::GetUrl() + ENDPOINT_RESULT;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
