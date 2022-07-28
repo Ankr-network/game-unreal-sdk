@@ -55,19 +55,28 @@
 7. Open MyGameInstance.h and include the following code:
 
 ```js
+#include "CoreMinimal.h"
+#include "Engine/GameInstance.h"
+#include "AnkrClient.h"
+#include "MyGameInstance.generated.h"
 
-   #include "AnkrClient.h"
+UCLASS()
+class MYPROJECT5_API UMyGameInstance : public UGameInstance
+{
+	GENERATED_BODY()
 
-   UPROPERTY()
-   UAnkrClient* ankrClient;
+	UPROPERTY()
+		UAnkrClient* ankrClient;
 
-   UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-   UAnkrClient* GetAnkrClient();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+		UAnkrClient* GetAnkrClient();
+};
    ```
 
 8. Open MyGameInstance.cpp and include the following code:
 
 ```js
+#include "MyGameInstance.h"
 
 UAnkrClient* UMyGameInstance::GetAnkrClient()
 {
@@ -78,7 +87,6 @@ UAnkrClient* UMyGameInstance::GetAnkrClient()
 
 	return ankrClient;
 }
-
 ```
 9. Add "AnkrSDK" to your Unreal Project/Source/Unreal Project/Build.cs as shown below:
 
@@ -1146,7 +1154,3 @@ We have two ERC proposals.
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-
