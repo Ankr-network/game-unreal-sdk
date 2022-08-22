@@ -1,14 +1,8 @@
 var searchData=
 [
-  ['uadvertisementdata_0',['UAdvertisementData',['../class_u_advertisement_data.html',1,'']]],
-  ['uadvertisementmanager_1',['UAdvertisementManager',['../class_u_advertisement_manager.html',1,'']]],
-  ['uankrclient_2',['UAnkrClient',['../class_u_ankr_client.html',1,'']]],
-  ['uankrdelegates_3',['UAnkrDelegates',['../class_u_ankr_delegates.html',1,'']]],
-  ['uankrsavegame_4',['UAnkrSaveGame',['../class_u_ankr_save_game.html',1,'']]],
-  ['uiteminfo_5',['UItemInfo',['../class_u_item_info.html',1,'']]],
-  ['updatenft_6',['UpdateNFT',['../class_u_update_n_f_t_example.html#a61bd2f563f8d5df92a7e6198b3b69b9c',1,'UUpdateNFTExample']]],
-  ['uqrcodegenerator_7',['UQRCodeGenerator',['../class_u_q_r_code_generator.html',1,'']]],
-  ['urequestbodystructure_8',['URequestBodyStructure',['../class_u_request_body_structure.html',1,'']]],
-  ['uupdatenftexample_9',['UUpdateNFTExample',['../class_u_update_n_f_t_example.html',1,'']]],
-  ['uwearablenftexample_10',['UWearableNFTExample',['../class_u_wearable_n_f_t_example.html',1,'']]]
+  ['sendabi_0',['SendABI',['../class_u_ankr_client.html#aca2ff4dee0c15424497b0b2ac9661610',1,'UAnkrClient']]],
+  ['sendtransaction_1',['SendTransaction',['../class_u_ankr_client.html#af1a256a3263467e957eef6f98d3064da',1,'UAnkrClient']]],
+  ['setlastrequest_2',['SetLastRequest',['../class_u_ankr_client.html#ab4c2545fd306e873b8bd406c7b2d1760',1,'UAnkrClient']]],
+  ['signmessage_3',['SignMessage',['../class_u_ankr_client.html#a3163623044d4d98c4f254d6f972f5b4e',1,'UAnkrClient']]],
+  ['startupmodule_4',['StartupModule',['../class_f_ankr_s_d_k_module.html#aa1e4cdeb0c3c83ee1c39de801a215267',1,'FAnkrSDKModule']]]
 ];

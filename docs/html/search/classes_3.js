@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['librarymanager_0',['LibraryManager',['../class_library_manager.html',1,'']]]
+  ['fankrsdkmodule_0',['FAnkrSDKModule',['../class_f_ankr_s_d_k_module.html',1,'']]]
 ];

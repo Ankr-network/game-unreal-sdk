@@ -16,6 +16,11 @@
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/searchdata.js"></script>
 <script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+  $(document).ready(function() { init_search(); });
+/* @license-end */
+</script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -29,6 +34,21 @@
    <div id="projectname">AnkrSDK<span id="projectnumber">&#160;1.0.1</span>
    </div>
   </td>
+    <td>        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.svg"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="Search" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.svg" alt=""/></a>
+          </span>
+        </div>
+</td>
  </tr>
  </tbody>
 </table>
@@ -40,17 +60,6 @@
 var searchBox = new SearchBox("searchBox", "search",'Search','.html');
 /* @license-end */
 </script>
-<script type="text/javascript" src="menudata.js"></script>
-<script type="text/javascript" src="menu.js"></script>
-<script type="text/javascript">
-/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(function() {
-  initMenu('',true,false,'search.php','Search');
-  $(document).ready(function() { init_search(); });
-});
-/* @license-end */
-</script>
-<div id="main-nav"></div>
 </div><!-- top -->
 <div id="side-nav" class="ui-resizable side-nav-resizable">
   <div id="nav-tree">
@@ -95,12 +104,6 @@ $(document).ready(function(){initNavTree('class_u_wearable_n_f_t_example.html','
  <a href="class_u_wearable_n_f_t_example.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="_wearable_n_f_t_example_8h_source.html">WearableNFTExample.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for UWearableNFTExample:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="class_u_wearable_n_f_t_example.png" alt=""/>
- </div></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -252,7 +255,7 @@ FString&#160;</td><td class="memItemRight" valign="bottom"><b>session</b></td></
   </dd>
 </dl>
 <dl class="section attention"><dt>Attention</dt><dd>YOUR_ITEM_ADDRESS(s) and YOUR_ITEM_QUANTITY(s) represent each other respectively.</dd></dl>
-<h3><a class="anchor" id="autotoc_md12"></a>
+<h3><a class="anchor" id="autotoc_md16"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0xD0eF33b38D8525728902D90b20d6e2F303B8dc2C&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;mintBatch&quot;</span>, <span class="stringliteral">&quot;args&quot;</span>:[<span class="stringliteral">&quot;TO_WALLET_ADDRESS&quot;</span>, [<span class="stringliteral">&quot;YOUR_ITEM_ADDRESS&quot;</span>, <span class="stringliteral">&quot;YOUR_ITEM_ADDRESS&quot;</span>, <span class="stringliteral">&quot;YOUR_ITEM_ADDRESS&quot;</span>, <span class="stringliteral">&quot;YOUR_ITEM_ADDRESS&quot;</span>, <span class="stringliteral">&quot;YOUR_ITEM_ADDRESS&quot;</span>, <span class="stringliteral">&quot;YOUR_ITEM_ADDRESS&quot;</span>], [YOUR_ITEM_QUANTITY, YOUR_ITEM_QUANTITY, YOUR_ITEM_QUANTITY, YOUR_ITEM_QUANTITY, YOUR_ITEM_QUANTITY, YOUR_ITEM_QUANTITY], \<span class="stringliteral">&quot;0x\&quot;]}</span></div>
 </div><!-- fragment --> 
@@ -300,7 +303,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md13"></a>
+<h3><a class="anchor" id="autotoc_md17"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0x7081F409F750EACD27867c988b4B3771d935Fe16&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;safeMint&quot;</span>, <span class="stringliteral">&quot;args:[&quot;</span>TO_WALLET_ADDRESS<span class="stringliteral">&quot;]}</span></div>
 </div><!-- fragment --> 
@@ -355,7 +358,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md14"></a>
+<h3><a class="anchor" id="autotoc_md18"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0xD0eF33b38D8525728902D90b20d6e2F303B8dc2C&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;setApprovalForAll&quot;</span>, <span class="stringliteral">&quot;args:[&quot;</span>0xD0eF33b38D8525728902D90b20d6e2F303B8dc2C<span class="stringliteral">&quot;, true]}</span></div>
 </div><!-- fragment --> 
@@ -403,7 +406,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md15"></a>
+<h3><a class="anchor" id="autotoc_md19"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0x7081F409F750EACD27867c988b4B3771d935Fe16&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;balanceOf&quot;</span>, <span class="stringliteral">&quot;args&quot;</span>:[<span class="stringliteral">&quot;WALLET_ADDRESS&quot;</span>]}</div>
 </div><!-- fragment --> 
@@ -465,7 +468,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md16"></a>
+<h3><a class="anchor" id="autotoc_md20"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0x7081F409F750EACD27867c988b4B3771d935Fe16&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;tokenOfOwnerByIndex&quot;</span>, <span class="stringliteral">&quot;args&quot;</span>:[<span class="stringliteral">&quot;WALLET_ADDRESS&quot;</span>, <span class="stringliteral">&quot;INDEX&quot;</span>]}</div>
 </div><!-- fragment --> 
@@ -527,7 +530,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md17"></a>
+<h3><a class="anchor" id="autotoc_md21"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0x7081F409F750EACD27867c988b4B3771d935Fe16&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;changeHat&quot;</span>, <span class="stringliteral">&quot;args&quot;</span>:[<span class="stringliteral">&quot;TOKEN_ID&quot;</span>, <span class="stringliteral">&quot;HAT_ADDRESS&quot;</span>]}</div>
 </div><!-- fragment --> 
@@ -575,7 +578,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md18"></a>
+<h3><a class="anchor" id="autotoc_md22"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0x7081F409F750EACD27867c988b4B3771d935Fe16&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;getHat&quot;</span>, <span class="stringliteral">&quot;args&quot;</span>:[<span class="stringliteral">&quot;TOKEN_ID&quot;</span>]}</div>
 </div><!-- fragment --> 
@@ -616,7 +619,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md19"></a>
+<h3><a class="anchor" id="autotoc_md23"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;ticket&quot;</span>:<span class="stringliteral">&quot;YOUR_TICKET&quot;</span>}</div>
 </div><!-- fragment --> 
@@ -664,7 +667,7 @@ Body</h3>
   </table>
   </dd>
 </dl>
-<h3><a class="anchor" id="autotoc_md20"></a>
+<h3><a class="anchor" id="autotoc_md24"></a>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;contract_address&quot;</span>:<span class="stringliteral">&quot;0xD0eF33b38D8525728902D90b20d6e2F303B8dc2C&quot;</span>, <span class="stringliteral">&quot;abi_hash&quot;</span>:<span class="stringliteral">&quot;YOUR_ABI_HASH&quot;</span>, <span class="stringliteral">&quot;method&quot;</span>:<span class="stringliteral">&quot;balanceOfBatch&quot;</span>, <span class="stringliteral">&quot;args:[ [&quot;</span>activeAccount<span class="stringliteral">&quot;, &quot;</span> + activeAccount<span class="stringliteral">&quot;, &quot;</span>activeAccount<span class="stringliteral">&quot;, &quot;</span>activeAccount<span class="stringliteral">&quot;, &quot;</span>activeAccount<span class="stringliteral">&quot;, &quot;</span>activeAccount<span class="stringliteral">&quot;, &quot;</span>activeAccount<span class="stringliteral">&quot;, &quot;</span>activeAccount<span class="stringliteral">&quot;, &quot;</span>activeAccount<span class="stringliteral">&quot;], [&quot;</span>BlueHatAddress<span class="stringliteral">&quot;, &quot;</span>RedHatAddress <span class="stringliteral">&quot;, &quot;</span>WhiteHatAddress <span class="stringliteral">&quot;, &quot;</span>BlueShoesAddress<span class="stringliteral">&quot;, &quot;</span>RedShoesAddress<span class="stringliteral">&quot;, &quot;</span>WhiteShoesAddress<span class="stringliteral">&quot;, &quot;</span>BlueGlassesAddress<span class="stringliteral">&quot;, &quot;</span>RedGlassesAddress<span class="stringliteral">&quot;, &quot;</span>WhiteGlassesAddress<span class="stringliteral">&quot;]]}</span></div>
 </div><!-- fragment --> 

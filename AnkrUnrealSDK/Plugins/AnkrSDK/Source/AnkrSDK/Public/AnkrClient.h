@@ -17,10 +17,11 @@
 UCLASS(Blueprintable, BlueprintType)
 class ANKRSDK_API UAnkrClient : public UObject
 {
+
 	GENERATED_UCLASS_BODY()
 
 public:
-
+//#ifndef DOXYGEN_SHOULD_SKIP_THIS
 	FHttpModule* http;
 	bool isDevelopment;
 	
@@ -37,6 +38,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UUpdateNFTExample* updateNFTExample;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UWearableNFTExample* wearableNFTExample;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UAdvertisementManager* advertisementManager;
+//#endif 
 
 	/// Ping function is used to check if the Ankr API responds properly.
 	///

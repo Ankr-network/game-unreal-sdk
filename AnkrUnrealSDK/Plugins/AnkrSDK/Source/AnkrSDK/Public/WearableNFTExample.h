@@ -214,7 +214,4 @@ public:
 	/// @param Result A callback delegate that will be triggered once a response is received with data.
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetTokenURI(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result);
-
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetAllTokens(FString abi_hash, int tokenBalance, FString owner, FAnkrCallCompleteDynamicDelegate Result);
 };
