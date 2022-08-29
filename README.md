@@ -187,9 +187,8 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 	Request->ProcessRequest();
 }
 
-<img width="494" alt="ConnectWalletpng" src="https://user-images.githubusercontent.com/99165088/187159950-fc5d030a-012d-42cb-bdfa-3383867f48b3.png">
-
 ```
+<img width="494" alt="ConnectWalletpng" src="https://user-images.githubusercontent.com/99165088/187159950-fc5d030a-012d-42cb-bdfa-3383867f48b3.png">
 
 2. If Login is required, wallet app will be opened on your mobile device to connect to.
 
