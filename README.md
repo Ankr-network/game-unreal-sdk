@@ -128,82 +128,16 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result);
 
 2. If Login is required, wallet app will be opened on your mobile device to connect to.
 
-```js
-FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
-
-```
-
 3. If already logged in then GetWalletInfo is used to the get the wallet information.
 
+To Get wallet information call the C++ GetWalletInfo in Blueprint shown below:
+
 ```js
-void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
-{
-	http = &FHttpModule::Get();
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetWalletInfo - GetContentAsString: %s"), *content);
-
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-
-			FString data = content;
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				bool result = JsonObject->GetBoolField("result");
-				if (result)
-				{
-					TArray<TSharedPtr<FJsonValue>> accountsObject = JsonObject->GetArrayField("accounts");
-
-					if (accountsObject.Num() > 0)
-					{
-						for (int32 i = 0; i < accountsObject.Num(); i++)
-						{
-							accounts.Add(accountsObject[i]->AsString());
-						}
-
-						activeAccount = accounts[0];
-						chainId = JsonObject->GetIntegerField("chainId");
-
-						updateNFTExample->SetAccount(activeAccount, chainId);
-						wearableNFTExample->SetAccount(activeAccount, chainId);
-
-						data = FString("Active Account: ").Append(activeAccount).Append(" | Chain Id: ").Append(FString::FromInt(chainId));
-					}
-					else
-					{
-						UE_LOG(LogTemp, Error, TEXT("AnkrClient - GetWalletInfo - Couldn't get an account, wallet is not connected: %s"), *content);
-					}
-				}
-				else
-				{
-					UE_LOG(LogTemp, Error, TEXT("AnkrClient - GetWalletInfo - Couldn't get a valid response: %s"), *content);
-					data = JsonObject->GetStringField("msg");
-				}
-
-				Result.ExecuteIfBound(content, data, "", -1, false);
-}
-			else
-			{
-				UE_LOG(LogTemp, Error, TEXT("AnkrClient - GetWalletInfo - Couldn't get a valid response:\n%s"), *content);
-			}
-	});
-
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_WALLET_INFO;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
-	Request->ProcessRequest();
-}
+void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result);
 
 ```
+<img width="529" alt="GetWalletpng" src="https://user-images.githubusercontent.com/99165088/187161391-da60ae1c-38a5-47e9-9553-94a5a6349a2a.png">
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
