@@ -114,78 +114,14 @@ Currently, the Unreal Engine serves three Use Cases.
 
 ## 👝 01 Connect Wallet
 
-1. Upon initialization, a unique deviceId is generated.  
-
-```js
-deviceId = load->UniqueId;
-```
-
-2. ConnectWallet is used to connect to the wallet app on your mobile device, on desktop a QR Code will be generated at the time the login button is pressed.
+ConnectWallet is used to connect to the wallet app on your mobile device, on desktop a QR Code will be generated at the time the login button is pressed.
 The session is saved to a variable for later use.
 
+To Connect wallet call the C++ ConnectWallet in Blueprint shown below:
+
 ```js
 
-void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
-{
-	http = &FHttpModule::Get();
-
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - ConnectWallet - GetContentAsString: %s"), *content);
-
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-
-			needLogin = false;
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				bool result = JsonObject->GetBoolField("result");
-				if (result)
-				{
-					FString recievedUri = JsonObject->GetStringField("uri");
-					FString sessionId = JsonObject->GetStringField("session");
-					needLogin = JsonObject->GetBoolField("login");
-					session = sessionId;
-					walletConnectDeeplink = recievedUri;
-
-					updateNFTExample->Init(deviceId, session);
-					wearableNFTExample->Init(deviceId, session);
-
-					if (needLogin)
-					{
-#if PLATFORM_ANDROID || PLATFORM_IOS
-						AnkrUtility::SetLastRequest("ConnectWallet");
-						FPlatformProcess::LaunchURL(recievedUri.GetCharArray().GetData(), NULL, NULL);
-#endif
-					}
-
-					Result.ExecuteIfBound(content, "", "", -1, needLogin);
-				}
-				else
-				{
-					UE_LOG(LogTemp, Error, TEXT("AnkrClient - ConnectWallet - Couldn't connect, when result is false, see details:\n%s"), *content);
-				}
-			}
-			else
-			{
-				UE_LOG(LogTemp, Error, TEXT("AnkrClient - ConnectWallet - Couldn't get a valid response, deserialization failed, see details:\n%s"), *content);
-			}
-
-});
-
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_CONNECT;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\"}");
-	Request->ProcessRequest();
-}
+void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result);
 
 ```
 <img width="494" alt="ConnectWalletpng" src="https://user-images.githubusercontent.com/99165088/187159950-fc5d030a-012d-42cb-bdfa-3383867f48b3.png">
