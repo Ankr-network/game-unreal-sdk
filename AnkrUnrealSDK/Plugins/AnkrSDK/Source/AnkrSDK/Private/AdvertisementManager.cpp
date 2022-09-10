@@ -12,7 +12,7 @@ UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectIni
         //libraryManageriOS = [[LibraryManager alloc] init];
     //}
 #elif PLATFORM_ANDROID
-	LibraryManager::GetInstance().Load();
+	//LibraryManager::GetInstance().Load();
 #endif
 }
 
@@ -86,7 +86,7 @@ void UAdvertisementManager::StartSession()
 			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - StartSession - GetContentAsString: %s"), *content);
 		});
 
-	FString url = API_AD_URL + ENDPOINT_START_SESSION;
+	FString url = AnkrUtility::GetAdUrl() + ENDPOINT_START_SESSION;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -115,7 +115,7 @@ void UAdvertisementManager::GetAdvertisement(FString _unit_id, FAdvertisementRec
 			if (FJsonSerializer::Deserialize(Reader, JsonObject))
 			{
 				FAdvertisementDataStructure adData = FAdvertisementDataStructure::FromJson(data);
-				adData.result.texture_url = API_AD_URL + ENDPOINT_AD + SLASH + adData.result.uuid;
+				adData.result.texture_url = AnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + adData.result.uuid;
 				adData.Log();
 
 				advertisementData.ExecuteIfBound(adData);
@@ -127,7 +127,7 @@ void UAdvertisementManager::GetAdvertisement(FString _unit_id, FAdvertisementRec
 			}
 		});
 
-	FString url = API_AD_URL + ENDPOINT_AD;
+	FString url = AnkrUtility::GetAdUrl() + ENDPOINT_AD;
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -178,7 +178,7 @@ void UAdvertisementManager::ShowAdvertisement(FAdvertisementDataStructure _data)
 	FString started_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
-	FString url = API_AD_URL + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("show");
+	FString url = AnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("show");
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -203,7 +203,7 @@ void UAdvertisementManager::RewardAdvertisement(FAdvertisementDataStructure _dat
 
 	FString rewarded_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
-	FString url = API_AD_URL + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("reward");
+	FString url = AnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("reward");
 	Request->SetURL(url);
 	Request->SetVerb("POST");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
@@ -228,7 +228,7 @@ void UAdvertisementManager::EngageAdvertisement(FAdvertisementDataStructure _dat
 
 	FString clicked_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
-	FString url = API_AD_URL + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("engage");
+	FString url = AnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("engage");
 	Request->SetURL(url);
 	Request->SetVerb("GET");
 	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);

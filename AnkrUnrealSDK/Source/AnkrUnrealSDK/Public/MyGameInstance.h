@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "AnkrClient.h"
-#include "AnkrDelegates.h"
+//#include "AnkrClient.h"
+//#include "AnkrDelegates.h"
 #include "MyGameInstance.generated.h"
 
 /**
@@ -16,7 +16,7 @@ class ANKRUNREALSDK_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
-public:
+/*public:
 	UPROPERTY(BlueprintAssignable, VisibleAnywhere, Category = "AnkrSDK")
 	FApplicationResume onApplicationResume;
 
@@ -39,5 +39,5 @@ public:
 	void OnMobileAppDeactivated();
 
 	UFUNCTION()
-		void OnApplicationResume();
+		void OnApplicationResume();*/
 };

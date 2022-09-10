@@ -5,7 +5,6 @@
 #include "RequestBodyStructure.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 
-// Contract addresses, ABIs, transaction limit and some item tokens are assigned.
 UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	GameItemContractAddress		 = "0xD0eF33b38D8525728902D90b20d6e2F303B8dc2C";
@@ -29,22 +28,18 @@ UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitial
 	WhiteGlassesAddress			 = "0x00030000000000000000000000000000000000000000000000000000000003";
 }
 
-// Init will save deviceId and session when the GetClient is called from MirageClient.cpp.
 void UWearableNFTExample::Init(FString _deviceId, FString _session)
 {
 	deviceId = _deviceId;
 	session = _session;
 }
 
-// SetAccount will save activeAccount and chainId when the GetWalletInfo is called from MirageClient.cpp.
 void UWearableNFTExample::SetAccount(FString _account, int _chainId)
 {
 	activeAccount = _account;
 	chainId		  = _chainId;
 }
 
-// MintItems is used to mint items to the user specified in the parameter.
-// Metamask will show popup to sign or confirm the transaction for that ticket.
 void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -93,8 +88,6 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrCallCompl
 	});
 }
 
-// MintCharacter is used to mint character to the user specified in the parameter.
-// Metamask will show popup to sign or confirm the transaction for that ticket.
 void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -140,8 +133,6 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrCallC
 	});
 }
 
-// GameItemSetApproval is used to give an approval for minting.
-// Metamask will show popup to sign or confirm the transaction for that ticket.
 void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -193,8 +184,6 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 	});
 }
 
-// GetCharacterBalance is used to get the number of token balances that the user holds.
-// The 'data' shows the number of tokens that the user holds.
 void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -231,8 +220,6 @@ void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address,
 	Request->ProcessRequest();
 }
 
-// GetCharacterTokenId is used to get the token ids that the user holds.
-// The 'data' shows the id of the character.
 void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FAnkrCallCompleteDynamicDelegate Result)
 {
 	if (tokenBalance <= 0)
@@ -275,8 +262,6 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 	Request->ProcessRequest();
 }
 
-// ChangeHat is used to change the hat of a character.
-// Metamask will show popup to sign or confirm the transaction for that ticket.
 void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result)
 {
 	if (!hasHat || characterId == -1)
@@ -331,8 +316,6 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 	});
 }
 
-// GetHat is used to get the hat of the user.
-// The 'data' shows the token address that the user has.
 void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -369,9 +352,6 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrCallCom
 	Request->ProcessRequest();
 }
 
-// GetTicketResult is used to get the result of a ticket.
-// The 'status' shows whether the result for the ticket signed has a success with a transaction hash.
-// The 'code' shows a code number related to a specific failure or success.
 void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
 {
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
@@ -419,7 +399,6 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDyn
 	Request->ProcessRequest();
 }
 
-// GetItemsBalance is used to get the item balances that the user has.
 void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
 	http = &FHttpModule::Get();
@@ -459,7 +438,6 @@ void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAn
 	Request->ProcessRequest();
 }
 
-// GetItemValueFromBalances is used to get the balance value for a token inside the balance array that is returned from GetItemsBalance.
 int UWearableNFTExample::GetItemValueFromBalances(FString data, int index)
 {
 	TArray<FString> tokens;

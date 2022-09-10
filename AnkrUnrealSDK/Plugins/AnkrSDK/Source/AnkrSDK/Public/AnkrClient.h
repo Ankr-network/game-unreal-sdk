@@ -229,4 +229,7 @@ public:
 	 * @param _lastRequest The name of the function that is called for the Ankr API.*/
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void SetLastRequest(FString _lastRequest);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void CollectStatistics(FString _app_id, FString _device_id, FString _public_address, const FAnkrCallCompleteDynamicDelegate& Result);
 };

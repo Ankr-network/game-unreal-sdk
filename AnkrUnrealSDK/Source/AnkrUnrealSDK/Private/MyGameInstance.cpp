@@ -1,6 +1,6 @@
 #include "MyGameInstance.h"
 
-UMyGameInstance::UMyGameInstance()
+/*UMyGameInstance::UMyGameInstance()
 {
 	hndl_AppWillEnterBackground	   = FCoreDelegates::ApplicationWillEnterBackgroundDelegate .AddUObject(this, &UMyGameInstance::OnMobileFocusLost);
 	hndl_AppHasEnteredForground	   = FCoreDelegates::ApplicationHasEnteredForegroundDelegate.AddUObject(this, &UMyGameInstance::OnMobileFocusGained);
@@ -69,4 +69,4 @@ UMyGameInstance::~UMyGameInstance()
 	FCoreDelegates::ApplicationHasEnteredForegroundDelegate.Remove(hndl_AppHasEnteredForground);
 	FCoreDelegates::ApplicationWillDeactivateDelegate      .Remove(hndl_ApplicationWillDeactivate);
 	onApplicationResume.RemoveDynamic(this, &UMyGameInstance::OnApplicationResume);
-}
+}*/

@@ -2,7 +2,6 @@
 #include "AnkrSaveGame.h"
 #include "AnkrUtility.h"
 
-// First of all a deviceId is generated and saved for the user. Secondly updateNFTExample and wearableNFTExample objects are instantiated.
 UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	if (UAnkrSaveGame::Load() == nullptr)
@@ -30,7 +29,6 @@ UAnkrClient::UAnkrClient(const FObjectInitializer& ObjectInitializer) : Super(Ob
 	AnkrUtility::SetDevelopment(true);
 }
 
-// Ping is to make sure if we can ping the Ankr API.
 void UAnkrClient::Ping(const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -55,8 +53,6 @@ void UAnkrClient::Ping(const FAnkrCallCompleteDynamicDelegate& Result)
 	Request->ProcessRequest();
 }
 
-// ConnectWallet is used to connect wallet (Metamask). 
-// Wallet app will be opened on mobile devices only, as on desktop (Windows/Mac) a QR Code will be generated at the time the login button is pressed. Scan the QR Code with your Wallet app from mobile.
 void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -119,8 +115,6 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 	Request->ProcessRequest();
 }
 
-// GetWalletInfo is used to get the connected wallet account and the chainId.
-// The account can be used whenever the user's public address is needed in any transactions.
 void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -188,13 +182,11 @@ void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 	Request->ProcessRequest();
 }
 
-// Returns the currently connected wallet address.
 FString UAnkrClient::GetActiveAccount()
 {
 	return !activeAccount.IsEmpty() ? activeAccount : "";
 }
 
-// SendABI is used to get the abi hash.
 void UAnkrClient::SendABI(FString abi, const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -235,7 +227,6 @@ void UAnkrClient::SendABI(FString abi, const FAnkrCallCompleteDynamicDelegate& R
 	Request->ProcessRequest();
 }
 
-// SendTransaction is used to send a trasaction provided that the paramters are entered correctly.
 void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -283,9 +274,6 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 		});
 }
 
-// GetTicketResult is used to get the status of the ticket having a 'code' and 'status'.
-// The 'status' shows whether the result for the ticket signed has a success or failure.
-// The 'code' shows a code number related to a specific failure or success.
 void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynamicDelegate& Result)
 {
 #if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
@@ -318,7 +306,6 @@ void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynam
 	Request->ProcessRequest();
 }
 
-// CallMethod is used to get data from readable functions from the contract provided that the parameters are entered correctly.
 void UAnkrClient::CallMethod(FString contract, FString abi_hash, FString method, FString args, const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -347,8 +334,6 @@ void UAnkrClient::CallMethod(FString contract, FString abi_hash, FString method,
 	Request->ProcessRequest();
 }
 
-// SignMessage is used to to sign and message, the ticket will be generated.
-// Metamask will show popup to sign or confirm the transaction for that ticket.
 void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDelegate & Result)
 {
 	http = &FHttpModule::Get();
@@ -387,7 +372,6 @@ void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDel
 	Request->ProcessRequest();
 }
 
-// GetSignature is used to get the result of the signed message ticket and a 'data' object with 'signature' string field will be received.
 void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -421,8 +405,6 @@ void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDel
 	Request->ProcessRequest();
 }
 
-// VerifyMessage is used to confirm whether the user signed the message, an account 'address' will be received.
-// The account address will be the connected wallet address.
 void UAnkrClient::VerifyMessage(FString message, FString signature, const FAnkrCallCompleteDynamicDelegate& Result)
 {
 	http = &FHttpModule::Get();
@@ -462,4 +444,27 @@ FString UAnkrClient::GetLastRequest()
 void UAnkrClient::SetLastRequest(FString _lastRequest)
 {
 	AnkrUtility::SetLastRequest(_lastRequest);
+}
+
+void UAnkrClient::CollectStatistics(FString _app_id, FString _device_id, FString _public_address, const FAnkrCallCompleteDynamicDelegate& Result)
+{
+	http = &FHttpModule::Get();
+
+#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
+	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
+#else
+	TSharedRef<IHttpRequest> Request = http->CreateRequest();
+#endif
+	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+		{
+			const FString content = Response->GetContentAsString();
+			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - CollectStatistics - GetContentAsString: %s"), *content);
+		});
+
+	FString url = AnkrUtility::GetStatUrl() + ENDPOINT_STATS_COLLECT;
+	Request->SetURL(url);
+	Request->SetVerb("POST");
+	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
+	Request->SetContentAsString("{\"app_id\": \"" + _app_id + "\", \"device_id\": \"" + _device_id + "\", \"public_address\":\"" + _public_address + "\"}");
+	Request->ProcessRequest();
 }

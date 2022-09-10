@@ -8,7 +8,15 @@ void AnkrUtility::SetDevelopment(bool _value)
 
 FString AnkrUtility::GetUrl()
 {
-	return IsDevelopment ? API_DEVELOPMENT_BASE_URL : API_PRODUCTION_URL;
+	return IsDevelopment ? API_DEVELOPMENT_URL : API_PRODUCTION_URL;
+}
+FString AnkrUtility::GetAdUrl()
+{
+	return IsDevelopment ? API_AD_DEVELOPMENT_URL : API_AD_PRODUCTION_URL;
+}
+FString AnkrUtility::GetStatUrl()
+{
+	return API_STATISTICS_URL;
 }
 
 FString AnkrUtility::GetLastRequest()
@@ -19,4 +27,17 @@ FString AnkrUtility::GetLastRequest()
 void AnkrUtility::SetLastRequest(FString _lastRequest)
 {
 	LastRequest = _lastRequest;
+}
+
+FString AnkrUtility::GetDefaultERC20()
+{
+	return DefaultERC20;
+}
+FString AnkrUtility::GetDefaultERC721()
+{
+	return DefaultERC721;
+}
+FString AnkrUtility::GetDefaultERC1155()
+{
+	return DefaultERC1155;
 }
