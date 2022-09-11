@@ -53,7 +53,8 @@
 5. Open the generated Visual Studio (or Xcode) project and check if the plugin in included inside the Game project.
 6. There are two ways you can create an instance of AnkrClient object which are shown below:
 
-(6a) Open any of your blueprint and do exactly the same show in the image
+(6a) Open any of your blueprint, call "Construct Object From Class", select AnkrClient and store the reference in a variable.
+
 <img width="517" alt="InstanceCreation" src="https://user-images.githubusercontent.com/99165088/189541606-8049b5c2-bfba-42df-989d-7bb424d9389c.png">
 
 (6b) Locate your GameInstance.h if already created. If not Add C++ class from Content Browser in Unreal Engine, check 'Show All Classes' and select GameInstance. Name your class 'MyGameInstance'.
