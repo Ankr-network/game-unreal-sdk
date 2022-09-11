@@ -8,7 +8,7 @@ public class AnkrUnrealSDK : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore" });//, "AnkrSDK" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "AnkrSDK" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 
