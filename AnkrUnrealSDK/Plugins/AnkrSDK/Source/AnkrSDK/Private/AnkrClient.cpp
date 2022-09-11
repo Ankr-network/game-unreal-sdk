@@ -446,7 +446,7 @@ void UAnkrClient::SetLastRequest(FString _lastRequest)
 	AnkrUtility::SetLastRequest(_lastRequest);
 }
 
-void UAnkrClient::CollectStatistics(FString _app_id, FString _device_id, FString _public_address, const FAnkrCallCompleteDynamicDelegate& Result)
+void UAnkrClient::CollectStatistics(FString _app_id, FString _device_id, FString _public_address)
 {
 	http = &FHttpModule::Get();
 
@@ -455,7 +455,7 @@ void UAnkrClient::CollectStatistics(FString _app_id, FString _device_id, FString
 #else
 	TSharedRef<IHttpRequest> Request = http->CreateRequest();
 #endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	Request->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
 		{
 			const FString content = Response->GetContentAsString();
 			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - CollectStatistics - GetContentAsString: %s"), *content);

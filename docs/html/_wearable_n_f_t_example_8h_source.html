@@ -111,69 +111,68 @@ $(document).ready(function(){initNavTree('_wearable_n_f_t_example_8h_source.html
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
 <div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    FHttpModule* http;</div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    FString deviceId;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    FString session;</div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) <span class="keywordtype">int</span> chainId;</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span> </div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemContractAddress;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemABI;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>             </div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameCharacterContractAddress;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameCharacterABI;</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>              </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString TransactionGasLimit;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueHatAddress;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedHatAddress;</div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteHatAddress;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueShoesAddress;</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedShoesAddress;</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteShoesAddress;</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueGlassesAddress;</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedGlassesAddress;</div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteGlassesAddress;</div>
-<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span> </div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    <span class="keywordtype">void</span> Init(FString _deviceId, FString _session);</div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> SetAccount(FString _account, <span class="keywordtype">int</span> _chainId);</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span> </div>
-<div class="line"><a id="l00059" name="l00059"></a><span class="lineno">   59</span>    UFUNCTION(BlueprintCallable, Category = <span class="stringliteral">&quot;ANKR SDK&quot;</span>)</div>
-<div class="line"><a id="l00060" name="l00060"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a37aad1b036965ee5fb84f133cdaf1d11">   60</a></span>    void MintItems(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span> </div>
-<div class="line"><a id="l00076" name="l00076"></a><span class="lineno">   76</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00077" name="l00077"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a1bbfa748f7433243545d78cd61eea411">   77</a></span>    <span class="keywordtype">void</span> MintCharacter(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span> </div>
-<div class="line"><a id="l00094" name="l00094"></a><span class="lineno">   94</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00095" name="l00095"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a338d2014ab61a8cae74699d07fae6992">   95</a></span>    <span class="keywordtype">void</span> GameItemSetApproval(FString abi_hash, FString callOperator, <span class="keywordtype">bool</span> approved, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno">  111</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00112" name="l00112"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a2c9cddaaceff38cff31d021ee11db9e4">  112</a></span>    <span class="keywordtype">void</span> GetCharacterBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#af77974d149a1c8c9ba80de7a44af14bc">  131</a></span>    <span class="keywordtype">void</span> GetCharacterTokenId(FString abi_hash, <span class="keywordtype">int</span> tokenBalance, FString owner, FString index, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#ac2c3aad8e3285e673e1c36915037c538">  150</a></span>    <span class="keywordtype">void</span> ChangeHat(FString abi_hash, <span class="keywordtype">int</span> characterId, <span class="keywordtype">bool</span> hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span> </div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#ae0cebb71934623086707446df24052d4">  167</a></span>    <span class="keywordtype">void</span> GetHat(FString abi_hash, <span class="keywordtype">int</span> characterId, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    </div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#ad2e5f349e221c5638d7e07565c900cb5">  184</a></span>    <span class="keywordtype">void</span> GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span> </div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#afcfaee02c77c5337d74d1d25f2a3bfbf">  201</a></span>    <span class="keywordtype">void</span> GetItemsBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span> </div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>    <span class="keywordtype">int</span> GetItemValueFromBalances(FString data, <span class="keywordtype">int</span> index);</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span> </div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a98e9fa2c1b0cfa1ce66467890a79d52f">  216</a></span>    <span class="keywordtype">void</span> GetTokenURI(FString abi_hash, <span class="keywordtype">int</span> tokenId, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span> </div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>    <span class="keywordtype">void</span> GetAllTokens(FString abi_hash, <span class="keywordtype">int</span> tokenBalance, FString owner, FAnkrCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>};</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#ifndef DOXYGEN_SHOULD_SKIP_THIS</span></div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    FHttpModule* http;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    FString deviceId;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    FString session;</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) <span class="keywordtype">int</span> chainId;</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span> </div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemContractAddress;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemABI;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>             </div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameCharacterContractAddress;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameCharacterABI;</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>              </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString TransactionGasLimit;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueHatAddress;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedHatAddress;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteHatAddress;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueShoesAddress;</div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedShoesAddress;</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteShoesAddress;</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueGlassesAddress;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedGlassesAddress;</div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteGlassesAddress;</div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span> </div>
+<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">void</span> Init(FString _deviceId, FString _session);</div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    <span class="keywordtype">void</span> SetAccount(FString _account, <span class="keywordtype">int</span> _chainId);</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span><span class="preprocessor">#endif </span><span class="comment">/* DOXYGEN_SHOULD_SKIP_THIS */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00061" name="l00061"></a><span class="lineno">   61</span>    UFUNCTION(BlueprintCallable, Category = <span class="stringliteral">&quot;ANKR SDK&quot;</span>)</div>
+<div class="line"><a id="l00062" name="l00062"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a37aad1b036965ee5fb84f133cdaf1d11">   62</a></span>    void MintItems(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span> </div>
+<div class="line"><a id="l00078" name="l00078"></a><span class="lineno">   78</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00079" name="l00079"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a1bbfa748f7433243545d78cd61eea411">   79</a></span>    <span class="keywordtype">void</span> MintCharacter(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00080" name="l00080"></a><span class="lineno">   80</span> </div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a338d2014ab61a8cae74699d07fae6992">   97</a></span>    <span class="keywordtype">void</span> GameItemSetApproval(FString abi_hash, FString callOperator, <span class="keywordtype">bool</span> approved, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00098" name="l00098"></a><span class="lineno">   98</span> </div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a2c9cddaaceff38cff31d021ee11db9e4">  114</a></span>    <span class="keywordtype">void</span> GetCharacterBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#af77974d149a1c8c9ba80de7a44af14bc">  133</a></span>    <span class="keywordtype">void</span> GetCharacterTokenId(FString abi_hash, <span class="keywordtype">int</span> tokenBalance, FString owner, FString index, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span> </div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#ac2c3aad8e3285e673e1c36915037c538">  152</a></span>    <span class="keywordtype">void</span> ChangeHat(FString abi_hash, <span class="keywordtype">int</span> characterId, <span class="keywordtype">bool</span> hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span> </div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00169" name="l00169"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#ae0cebb71934623086707446df24052d4">  169</a></span>    <span class="keywordtype">void</span> GetHat(FString abi_hash, <span class="keywordtype">int</span> characterId, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>    </div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#ad2e5f349e221c5638d7e07565c900cb5">  186</a></span>    <span class="keywordtype">void</span> GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span> </div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#afcfaee02c77c5337d74d1d25f2a3bfbf">  203</a></span>    <span class="keywordtype">void</span> GetItemsBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span> </div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>    <span class="keywordtype">int</span> GetItemValueFromBalances(FString data, <span class="keywordtype">int</span> index);</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span> </div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno"><a class="line" href="class_u_wearable_n_f_t_example.html#a98e9fa2c1b0cfa1ce66467890a79d52f">  218</a></span>    <span class="keywordtype">void</span> GetTokenURI(FString abi_hash, <span class="keywordtype">int</span> tokenId, FAnkrCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>};</div>
 <div class="ttc" id="aclass_u_wearable_n_f_t_example_html"><div class="ttname"><a href="class_u_wearable_n_f_t_example.html">UWearableNFTExample</a></div><div class="ttdoc">UWearableNFTExample provide various functions to mint character, mint items, get balance and changeHa...</div><div class="ttdef"><b>Definition:</b> WearableNFTExample.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->

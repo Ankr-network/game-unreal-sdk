@@ -12,5 +12,6 @@ var class_u_ankr_client =
     [ "GetSignature", "class_u_ankr_client.html#aad222640b30f82782255645bd2348e5e", null ],
     [ "VerifyMessage", "class_u_ankr_client.html#a7731405e4225b4ef05c82e7d1ac12aed", null ],
     [ "GetLastRequest", "class_u_ankr_client.html#ab921c06fed236f2b1c81811801796d92", null ],
-    [ "SetLastRequest", "class_u_ankr_client.html#ab4c2545fd306e873b8bd406c7b2d1760", null ]
+    [ "SetLastRequest", "class_u_ankr_client.html#ab4c2545fd306e873b8bd406c7b2d1760", null ],
+    [ "CollectStatistics", "class_u_ankr_client.html#ac39f9bf1a1fe27c9f399717f6419c1bc", null ]
 ];

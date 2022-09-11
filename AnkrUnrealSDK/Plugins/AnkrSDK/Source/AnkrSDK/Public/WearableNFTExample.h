@@ -15,6 +15,7 @@ class ANKRSDK_API UWearableNFTExample : public UObject
 
 public:
 
+//#ifndef DOXYGEN_SHOULD_SKIP_THIS
 	FHttpModule* http;
 	FString deviceId;
 	FString session;
@@ -41,11 +42,12 @@ public:
 
 	void Init(FString _deviceId, FString _session);
 	void SetAccount(FString _account, int _chainId);
+//#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 	/// MintItems function is used to mint a batch of items to the user and requires the user confirmation through wallet such as metamask.
 	///
 	/// The function requires parameters described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is described in the body section below.
 	/// string data will be received in json response for a "ticket".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -62,7 +64,7 @@ public:
 	/// MintCharacter function is used to mint a character to the user and requires the user confirmation through wallet such as metamask.
 	///
 	/// The function requires parameters described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is described in the body section below.
 	/// string data will be received in json response for a "ticket".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -79,7 +81,7 @@ public:
 	/// GameItemSetApproval function is used to set an approval to mint items for the user and requires the user confirmation through wallet such as metamask.
 	///
 	/// The function requires parameters described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is described in the body section below.
 	/// string data will be received in json response for a "ticket".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -97,7 +99,7 @@ public:
 	/// GetCharacterBalance function is used to get the token balance that user holds.
 	///
 	/// The function requires parameters described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is described in the body section below.
 	/// string data will be received in json response for a "data".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -114,7 +116,7 @@ public:
 	/// GetCharacterTokenId function is used to get the id of the token at the specified index.
 	///
 	/// The function requires parameters described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is described in the body section below.
 	/// string data will be received in json response for a "ticket".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -133,7 +135,7 @@ public:
 	/// ChangeHat function is used to change the hat of the character and requires the user confirmation through wallet such as metamask.
 	///
 	/// The function requires parameters described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a device_id, contract_address, abi_hash, method and args. The format is described in the body section below.
 	/// string data will be received in json response for a "ticket".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -152,7 +154,7 @@ public:
 	/// GetHat function is used to get the current hat of the character and requires the user confirmation through wallet such as metamask.
 	///
 	/// The function requires a parameter described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a  device_id, contract_address, abi_hash, method and args. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a  device_id, contract_address, abi_hash, method and args. The format is described in the body section below.
 	/// string data will be received in json response for a "data".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -170,7 +172,7 @@ public:
 	/// GameItemSetApproval(FString, FString, bool, FAnkrCallCompleteDynamicDelegate) or ChangeHat(FString, int, bool, FString, FAnkrCallCompleteDynamicDelegate)
 	///
 	/// The function requires a parameter described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a data and txHash. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a data and txHash. The format is described in the body section below.
 	/// string data will be received in json response for a "data".
 	///
 	/// @param ticketId The ticket generated by UpdateNFT(FString, FItemInfoStructure, FAnkrCallCompleteDynamicDelegate);
@@ -186,7 +188,7 @@ public:
 	/// GetItemsBalance function is used to get the balance of items in batch.
 	///
 	/// The function requires a parameter described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a ticket. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing a ticket. The format is described in the body section below.
 	/// string data will be received in json response for a "data".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
@@ -206,7 +208,7 @@ public:
 	/// GetTokenURI function is used to get token uri of an NFT.
 	///
 	/// The function requires a parameter described below and returns nothing.
-	/// Inside the function, A POST request is sent to the Ankr. The request needs a json body containing a ticket. The format is describied in the note section below.
+	/// Inside the function, A POST request is sent to the Ankr. The request needs a json body containing a ticket. The format is described in the body section below.
 	/// string data will be received in json response for a "data".
 	///
 	/// @param abi_hash The hash of the abi string of the contract.

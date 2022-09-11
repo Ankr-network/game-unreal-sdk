@@ -1,7 +1,7 @@
 var indexSectionsWithContent =
 {
-  0: "acfgmopsuv",
-  1: "afu",
+  0: "cgmopsuv",
+  1: "u",
   2: "cgmpsuv",
   3: "o"
 };
