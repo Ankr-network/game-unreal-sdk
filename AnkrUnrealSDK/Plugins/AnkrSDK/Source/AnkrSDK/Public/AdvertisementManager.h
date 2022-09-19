@@ -1,10 +1,11 @@
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Engine.h"
-#include "Runtime/Online/HTTP/Public/Http.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "AnkrDelegates.h"
+//#include "CoreMinimal.h"
+//#include "Engine.h"
+//#include "Runtime/Online/HTTP/Public/Http.h"
+//#include "Kismet/BlueprintFunctionLibrary.h"
+//#include "AnkrDelegates.h"
+#include "AnkrClientBase.h"
 
 #if PLATFORM_IOS
 #import "../Private/iOS/LibraryManager.h"
@@ -27,7 +28,7 @@
 #define AD_INCORRECT_APP_TYPE 1005 // Incorrect app type.
 
 UCLASS(Blueprintable, BlueprintType)
-class ANKRSDK_API UAdvertisementManager : public UObject
+class ANKRSDK_API UAdvertisementManager : public UAnkrClientBase
 {
 	GENERATED_UCLASS_BODY()
 
@@ -49,7 +50,7 @@ public:
 	void InitializeAdvertisement(FString _deviceId, FString _appId, FString _publicAddress, FString _language);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetAdvertisement(FString _unit_id, FAdvertisementReceivedDelegate advertisementData);
+	void GetAdvertisement(FString _unit_id, const FAdvertisementReceivedDelegate& advertisementData);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void DownloadVideoAdvertisement(FAdvertisementDataStructure advertisementData, FAdvertisementVideoAdDownloadDelegate Result);

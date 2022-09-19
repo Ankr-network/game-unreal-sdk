@@ -1,28 +1,27 @@
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Engine.h"
-#include "Runtime/Online/HTTP/Public/Http.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "AnkrDelegates.h"
+#include "AnkrClient.h"
 #include "WearableNFTExample.generated.h"
+
+const FString BlueHatAddress      = "0x00010000000000000000000000000000000000000000000000000000000001";
+const FString RedHatAddress       = "0x00010000000000000000000000000000000000000000000000000000000002";
+const FString WhiteHatAddress     = "0x00010000000000000000000000000000000000000000000000000000000003";
+const FString BlueShoesAddress    = "0x00020000000000000000000000000000000000000000000000000000000001";
+const FString RedShoesAddress     = "0x00020000000000000000000000000000000000000000000000000000000002";
+const FString WhiteShoesAddress   = "0x00020000000000000000000000000000000000000000000000000000000003";
+const FString BlueGlassesAddress  = "0x00030000000000000000000000000000000000000000000000000000000001";
+const FString RedGlassesAddress   = "0x00030000000000000000000000000000000000000000000000000000000002";
+const FString WhiteGlassesAddress = "0x00030000000000000000000000000000000000000000000000000000000003";
 
 /// UWearableNFTExample provide various functions to mint character, mint items, get balance and changeHat etc.
 UCLASS(Blueprintable, BlueprintType)
-class ANKRSDK_API UWearableNFTExample : public UObject
+class ANKRSDK_API UWearableNFTExample : public UAnkrClient
 {
 	GENERATED_UCLASS_BODY()
 
 public:
 
-//#ifndef DOXYGEN_SHOULD_SKIP_THIS
-	FHttpModule* http;
-	FString deviceId;
-	FString session;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) int chainId;
-
+//#ifndef DOXYGEN_SHOULD_SKIP_THIS	
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemContractAddress;
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameItemABI;
 			 
@@ -30,18 +29,16 @@ public:
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString GameCharacterABI;
 			  
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString TransactionGasLimit;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueHatAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedHatAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteHatAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueShoesAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedShoesAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteShoesAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString BlueGlassesAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString RedGlassesAddress;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString WhiteGlassesAddress;
 
-	void Init(FString _deviceId, FString _session);
-	void SetAccount(FString _account, int _chainId);
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetBlueHatAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetRedHatAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetWhiteHatAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetBlueShoesAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetRedShoesAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetWhiteShoesAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetBlueGlassesAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetRedGlassesAddress();
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK") FString GetWhiteGlassesAddress();
 //#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 	/// MintItems function is used to mint a batch of items to the user and requires the user confirmation through wallet such as metamask.
@@ -183,7 +180,7 @@ public:
 	/// {"ticket":"YOUR_TICKET"}
 	/// ~~~~~~~~~~~~~~~~~~~~~~~
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result);
+	void GetWearableNFTResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result);
 
 	/// GetItemsBalance function is used to get the balance of items in batch.
 	///

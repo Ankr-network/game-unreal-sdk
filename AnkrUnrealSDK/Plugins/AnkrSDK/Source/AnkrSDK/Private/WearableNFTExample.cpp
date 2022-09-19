@@ -1,9 +1,5 @@
 #include "WearableNFTExample.h"
-#include "UpdateNFTExample.h"
-#include "ItemInfo.h"
 #include "AnkrUtility.h"
-#include "RequestBodyStructure.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
 
 UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -17,207 +13,103 @@ UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitial
 	GameCharacterABI			 = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"gameItemContractAddress\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"approved\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Approval\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"ApprovalForAll\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldGlassesId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newGlassesId\",\"type\":\"uint256\"}],\"name\":\"GlassesChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldHatId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newHatId\",\"type\":\"uint256\"}],\"name\":\"HatChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"previousAdminRole\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"newAdminRole\",\"type\":\"bytes32\"}],\"name\":\"RoleAdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleGranted\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"sender\",\"type\":\"address\"}],\"name\":\"RoleRevoked\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"oldShoesId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"newShoesId\",\"type\":\"uint256\"}],\"name\":\"ShoesChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"Transfer\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"DEFAULT_ADMIN_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MINTER_ROLE\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"approve\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"balanceOf\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"burn\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"newGlassesId\",\"type\":\"uint256\"}],\"name\":\"changeGlasses\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"newHatId\",\"type\":\"uint256\"}],\"name\":\"changeHat\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"newShoesId\",\"type\":\"uint256\"}],\"name\":\"changeShoes\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getApproved\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"}],\"name\":\"getGlasses\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"}],\"name\":\"getHat\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"}],\"name\":\"getRoleAdmin\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"characterId\",\"type\":\"uint256\"}],\"name\":\"getShoes\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"grantRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"hasRole\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"}],\"name\":\"isApprovedForAll\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"ownerOf\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"renounceRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"role\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"revokeRole\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"}],\"name\":\"safeMint\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\"}],\"name\":\"safeTransferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"operator\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"approved\",\"type\":\"bool\"}],\"name\":\"setApprovalForAll\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"symbol\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\"}],\"name\":\"tokenOfOwnerByIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"tokenURI\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"transferFrom\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]";
 
 	TransactionGasLimit			 = "1000000";
-	BlueHatAddress				 = "0x00010000000000000000000000000000000000000000000000000000000001";
-	RedHatAddress				 = "0x00010000000000000000000000000000000000000000000000000000000002";
-	WhiteHatAddress				 = "0x00010000000000000000000000000000000000000000000000000000000003";
-	BlueShoesAddress			 = "0x00020000000000000000000000000000000000000000000000000000000001";
-	RedShoesAddress				 = "0x00020000000000000000000000000000000000000000000000000000000002";
-	WhiteShoesAddress			 = "0x00020000000000000000000000000000000000000000000000000000000003";
-	BlueGlassesAddress			 = "0x00030000000000000000000000000000000000000000000000000000000001";
-	RedGlassesAddress			 = "0x00030000000000000000000000000000000000000000000000000000000002";
-	WhiteGlassesAddress			 = "0x00030000000000000000000000000000000000000000000000000000000003";
 }
 
-void UWearableNFTExample::Init(FString _deviceId, FString _session)
-{
-	deviceId = _deviceId;
-	session = _session;
-}
-
-void UWearableNFTExample::SetAccount(FString _account, int _chainId)
-{
-	activeAccount = _account;
-	chainId		  = _chainId;
-}
+FString UWearableNFTExample::GetBlueHatAddress()      { return BlueHatAddress; }
+FString UWearableNFTExample::GetRedHatAddress()       { return RedHatAddress; }
+FString UWearableNFTExample::GetWhiteHatAddress()     { return WhiteHatAddress; }
+FString UWearableNFTExample::GetBlueShoesAddress()    { return BlueShoesAddress; }
+FString UWearableNFTExample::GetRedShoesAddress()     { return RedShoesAddress; }
+FString UWearableNFTExample::GetWhiteShoesAddress()   { return WhiteShoesAddress; }
+FString UWearableNFTExample::GetBlueGlassesAddress()  { return BlueGlassesAddress; }
+FString UWearableNFTExample::GetRedGlassesAddress()   { return RedGlassesAddress; }
+FString UWearableNFTExample::GetWhiteGlassesAddress() { return WhiteGlassesAddress; }
 
 void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
-	http = &FHttpModule::Get();
+	FString method = "mintBatch";
+	FString args = "[\"" + to + "\", [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"], [1, 2, 3, 4, 5, 6], \"0x\"]";
+	args = args.Replace(TEXT(" "), TEXT(""));
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": " + args + "}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintItems - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-
-		FString data = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			FString ticket = JsonObject->GetStringField("ticket");
-			data = ticket;
-		}
-			
-		AnkrUtility::SetLastRequest("MintItems");
-		Result.ExecuteIfBound(content, data, "", -1, false);
-	});
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintItems - response: %s"), *content);
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, to]()
-	{
-		FString mintBatchMethodName = "mintBatch";
+			FString ticket = jsonObject->GetStringField("ticket");
 
-		FString args = "[\"" + to + "\", [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"], [1, 2, 3, 4, 5, 6], \"0x\"]";
-		args = args.Replace(TEXT(" "), TEXT(""));
+			UAnkrUtility::SetLastRequest("MintItems");
+			callback.ExecuteIfBound(content, ticket, "", -1, false);
 
-		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
-		Request->SetURL(url);
-		Request->SetVerb("POST");
-		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + mintBatchMethodName + "\", \"args\": " + args + "}");
-		Request->ProcessRequest();
-
-#if PLATFORM_ANDROID
-		FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+#if PLATFORM_ANDROID || PLATFORM_IOS
+			FPlatformProcess::LaunchURL(UAnkrUtility::GetSession().GetCharArray().GetData(), NULL, NULL);
 #endif
-	});
+
+		}, Result, true);
 }
 
 void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
-	http = &FHttpModule::Get();
+	FString method = "safeMint";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + to + "\"]}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintCharacter - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-
-		FString data = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			FString ticket = JsonObject->GetStringField("ticket");
-			data = ticket;
-		}
-			
-		AnkrUtility::SetLastRequest("MintCharacter");
-		Result.ExecuteIfBound(content, data, "", -1, false);
-	});
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - MintCharacter - response: %s"), *content);
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, to]()
-	{
-		FString safeMintMethodName = "safeMint";
+			FString ticket = jsonObject->GetStringField("ticket");
 
-		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
-		Request->SetURL(url);
-		Request->SetVerb("POST");
-		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-		Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + safeMintMethodName + "\", \"args\": [\"" + to + "\"]}");
-		Request->ProcessRequest();
+			UAnkrUtility::SetLastRequest("MintCharacter");
+			callback.ExecuteIfBound(content, ticket, "", -1, false);
 
-#if PLATFORM_ANDROID
-			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+#if PLATFORM_ANDROID || PLATFORM_IOS
+			FPlatformProcess::LaunchURL(UAnkrUtility::GetSession().GetCharArray().GetData(), NULL, NULL);
 #endif
-	});
+
+		}, Result, true);
 }
 
 void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrCallCompleteDynamicDelegate Result)
 {
-	http = &FHttpModule::Get();
+	FString method = "setApprovalForAll";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GameItemSetApproval - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-			
-		FString data = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			bool result = JsonObject->GetBoolField("result");
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GameItemSetApproval - response: %s"), *content);
+
+			FString data = content;
+			bool result = jsonObject->GetBoolField("result");
 			if (result)
 			{
-				FString ticket = JsonObject->GetStringField("ticket");
+				FString ticket = jsonObject->GetStringField("ticket");
 				data = ticket;
 			}
-		}
-			
-		AnkrUtility::SetLastRequest("GameItemSetApproval");
-		Result.ExecuteIfBound(content, data, "", -1, false);
-	});
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, callOperator, approved]()
-	{
-		FString setApprovalForAllMethodName = "setApprovalForAll";
+			UAnkrUtility::SetLastRequest("GameItemSetApproval");
+			callback.ExecuteIfBound(content, data, "", -1, false);
 
-		FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + setApprovalForAllMethodName + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}";
-			
-		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
-		Request->SetURL(url);
-		Request->SetVerb("POST");
-		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-		Request->SetContentAsString(body);
-		Request->ProcessRequest();
-
-#if PLATFORM_ANDROID
-			FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+#if PLATFORM_ANDROID || PLATFORM_IOS
+			FPlatformProcess::LaunchURL(UAnkrUtility::GetSession().GetCharArray().GetData(), NULL, NULL);
 #endif
-	});
+
+		}, Result, true);
 }
 
 void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
-	http = &FHttpModule::Get();
+	FString method = "balanceOf";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + address + "\"]}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-			
-		FString data = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			data = JsonObject->GetStringField("data");
-		}
-			
-		Result.ExecuteIfBound(content, data, "", -1, false);
-	});
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterBalance - response: %s"), *content);
 
-	FString balanceOfMethodName = "balanceOf";
+			FString data = jsonObject->GetStringField("data");
 
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfMethodName + "\", \"args\": [\"" + address + "\"]}");
-	Request->ProcessRequest();
+			callback.ExecuteIfBound(content, data, "", -1, false);
+
+		}, Result, false);
 }
 
 void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance, FString owner, FString index, FAnkrCallCompleteDynamicDelegate Result)
@@ -228,38 +120,18 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 		return;
 	}
 
-	http = &FHttpModule::Get();
+	FString method = "tokenOfOwnerByIndex";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + owner + "\", \"" + index + "\"]}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-			
-		FString data = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			data = JsonObject->GetStringField("data");
-		}
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - response: %s"), *content);
 
-		Result.ExecuteIfBound(content, data, "", -1, false);
-	});
+			FString data = jsonObject->GetStringField("data");
 
-	FString tokenOfOwnerByIndexMethodName = "tokenOfOwnerByIndex";
+			callback.ExecuteIfBound(content, data, "", -1, false);
 
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + tokenOfOwnerByIndexMethodName + "\", \"args\": [\"" + owner + "\", \"" + index + "\"]}");
-	Request->ProcessRequest();
+		}, Result, false);
 }
 
 void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result)
@@ -270,115 +142,60 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 		return;
 	}
 
-	http = &FHttpModule::Get();
-	
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this, hatAddress](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - GetContentAsString: %s"), *content);
+	FString method = "changeHat";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}");
 
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-			
-		FString ticket = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this, hatAddress](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			ticket = JsonObject->GetStringField("ticket");
-		}
-			
-		if		(hatAddress.Equals(BlueHatAddress)) AnkrUtility::SetLastRequest("ChangeHatBlue");
-		else if (hatAddress.Equals(RedHatAddress))  AnkrUtility::SetLastRequest("ChangeHatRed");
-			
-		Result.ExecuteIfBound(content, ticket, "", -1, false);
-	});
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - response: %s"), *content);
 
-	AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [this, Request, abi_hash, characterId, hasHat, hatAddress]()
-	{
-		FString changeHatMethodName = "changeHat";
+			FString ticket = jsonObject->GetStringField("ticket");
 
-		FString body = "{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + changeHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}";
+			if (hatAddress.Equals(BlueHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatBlue");
+			else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatRed");
 
-		FString url = AnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION;
-		Request->SetURL(url);
-		Request->SetVerb("POST");
-		Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-		Request->SetContentAsString(body);
-		Request->ProcessRequest();
+			callback.ExecuteIfBound(content, ticket, "", -1, false);
 
-#if PLATFORM_ANDROID
-		FPlatformProcess::LaunchURL(session.GetCharArray().GetData(), NULL, NULL);
+#if PLATFORM_ANDROID || PLATFORM_IOS
+			FPlatformProcess::LaunchURL(UAnkrUtility::GetSession().GetCharArray().GetData(), NULL, NULL);
 #endif
-	});
+
+		}, Result, true);
 }
 
 void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	http = &FHttpModule::Get();
+	FString method = "getHat";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + FString::FromInt(characterId) + "\"]}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-
-		FString data = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			data = JsonObject->GetStringField("data");
-		}
-			
-		Result.ExecuteIfBound(content, data, "", -1, false);
-	});
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetHat - response: %s"), *content);
 
-	FString getHatMethodName = "getHat";
+			FString data = jsonObject->GetStringField("data");
 
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + getHatMethodName + "\", \"args\": [\"" + FString::FromInt(characterId) + "\"]}");
-	Request->ProcessRequest();
+			callback.ExecuteIfBound(content, data, "", -1, false);
+
+		}, Result, false);
 }
 
-void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
+void UWearableNFTExample::GetWearableNFTResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
 {
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, ticketId, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetTicketResult - GetContentAsString: %s"), *content);
+	const FString payload = FString("{\"ticket\": \"" + ticketId + "\" }");
 
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-			
-		FString data = content;
-		int code = 0;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_RESULT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			code = 1;
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetWearableNFTResult - response: %s"), *content);
 
-			if (AnkrUtility::GetLastRequest().Equals("ChangeHatBlue") || AnkrUtility::GetLastRequest().Equals("ChangeHatRed"))
+			FString data = content;
+			int code = 1;
+
+			if (UAnkrUtility::GetLastRequest().Equals("ChangeHatBlue") || UAnkrUtility::GetLastRequest().Equals("ChangeHatRed"))
 			{
-				bool result					   = JsonObject->GetBoolField("result");
-				TSharedPtr<FJsonObject> object = JsonObject->GetObjectField("data");
-				FString transactionHash		   = object->GetStringField("tx_hash");
-				FString status				   = object->GetStringField("status");
+				bool result                    = jsonObject->GetBoolField("result");
+				TSharedPtr<FJsonObject> object = jsonObject->GetObjectField("data");
+				FString transactionHash        = object->GetStringField("tx_hash");
+				FString status                 = object->GetStringField("status");
 				UE_LOG(LogTemp, Warning, TEXT("tx_hash: %s | status: %s"), *transactionHash, *status);
 
 				if (result && status == "success")
@@ -386,56 +203,27 @@ void UWearableNFTExample::GetTicketResult(FString ticketId, FAnkrCallCompleteDyn
 					code = 123;
 				}
 			}
-		}
 
-		Result.ExecuteIfBound(content, data, "", code, false);
-	});
+			callback.ExecuteIfBound(content, data, "", code, false);
 
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_RESULT;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"ticket\": \"" + ticketId + "\" }");
-	Request->ProcessRequest();
+		}, Result, false);
 }
 
 void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
-	http = &FHttpModule::Get();
+	FString method = "balanceOfBatch";
+	FString args = "[ [\"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": " + args + "}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-	{
-		const FString content = Response->GetContentAsString();
-		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - GetContentAsString: %s"), *content);
-
-		TSharedPtr<FJsonObject> JsonObject;
-		TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-
-		FString data = content;
-		if (FJsonSerializer::Deserialize(Reader, JsonObject))
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			data = JsonObject->GetStringField("data");
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - Balance: %s"), *data);
-		}
-			
-		Result.ExecuteIfBound(content, data, "", -1, false);
-	});
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetItemsBalance - response: %s"), *content);
 
-	FString balanceOfBatchMethodName = "balanceOfBatch";
+			FString data = jsonObject->GetStringField("data");
 
-	FString args = "[ [\"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\", \"" + activeAccount + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
-	
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + balanceOfBatchMethodName + "\", \"args\": " + args + "}");
-	Request->ProcessRequest();
+			callback.ExecuteIfBound(content, data, "", -1, false);
+
+		}, Result, false);
 }
 
 int UWearableNFTExample::GetItemValueFromBalances(FString data, int index)
@@ -460,36 +248,16 @@ int UWearableNFTExample::GetItemValueFromBalances(FString data, int index)
 
 void UWearableNFTExample::GetTokenURI(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	http = &FHttpModule::Get();
+	FString method = "tokenURI";
+	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}");
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([Result, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - GetContentAsString: %s"), *content);
+			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetTokenURI - response: %s"), *content);
 
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
+			FString data = jsonObject->GetStringField("data");
 
-			FString data = content;
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				data = JsonObject->GetStringField("data");
-			}
+			callback.ExecuteIfBound(content, data, "", -1, false);
 
-			Result.ExecuteIfBound(content, data, "", -1, false);
-		});
-
-	FString tokenURI = "tokenURI";
-
-	FString url = AnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + tokenURI + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}");
-	Request->ProcessRequest();
+		}, Result, false);
 }

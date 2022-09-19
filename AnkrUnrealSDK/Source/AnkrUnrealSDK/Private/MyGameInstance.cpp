@@ -18,6 +18,36 @@ UAnkrClient* UMyGameInstance::GetAnkrClient()
 	return ankrClient;
 }
 
+UUpdateNFTExample* UMyGameInstance::GetUpdateNFTExample()
+{
+	if (updateNFTExample == nullptr)
+	{
+		updateNFTExample = NewObject<UUpdateNFTExample>();
+	}
+
+	return updateNFTExample;
+}
+
+UWearableNFTExample* UMyGameInstance::GetWearableNFTExample()
+{
+	if (wearableNFTExample == nullptr)
+	{
+		wearableNFTExample = NewObject<UWearableNFTExample>();
+	}
+
+	return wearableNFTExample;
+}
+
+UAdvertisementManager* UMyGameInstance::GetAdvertisementManager()
+{
+	if (advertisementManager == nullptr)
+	{
+		advertisementManager = NewObject<UAdvertisementManager>();
+	}
+
+	return advertisementManager;
+}
+
 void UMyGameInstance::OnMobileFocusLost()
 {
 	// This is called when the application is being backgrounded(e.g., due to switching to another app or closing it via the home button) The game should release shared resources, 

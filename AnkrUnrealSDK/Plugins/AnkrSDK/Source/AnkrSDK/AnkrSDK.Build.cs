@@ -89,6 +89,9 @@ public class AnkrSDK : ModuleRules
         //PublicIncludePaths.Add(ModuleDirectory + "/Private/Mac/Libraries/Framework.framework/Headers");
         //PublicFrameworks.Add(ModuleDirectory + "/Private/Mac/Libraries/Framework.framework");
 
+        PublicIncludePaths.Add(ModuleDirectory + "/Private/Mac/Libraries/AnkrSDKUnrealMac.framework/Headers");
+        PublicFrameworks.Add(ModuleDirectory + "/Private/Mac/Libraries/AnkrSDKUnrealMac.framework");
+
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Mac"));
     }
 

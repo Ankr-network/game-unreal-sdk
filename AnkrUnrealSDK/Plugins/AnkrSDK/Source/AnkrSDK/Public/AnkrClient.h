@@ -1,44 +1,27 @@
 #pragma once
 
-#include "CoreMinimal.h"
-#include "Engine.h"
-#include "Runtime/Online/HTTP/Public/Http.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
-#include "UpdateNFTExample.h"
-#include "WearableNFTExample.h"
-#include "AnkrDelegates.h"
-#include "AdvertisementManager.h"
-#include "RequestBodyStructure.h"
+#include "AnkrClientBase.h"
 #include "AnkrClient.generated.h"
 
 #define DOXYGEN_SHOULD_SKIP_THIS
 
 /// AnkrClient provides various functions that are used to connect wallet and interact with the blockchain.
 UCLASS(Blueprintable, BlueprintType)
-class ANKRSDK_API UAnkrClient : public UObject
+class ANKRSDK_API UAnkrClient : public UAnkrClientBase
 {
-
 	GENERATED_UCLASS_BODY()
 
 public:
+
 //#ifndef DOXYGEN_SHOULD_SKIP_THIS
-	FHttpModule* http;
 	bool isDevelopment;
-	
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString deviceId;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString session;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString walletConnectDeeplink;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) bool needLogin;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) TArray<FString> accounts;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString activeAccount;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) int chainId;
-
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UUpdateNFTExample* updateNFTExample;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UWearableNFTExample* wearableNFTExample;
-	UPROPERTY(BlueprintReadOnly, VisibleAnywhere) UAdvertisementManager* advertisementManager;
 //#endif /* DOXYGEN_SHOULD_SKIP_THIS */
+
+	/// Initialize function is used to initialize the AnkrClient.
+	///
+	/// The function does not require a parameter and returns nothing.
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void Initialize();
 
 	/// Ping function is used to check if the Ankr API is alive.
 	///
@@ -80,15 +63,6 @@ public:
 	/// ~~~~~~~~~~~~~~~~~~~~~~~
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result);
-
-	/// GetActiveAccount function is used to get the connected wallet address.
-	///
-	/// The function doesn't require a parameter and returns a string.\n
-	/// Inside the function, the activeAccount is returned.
-	///
-	/// @returns Returns the connected wallet address.
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	FString GetActiveAccount();
 
 	/// SendABI function is used to get the hash of the abi string.
 	///
@@ -138,8 +112,9 @@ public:
 	/// ~~~~~~~~~~~~~~~~~~~~~~~.cpp
 	/// {"ticket":"YOUR_TICKET"}
 	/// ~~~~~~~~~~~~~~~~~~~~~~~
+	
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void GetTicketResult(FString ticketId, const FAnkrCallCompleteDynamicDelegate& Result);
+	virtual void GetTicketResult(FString ticketId, const FAnkrCallCompleteDynamicDelegate& Result);
 
 	/// CallMethod function is used to get a data from blockchain and doesn't require the user confirmation through wallet such as metamask.
 	///
@@ -156,6 +131,7 @@ public:
 	/// ~~~~~~~~~~~~~~~~~~~~~~~.cpp
 	/// {"device_id":"YOUR_DEVICE_ID", "contract_address":"YOUR_CONTRACT_ADDRESS", "abi_hash":"YOUR_ABI_HASH", "method":"YOUR_METHOD", "args:"YOUR_ARGS"}
 	/// ~~~~~~~~~~~~~~~~~~~~~~~
+	
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void CallMethod(FString contract, FString abi, FString method, FString args, const FAnkrCallCompleteDynamicDelegate& Result);
 
@@ -210,6 +186,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
     void VerifyMessage(FString message, FString signature, const FAnkrCallCompleteDynamicDelegate& Result);
 
+	/// CollectStatistics function is used to collect the statistics.
+	///
+	/// The function requires parameters described below and returns nothing.\n
+	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing an app_id, device_id and public_address. The format is described in the body section below.\n
+	/// string data will be received in json response as a result.
+	///
+	/// @param app_id The app specific app_id.
+	/// @param device_id The device specific device id.
+	/// @param public_address The address of the contract to which you want to interact.
+	/// 
+	/// ### Body
+	/// ~~~~~~~~~~~~~~~~~~~~~~~.cpp
+	/// {"app_id":"YOUR_APP_ID", "device_id":"YOUR_DEVICE_ID", "public_address":"YOUR_PUBLIC_ADDRESS"}
+	/// ~~~~~~~~~~~~~~~~~~~~~~~
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	void CollectStatistics(FString _app_id, FString _device_id, FString _public_address);
+
 	/// GetLastRequest function gets the name of last function that was called for the Ankr API. 
 	///
 	/// The function doesn't require a parameter and returns a string.\n
@@ -227,21 +220,4 @@ public:
 	/// @param _lastRequest The name of the function that is called for the Ankr API.
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void SetLastRequest(FString _lastRequest);
-
-	/// CollectStatistics function is used to collect the statistics.
-	///
-	/// The function requires parameters described below and returns nothing.\n
-	/// Inside the function, A POST request is sent to the Ankr API. The request needs a json body containing an app_id, device_id and public_address. The format is described in the body section below.\n
-	/// string data will be received in json response as a result.
-	///
-	/// @param app_id The app specific app_id.
-	/// @param device_id The device specific device id.
-	/// @param public_address The address of the contract to which you want to interact.
-	/// 
-	/// ### Body
-	/// ~~~~~~~~~~~~~~~~~~~~~~~.cpp
-	/// {"app_id":"YOUR_APP_ID", "device_id":"YOUR_DEVICE_ID", "public_address":"YOUR_PUBLIC_ADDRESS"}
-	/// ~~~~~~~~~~~~~~~~~~~~~~~
-	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void CollectStatistics(FString _app_id, FString _device_id, FString _public_address);
 };
