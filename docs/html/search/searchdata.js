@@ -1,8 +1,8 @@
 var indexSectionsWithContent =
 {
-  0: "cgmopsuv",
+  0: "cgimopsuv",
   1: "u",
-  2: "cgmpsuv",
+  2: "cgimpsuv",
   3: "o"
 };
 

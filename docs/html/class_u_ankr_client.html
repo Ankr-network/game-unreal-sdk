@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Logo.jfif"/></td>
   <td id="projectalign">
-   <div id="projectname">AnkrSDK<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">AnkrSDK<span id="projectnumber">&#160;1.1.0</span>
    </div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
@@ -106,6 +106,9 @@ $(document).ready(function(){initNavTree('class_u_ankr_client.html',''); initRes
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a0f18d012b6aa0cf687b5ff0f8b14c56e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#a0f18d012b6aa0cf687b5ff0f8b14c56e">Initialize</a> ()</td></tr>
+<tr class="memdesc:a0f18d012b6aa0cf687b5ff0f8b14c56e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize function is used to initialize the AnkrClient.  <a href="class_u_ankr_client.html#a0f18d012b6aa0cf687b5ff0f8b14c56e">More...</a><br /></td></tr>
+<tr class="separator:a0f18d012b6aa0cf687b5ff0f8b14c56e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2b46e8cae70b022bf5c043f044cab487"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#a2b46e8cae70b022bf5c043f044cab487">Ping</a> (const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
 <tr class="memdesc:a2b46e8cae70b022bf5c043f044cab487"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ping function is used to check if the Ankr API is alive.  <a href="class_u_ankr_client.html#a2b46e8cae70b022bf5c043f044cab487">More...</a><br /></td></tr>
 <tr class="separator:a2b46e8cae70b022bf5c043f044cab487"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,18 +118,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a327b4c442e6e95570e223a402a0ed038"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#a327b4c442e6e95570e223a402a0ed038">GetWalletInfo</a> (const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
 <tr class="memdesc:a327b4c442e6e95570e223a402a0ed038"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetWalletInfo function is used to get the wallet address and chain id.  <a href="class_u_ankr_client.html#a327b4c442e6e95570e223a402a0ed038">More...</a><br /></td></tr>
 <tr class="separator:a327b4c442e6e95570e223a402a0ed038"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12a99b9c3572e06b48bd2eaefe383601"><td class="memItemLeft" align="right" valign="top">FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#a12a99b9c3572e06b48bd2eaefe383601">GetActiveAccount</a> ()</td></tr>
-<tr class="memdesc:a12a99b9c3572e06b48bd2eaefe383601"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetActiveAccount function is used to get the connected wallet address.  <a href="class_u_ankr_client.html#a12a99b9c3572e06b48bd2eaefe383601">More...</a><br /></td></tr>
-<tr class="separator:a12a99b9c3572e06b48bd2eaefe383601"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aca2ff4dee0c15424497b0b2ac9661610"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#aca2ff4dee0c15424497b0b2ac9661610">SendABI</a> (FString abi, const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
 <tr class="memdesc:aca2ff4dee0c15424497b0b2ac9661610"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendABI function is used to get the hash of the abi string.  <a href="class_u_ankr_client.html#aca2ff4dee0c15424497b0b2ac9661610">More...</a><br /></td></tr>
 <tr class="separator:aca2ff4dee0c15424497b0b2ac9661610"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1a256a3263467e957eef6f98d3064da"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#af1a256a3263467e957eef6f98d3064da">SendTransaction</a> (FString contract, FString abi_hash, FString method, FString args, const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
 <tr class="memdesc:af1a256a3263467e957eef6f98d3064da"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendTransaction function is used to send a transaction and requires the user confirmation through wallet such as metamask.  <a href="class_u_ankr_client.html#af1a256a3263467e957eef6f98d3064da">More...</a><br /></td></tr>
 <tr class="separator:af1a256a3263467e957eef6f98d3064da"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a426ec8e740f14d3db890c65fa7fca72f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#a426ec8e740f14d3db890c65fa7fca72f">GetTicketResult</a> (FString ticketId, const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
-<tr class="memdesc:a426ec8e740f14d3db890c65fa7fca72f"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetTicketResult function is used to get the result of the ticket generated by <a class="el" href="class_u_ankr_client.html#af1a256a3263467e957eef6f98d3064da" title="SendTransaction function is used to send a transaction and requires the user confirmation through wal...">SendTransaction(FString, FString, FString, FString, const FAnkrCallCompleteDynamicDelegate&amp;)</a>.  <a href="class_u_ankr_client.html#a426ec8e740f14d3db890c65fa7fca72f">More...</a><br /></td></tr>
-<tr class="separator:a426ec8e740f14d3db890c65fa7fca72f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa90750c30ced0fbfe9f14f9fac4295a2"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#aa90750c30ced0fbfe9f14f9fac4295a2">GetTicketResult</a> (FString ticketId, const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
+<tr class="memdesc:aa90750c30ced0fbfe9f14f9fac4295a2"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetTicketResult function is used to get the result of the ticket generated by <a class="el" href="class_u_ankr_client.html#af1a256a3263467e957eef6f98d3064da" title="SendTransaction function is used to send a transaction and requires the user confirmation through wal...">SendTransaction(FString, FString, FString, FString, const FAnkrCallCompleteDynamicDelegate&amp;)</a>.  <a href="class_u_ankr_client.html#aa90750c30ced0fbfe9f14f9fac4295a2">More...</a><br /></td></tr>
+<tr class="separator:aa90750c30ced0fbfe9f14f9fac4295a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1abac07b78fd4962b7ad8f7d05c0698f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#a1abac07b78fd4962b7ad8f7d05c0698f">CallMethod</a> (FString contract, FString abi, FString method, FString args, const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
 <tr class="memdesc:a1abac07b78fd4962b7ad8f7d05c0698f"><td class="mdescLeft">&#160;</td><td class="mdescRight">CallMethod function is used to get a data from blockchain and doesn't require the user confirmation through wallet such as metamask.  <a href="class_u_ankr_client.html#a1abac07b78fd4962b7ad8f7d05c0698f">More...</a><br /></td></tr>
 <tr class="separator:a1abac07b78fd4962b7ad8f7d05c0698f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -139,19 +139,46 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a7731405e4225b4ef05c82e7d1ac12aed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#a7731405e4225b4ef05c82e7d1ac12aed">VerifyMessage</a> (FString message, FString signature, const FAnkrCallCompleteDynamicDelegate &amp;Result)</td></tr>
 <tr class="memdesc:a7731405e4225b4ef05c82e7d1ac12aed"><td class="mdescLeft">&#160;</td><td class="mdescRight">VerifyMessage function is used to verify the message that was signed.  <a href="class_u_ankr_client.html#a7731405e4225b4ef05c82e7d1ac12aed">More...</a><br /></td></tr>
 <tr class="separator:a7731405e4225b4ef05c82e7d1ac12aed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac39f9bf1a1fe27c9f399717f6419c1bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#ac39f9bf1a1fe27c9f399717f6419c1bc">CollectStatistics</a> (FString _app_id, FString _device_id, FString _public_address)</td></tr>
+<tr class="memdesc:ac39f9bf1a1fe27c9f399717f6419c1bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">CollectStatistics function is used to collect the statistics.  <a href="class_u_ankr_client.html#ac39f9bf1a1fe27c9f399717f6419c1bc">More...</a><br /></td></tr>
+<tr class="separator:ac39f9bf1a1fe27c9f399717f6419c1bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab921c06fed236f2b1c81811801796d92"><td class="memItemLeft" align="right" valign="top">FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#ab921c06fed236f2b1c81811801796d92">GetLastRequest</a> ()</td></tr>
 <tr class="memdesc:ab921c06fed236f2b1c81811801796d92"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetLastRequest function gets the name of last function that was called for the Ankr API.  <a href="class_u_ankr_client.html#ab921c06fed236f2b1c81811801796d92">More...</a><br /></td></tr>
 <tr class="separator:ab921c06fed236f2b1c81811801796d92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab4c2545fd306e873b8bd406c7b2d1760"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#ab4c2545fd306e873b8bd406c7b2d1760">SetLastRequest</a> (FString _lastRequest)</td></tr>
 <tr class="memdesc:ab4c2545fd306e873b8bd406c7b2d1760"><td class="mdescLeft">&#160;</td><td class="mdescRight">SetLastRequest function sets the name of last function that is called for the Ankr API.  <a href="class_u_ankr_client.html#ab4c2545fd306e873b8bd406c7b2d1760">More...</a><br /></td></tr>
 <tr class="separator:ab4c2545fd306e873b8bd406c7b2d1760"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac39f9bf1a1fe27c9f399717f6419c1bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client.html#ac39f9bf1a1fe27c9f399717f6419c1bc">CollectStatistics</a> (FString _app_id, FString _device_id, FString _public_address)</td></tr>
-<tr class="memdesc:ac39f9bf1a1fe27c9f399717f6419c1bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">CollectStatistics function is used to collect the statistics.  <a href="class_u_ankr_client.html#ac39f9bf1a1fe27c9f399717f6419c1bc">More...</a><br /></td></tr>
-<tr class="separator:ac39f9bf1a1fe27c9f399717f6419c1bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_u_ankr_client_base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_u_ankr_client_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_u_ankr_client_base.html">UAnkrClientBase</a></td></tr>
+<tr class="memitem:a9052632c5424290d21c3a10b0c80c787 inherit pub_methods_class_u_ankr_client_base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client_base.html#a9052632c5424290d21c3a10b0c80c787">SendRequest</a> (FString _url, FString _verb, FString _payload, TFunctionRef&lt; void(const TArray&lt; uint8 &gt;, const FString, TSharedPtr&lt; FJsonObject &gt;)&gt; _function, bool _backgroundTask)</td></tr>
+<tr class="memdesc:a9052632c5424290d21c3a10b0c80c787 inherit pub_methods_class_u_ankr_client_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendRequest function is used to send GET or POST request and the response will be received as a JsonObject.  <a href="class_u_ankr_client_base.html#a9052632c5424290d21c3a10b0c80c787">More...</a><br /></td></tr>
+<tr class="separator:a9052632c5424290d21c3a10b0c80c787 inherit pub_methods_class_u_ankr_client_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38f12f584253a7ee298de08ddf6b4e3f inherit pub_methods_class_u_ankr_client_base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client_base.html#a38f12f584253a7ee298de08ddf6b4e3f">SendRequest</a> (FString _url, FString _verb, FString _payload, TFunctionRef&lt; void(const TArray&lt; uint8 &gt;, const FString, const FAnkrCallCompleteDynamicDelegate &amp;, TSharedPtr&lt; FJsonObject &gt;)&gt; _function, const FAnkrCallCompleteDynamicDelegate &amp;_callback, bool _backgroundTask)</td></tr>
+<tr class="memdesc:a38f12f584253a7ee298de08ddf6b4e3f inherit pub_methods_class_u_ankr_client_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendRequest function is used to send GET or POST request and the response will be received as a JsonObject.  <a href="class_u_ankr_client_base.html#a38f12f584253a7ee298de08ddf6b4e3f">More...</a><br /></td></tr>
+<tr class="separator:a38f12f584253a7ee298de08ddf6b4e3f inherit pub_methods_class_u_ankr_client_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p >AnkrClient provides various functions that are used to connect wallet and interact with the blockchain. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0f18d012b6aa0cf687b5ff0f8b14c56e" name="a0f18d012b6aa0cf687b5ff0f8b14c56e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f18d012b6aa0cf687b5ff0f8b14c56e">&#9670;&nbsp;</a></span>Initialize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAnkrClient::Initialize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Initialize function is used to initialize the AnkrClient. </p>
+<p >The function does not require a parameter and returns nothing. </p>
+
+</div>
+</div>
 <a id="a2b46e8cae70b022bf5c043f044cab487" name="a2b46e8cae70b022bf5c043f044cab487"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2b46e8cae70b022bf5c043f044cab487">&#9670;&nbsp;</a></span>Ping()</h2>
 
@@ -242,28 +269,6 @@ string data will be received in json response for "accounts" and "chainId".</p>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>}</div>
 </div><!-- fragment --> 
-</div>
-</div>
-<a id="a12a99b9c3572e06b48bd2eaefe383601" name="a12a99b9c3572e06b48bd2eaefe383601"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12a99b9c3572e06b48bd2eaefe383601">&#9670;&nbsp;</a></span>GetActiveAccount()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FString UAnkrClient::GetActiveAccount </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>GetActiveAccount function is used to get the connected wallet address. </p>
-<p >The function doesn't require a parameter and returns a string.<br  />
-Inside the function, the activeAccount is returned.</p>
-<dl class="section return"><dt>Returns</dt><dd>Returns the connected wallet address. </dd></dl>
-
 </div>
 </div>
 <a id="aca2ff4dee0c15424497b0b2ac9661610" name="aca2ff4dee0c15424497b0b2ac9661610"></a>
@@ -372,14 +377,17 @@ Body</h3>
 </div><!-- fragment --> 
 </div>
 </div>
-<a id="a426ec8e740f14d3db890c65fa7fca72f" name="a426ec8e740f14d3db890c65fa7fca72f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a426ec8e740f14d3db890c65fa7fca72f">&#9670;&nbsp;</a></span>GetTicketResult()</h2>
+<a id="aa90750c30ced0fbfe9f14f9fac4295a2" name="aa90750c30ced0fbfe9f14f9fac4295a2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa90750c30ced0fbfe9f14f9fac4295a2">&#9670;&nbsp;</a></span>GetTicketResult()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void UAnkrClient::GetTicketResult </td>
+          <td class="memname">virtual void UAnkrClient::GetTicketResult </td>
           <td>(</td>
           <td class="paramtype">FString&#160;</td>
           <td class="paramname"><em>ticketId</em>, </td>
@@ -396,6 +404,11 @@ Body</h3>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>GetTicketResult function is used to get the result of the ticket generated by <a class="el" href="class_u_ankr_client.html#af1a256a3263467e957eef6f98d3064da" title="SendTransaction function is used to send a transaction and requires the user confirmation through wal...">SendTransaction(FString, FString, FString, FString, const FAnkrCallCompleteDynamicDelegate&amp;)</a>. </p>
@@ -617,56 +630,6 @@ Body</h3>
 </div><!-- fragment --> 
 </div>
 </div>
-<a id="ab921c06fed236f2b1c81811801796d92" name="ab921c06fed236f2b1c81811801796d92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab921c06fed236f2b1c81811801796d92">&#9670;&nbsp;</a></span>GetLastRequest()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">FString UAnkrClient::GetLastRequest </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>GetLastRequest function gets the name of last function that was called for the Ankr API. </p>
-<p >The function doesn't require a parameter and returns a string.<br  />
-Inside the function, the name of the last function that was called for the Ankr API is returned.</p>
-<dl class="section return"><dt>Returns</dt><dd>The name of the last function that was called for Ankr API. </dd></dl>
-
-</div>
-</div>
-<a id="ab4c2545fd306e873b8bd406c7b2d1760" name="ab4c2545fd306e873b8bd406c7b2d1760"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4c2545fd306e873b8bd406c7b2d1760">&#9670;&nbsp;</a></span>SetLastRequest()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void UAnkrClient::SetLastRequest </td>
-          <td>(</td>
-          <td class="paramtype">FString&#160;</td>
-          <td class="paramname"><em>_lastRequest</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>SetLastRequest function sets the name of last function that is called for the Ankr API. </p>
-<p >The function requires a parameter described below and returns nothing.<br  />
-Inside the function, the name of the last function that is called for the Ankr API is set.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">_lastRequest</td><td>The name of the function that is called for the Ankr API. </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="ac39f9bf1a1fe27c9f399717f6419c1bc" name="ac39f9bf1a1fe27c9f399717f6419c1bc"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac39f9bf1a1fe27c9f399717f6419c1bc">&#9670;&nbsp;</a></span>CollectStatistics()</h2>
 
@@ -715,6 +678,56 @@ string data will be received in json response as a result.</p>
 Body</h3>
 <div class="fragment"><div class="line">{<span class="stringliteral">&quot;app_id&quot;</span>:<span class="stringliteral">&quot;YOUR_APP_ID&quot;</span>, <span class="stringliteral">&quot;device_id&quot;</span>:<span class="stringliteral">&quot;YOUR_DEVICE_ID&quot;</span>, <span class="stringliteral">&quot;public_address&quot;</span>:<span class="stringliteral">&quot;YOUR_PUBLIC_ADDRESS&quot;</span>}</div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a id="ab921c06fed236f2b1c81811801796d92" name="ab921c06fed236f2b1c81811801796d92"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab921c06fed236f2b1c81811801796d92">&#9670;&nbsp;</a></span>GetLastRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FString UAnkrClient::GetLastRequest </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>GetLastRequest function gets the name of last function that was called for the Ankr API. </p>
+<p >The function doesn't require a parameter and returns a string.<br  />
+Inside the function, the name of the last function that was called for the Ankr API is returned.</p>
+<dl class="section return"><dt>Returns</dt><dd>The name of the last function that was called for Ankr API. </dd></dl>
+
+</div>
+</div>
+<a id="ab4c2545fd306e873b8bd406c7b2d1760" name="ab4c2545fd306e873b8bd406c7b2d1760"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4c2545fd306e873b8bd406c7b2d1760">&#9670;&nbsp;</a></span>SetLastRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAnkrClient::SetLastRequest </td>
+          <td>(</td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_lastRequest</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>SetLastRequest function sets the name of last function that is called for the Ankr API. </p>
+<p >The function requires a parameter described below and returns nothing.<br  />
+Inside the function, the name of the last function that is called for the Ankr API is set.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_lastRequest</td><td>The name of the function that is called for the Ankr API. </td></tr>
+  </table>
+  </dd>
+</dl>
+
 </div>
 </div>
 </div><!-- contents -->
