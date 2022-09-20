@@ -142,6 +142,9 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 		return;
 	}
 
+	if (hatAddress.Equals(BlueHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatBlue");
+	else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatRed");
+
 	FString method = "changeHat";
 	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}");
 
@@ -150,9 +153,6 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - response: %s"), *content);
 
 			FString ticket = jsonObject->GetStringField("ticket");
-
-			if (hatAddress.Equals(BlueHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatBlue");
-			else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatRed");
 
 			callback.ExecuteIfBound(content, ticket, "", -1, false);
 
