@@ -1,5 +1,6 @@
 #include "AnkrUtility.h"
 #include "Runtime/Online/HTTP/Public/Http.h"
+#include "Serialization/JsonSerializer.h"
 
 void UAnkrUtility::SetDevelopment(bool _value)
 {
@@ -9,6 +10,10 @@ void UAnkrUtility::SetDevelopment(bool _value)
 FString UAnkrUtility::GetUrl()
 {
 	return IsDevelopment ? API_DEVELOPMENT_URL : API_PRODUCTION_URL;
+}
+FString UAnkrUtility::GetAdsAppID()
+{
+	return ADS_APP_ID;
 }
 FString UAnkrUtility::GetAdUrl()
 {

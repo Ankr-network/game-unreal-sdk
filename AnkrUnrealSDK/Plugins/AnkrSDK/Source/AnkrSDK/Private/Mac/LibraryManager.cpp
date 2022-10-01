@@ -1,124 +1,62 @@
 #include "LibraryManager.h"
-#include <codecvt>
+#include <dlfcn.h>
+#include <string>
+#include "HAL/PlatformFileManager.h"
+#include "GenericPlatform/GenericPlatformFile.h"
 
-void LibraryManager::Load()
+void LibraryManager::LoadLibrary()
 {
-    if(ankrClient == nullptr)
-    {
-        ankrClient = [[AnkrClient alloc] init];
-    }
-}
+	isInitialized = false;
 
-void LibraryManager::Unload()
-{
-}
+	const FString UserLibrary = FString("/usr/local/lib/");
 
-void LibraryManager::Initialize(bool _isDevelopment, FString _device_id)
-{
-    [ankrClient InitializeWith_isDevelopment:_isDevelopment _device_id:FStringToNSString(*_device_id)];
-}
-void LibraryManager::Ping()
-{
-    [ankrClient PingWithFunction:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
-}
-void LibraryManager::ConnectWallet(FString _content)
-{
-    [ankrClient ConnectWalletWith_content:FStringToNSString(_content) function:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
-}
-void LibraryManager::GetWallet(FString _content)
-{
-    [ankrClient GetWalletWith_content : FStringToNSString(_content) function : ^ (BOOL _success, NSString * _sender, NSString * _data)
-    {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
+	FString dllPath = *FPaths::ProjectPluginsDir() + FString("PluginName/Source/PluginName/Private/Mac/Libraries/Name.dylib");
+	bool exists = FPaths::FileExists(dllPath);
 
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-    }] ;
-}
-void LibraryManager::SendABI(FString _content)
-{
-    [ankrClient SendABIWith_content:FStringToNSString(_content) function:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
-}
-void LibraryManager::SendTransaction(FString _content)
-{
-    [ankrClient SendTransactionWith_content:FStringToNSString(_content) function:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
-}
-void LibraryManager::CallMethod(FString _content)
-{
-    [ankrClient CallMethodWith_content:FStringToNSString(_content) function:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
-}
-void LibraryManager::SignMessage(FString _content)
-{
-    [ankrClient SignMessageWith_content:FStringToNSString(_content) function:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
-}
-void LibraryManager::GetResult(FString _content)
-{
-    [ankrClient GetResultWith_content:FStringToNSString(_content) function:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
-}
-void LibraryManager::VerifyMessage(FString _content)
-{
-    [ankrClient VerifyMessageWith_content:FStringToNSString(_content) function:^(BOOL _success, NSString* _sender, NSString* _data)
-     {
-        UE_LOG(LogTemp, Warning, TEXT("ObjC - LibraryManager - %s - _success: %d | _data: %s"), *NSStringToFString(_sender), _success, *NSStringToFString(_data));
-        
-        FlushCall([_sender UTF8String], _success, [_data UTF8String]);
-     }];
+	if (FPaths::FileExists(dllPath))
+	{
+		std::string fullPath = std::string(TCHAR_TO_UTF8(*dllPath));
+
+		FString fileName = FPaths::GetBaseFilename(*dllPath);
+		FString fileExt = FPaths::GetExtension(*dllPath);
+
+		FString libraryPath(UserLibrary + fileName + "." + fileExt);
+		std::string conversion = std::string(TCHAR_TO_UTF8(*libraryPath));
+
+		std::basic_string<TCHAR> source(fullPath.begin(), fullPath.end());
+		std::basic_string<TCHAR> destination(conversion.begin(), conversion.end());
+
+		IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+		PlatformFile.DeleteFile(destination.c_str());
+		PlatformFile.CopyFile(destination.c_str(), source.c_str());
+		
+		char* error;
+		HNDL = dlopen(fullPath.c_str(), RTLD_NOW | RTLD_GLOBAL);
+		if ((error = dlerror()) != nullptr)
+		{
+			FString e(error);
+			UE_LOG(LogTemp, Warning, TEXT("dlopen failed: %s"), *e);
+		}
+
+		if (HNDL != NULL)
+		{
+			isInitialized = true;
+			dumpMethod = (DumpMethodHandle)dlsym(HNDL, "MethodNameExport");
+		}
+	}
 }
 
-std::wstring LibraryManager::GetWString(FString input)
+void LibraryManager::UnloadLibrary()
 {
-    std::string raw = std::string(TCHAR_TO_UTF8(*input));
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    std::wstring conversion = converter.from_bytes(raw);
+	if (HNDL)
+	{
+		dumpMethod = NULL;
 
-    return conversion;
-}
+		dlclose(HNDL);
+		HNDL = NULL;
 
-std::string LibraryManager::GetString(std::wstring _wstring)
-{
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    std::string conversion = converter.to_bytes(_wstring);
-    return conversion;
-}
-
-FString LibraryManager::GetFString(std::wstring _wstring)
-{
-    FString conversion = FString(GetString(_wstring).c_str());
-    return conversion;
+		isInitialized = false;
+	}
 }
 
 NSString* LibraryManager::FStringToNSString(FString _input)
@@ -131,53 +69,4 @@ FString LibraryManager::NSStringToFString(NSString* _input)
 {
     FString conversion([_input UTF8String]);
     return conversion;
-}
-
-void LibraryManager::Log(FString _message)
-{
-    UE_LOG(LogTemp, Warning, TEXT("%s"), *_message);
-}
-
-int LibraryManager::GetGlobalCallIndex()
-{
-    GlobalCallIndex++; if (GlobalCallIndex > INT_MAX) GlobalCallIndex = 0;
-    return GlobalCallIndex;
-}
-bool LibraryManager::AddCall(const char* _sender, const FAnkrCallCompleteDynamicDelegate& _callComplete)
-{
-    std::string caller = std::string(_sender);
-    
-    if (CallList.count(caller) > 0)
-    {
-        //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is already in the call list, can not add again."), *FString(caller.c_str()));
-        return false;
-    }
-
-    FAnkrCallStruct call{};
-    call.callIndex = LibraryManager::GetGlobalCallIndex();
-    call.sender = FString(_sender);
-    call.CallComplete = _callComplete;
-    CallList[caller] = call;
-
-    //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - AddCall - %s call is added to the call list successfully."), *call.sender);
-    return true;
-}
-
-void LibraryManager::FlushCall(const char* _sender, bool _success, const char* _data)
-{
-    std::string caller = std::string(_sender);
-
-    if (CallList.count(caller) <= 0)
-    {
-        //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call doesn't exist in the call list."), *FString(caller.c_str()));
-        return;
-    }
-
-    FAnkrCallStruct call = CallList[caller];
-    call.success = _success;
-    call.data = FString(_data);
-    CallQueue.push(call);
-    CallList.erase(caller);
-
-    //UE_LOG(LogTemp, Warning, TEXT("LibraryManager - FlushCall - %s call is pushed to queue successfully."), *call.sender);
 }

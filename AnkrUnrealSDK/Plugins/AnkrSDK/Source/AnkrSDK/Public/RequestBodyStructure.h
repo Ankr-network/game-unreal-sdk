@@ -35,18 +35,6 @@ struct FRequestBodyStruct
 	}
 };
 
-USTRUCT(BlueprintType)
-struct FAnkrCallStruct
-{
-	GENERATED_BODY()
-	
-	int callIndex;
-	FString sender;
-	bool success;
-	FString data;
-	FAnkrCallCompleteDynamicDelegate CallComplete;
-};
-
 UCLASS()
 class ANKRSDK_API URequestBodyStructure : public UUserDefinedStruct
 {

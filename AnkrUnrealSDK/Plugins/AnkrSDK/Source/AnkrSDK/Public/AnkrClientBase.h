@@ -40,4 +40,9 @@ public:
 	/// @param _callback The callback delegate to be executed when a response is received.
 	/// @param _backgroundTask Determines if the request to be processed as a background task.
 	void SendRequest(FString _url, FString _verb, FString _payload, TFunctionRef<void(const TArray<uint8>, const FString, const FAnkrCallCompleteDynamicDelegate&, TSharedPtr<FJsonObject>)> _function, const FAnkrCallCompleteDynamicDelegate& _callback, bool _backgroundTask);
+
+	void SendRequest(FString _url, FString _verb, FString _payload, TFunctionRef<void(const TArray<uint8>, const FString, const FAdvertisementReceivedDelegate&, TSharedPtr<FJsonObject>)> _function, const FAdvertisementReceivedDelegate& _callback, bool _backgroundTask);
+
+	void SendRequest(FString _url, TFunctionRef<void(const TArray<uint8>, const FString, FAdvertisementDataStructure data, const FAdvertisementVideoAdDownloadDelegate&)> _function, FAdvertisementDataStructure data, const FAdvertisementVideoAdDownloadDelegate& _callback, bool _backgroundTask);
+
 };

@@ -1,5 +1,6 @@
 #include "WearableNFTExample.h"
 #include "AnkrUtility.h"
+#include "PayloadBuilder.h"
 
 UWearableNFTExample::UWearableNFTExample(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -27,10 +28,35 @@ FString UWearableNFTExample::GetWhiteGlassesAddress() { return WhiteGlassesAddre
 
 void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "mintBatch";
-	FString args = "[\"" + to + "\", [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"], [1, 2, 3, 4, 5, 6], \"0x\"]";
-	args = args.Replace(TEXT(" "), TEXT(""));
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": " + args + "}");
+	const TArray<FString> items = { BlueHatAddress, RedHatAddress, BlueShoesAddress, WhiteShoesAddress, RedGlassesAddress, WhiteGlassesAddress };
+	
+	TArray<TSharedPtr<FJsonValue>> itemsArray;
+	for (int32 i = 0; i < items.Num(); i++)
+	{
+		UPayloadBuilder::AddArrayItem(itemsArray, items[i]);
+	}
+
+	const TArray<int> indices = { 1, 2, 3, 4, 5, 6 };
+
+	TArray<TSharedPtr<FJsonValue>> indicesArray;
+	for (int32 i = 0; i < indices.Num(); i++)
+	{
+		UPayloadBuilder::AddArrayItem(indicesArray, indices[i]);
+	}
+
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddArrayItem  (args, to);
+	UPayloadBuilder::AddNestedArray(args, itemsArray);
+	UPayloadBuilder::AddNestedArray(args, indicesArray);
+	UPayloadBuilder::AddArrayItem  (args, FString("0x"));
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",        UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameItemContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"mintBatch");
+	builder->SetArrayField ("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -50,8 +76,16 @@ void UWearableNFTExample::MintItems(FString abi_hash, FString to, FAnkrCallCompl
 
 void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "safeMint";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + to + "\"]}");
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddArrayItem(args, to);
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameCharacterContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"safeMint");
+	builder->SetArrayField ("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -71,8 +105,17 @@ void UWearableNFTExample::MintCharacter(FString abi_hash, FString to, FAnkrCallC
 
 void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOperator, bool approved, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "setApprovalForAll";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + GameCharacterContractAddress + "\", true ]}");
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddArrayItem(args, GameCharacterContractAddress);
+	UPayloadBuilder::AddArrayItem(args, true);
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameItemContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"setApprovalForAll");
+	builder->SetArrayField("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -98,8 +141,16 @@ void UWearableNFTExample::GameItemSetApproval(FString abi_hash, FString callOper
 
 void UWearableNFTExample::GetCharacterBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "balanceOf";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + address + "\"]}");
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddArrayItem(args, address);
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameCharacterContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"balanceOf");
+	builder->SetArrayField("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -120,8 +171,19 @@ void UWearableNFTExample::GetCharacterTokenId(FString abi_hash, int tokenBalance
 		return;
 	}
 
-	FString method = "tokenOfOwnerByIndex";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + owner + "\", \"" + index + "\"]}");
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddArrayItem(args, owner);
+	UPayloadBuilder::AddArrayItem(args, index);
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameCharacterContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"tokenOfOwnerByIndex");
+	builder->SetArrayField("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
+
+	UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetCharacterTokenId - payload: %s"), *payload);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -145,8 +207,17 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 	if (hatAddress.Equals(BlueHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatBlue");
 	else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatRed");
 
-	FString method = "changeHat";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + FString::FromInt(characterId) + "\", \"" + hatAddress + "\"]}");
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddArrayItem(args, FString::FromInt(characterId));
+	UPayloadBuilder::AddArrayItem(args, hatAddress);
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameCharacterContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"changeHat");
+	builder->SetArrayField("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this, hatAddress](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -165,8 +236,16 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 
 void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "getHat";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": [\"" + FString::FromInt(characterId) + "\"]}");
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddArrayItem(args, FString::FromInt(characterId));
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameCharacterContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"getHat");
+	builder->SetArrayField("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -181,7 +260,7 @@ void UWearableNFTExample::GetHat(FString abi_hash, int characterId, FAnkrCallCom
 
 void UWearableNFTExample::GetWearableNFTResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	const FString payload = FString("{\"ticket\": \"" + ticketId + "\" }");
+	const FString payload = UPayloadBuilder::BuildPayload("ticket", ticketId);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_RESULT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -211,9 +290,31 @@ void UWearableNFTExample::GetWearableNFTResult(FString ticketId, FAnkrCallComple
 
 void UWearableNFTExample::GetItemsBalance(FString abi_hash, FString address, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "balanceOfBatch";
-	FString args = "[ [\"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\", \"" + UAnkrUtility::GetWalletAddress() + "\"], [\"" + BlueHatAddress + "\", \"" + RedHatAddress + "\", \"" + WhiteHatAddress + "\", \"" + BlueShoesAddress + "\", \"" + RedShoesAddress + "\", \"" + WhiteShoesAddress + "\", \"" + BlueGlassesAddress + "\", \"" + RedGlassesAddress + "\", \"" + WhiteGlassesAddress + "\"]]";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameItemContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": " + args + "}");
+	TArray<TSharedPtr<FJsonValue>> addressArray;
+	for (int32 i = 0; i < 9; i++)
+	{
+		UPayloadBuilder::AddArrayItem(addressArray, UAnkrUtility::GetWalletAddress());
+	}
+
+	const TArray<FString> items = { BlueHatAddress, RedHatAddress, WhiteHatAddress, BlueShoesAddress, RedShoesAddress, WhiteShoesAddress, BlueGlassesAddress, RedGlassesAddress, WhiteGlassesAddress };
+	
+	TArray<TSharedPtr<FJsonValue>> itemsArray;
+	for (int32 i = 0; i < items.Num(); i++)
+	{
+		UPayloadBuilder::AddArrayItem(itemsArray, items[i]);
+	}
+
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddNestedArray(args, addressArray);
+	UPayloadBuilder::AddNestedArray(args, itemsArray);
+
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", GameItemContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"balanceOfBatch");
+	builder->SetArrayField("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -248,8 +349,11 @@ int UWearableNFTExample::GetItemValueFromBalances(FString data, int index)
 
 void UWearableNFTExample::GetTokenURI(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "tokenURI";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + GameCharacterContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}");
+	const FString payload = UPayloadBuilder::BuildPayload("device_id",		  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
+														  "contract_address", UPayloadBuilder::FStringToJsonValue(GameCharacterContractAddress),
+														  "abi_hash",		  UPayloadBuilder::FStringToJsonValue(abi_hash),
+														  "method",			  UPayloadBuilder::FStringToJsonValue("tokenURI"),
+														  "args",			  UPayloadBuilder::FStringToJsonValue(FString::FromInt(tokenId)));
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{

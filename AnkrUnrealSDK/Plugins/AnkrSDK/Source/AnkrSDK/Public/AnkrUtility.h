@@ -25,6 +25,7 @@ const FString ENDPOINT_CALL_METHOD		= FString(TEXT("call/method"));
 const FString ENDPOINT_SIGN_MESSAGE		= FString(TEXT("sign/message"));
 const FString ENDPOINT_VERIFY_MESSAGE	= FString(TEXT("verify/message"));
 
+const FString ADS_APP_ID				= FString(TEXT("86fc9bc7-3f7a-46cf-9cab-a12935d1e4ad"));
 const FString ENDPOINT_START_SESSION	= FString(TEXT("start"));
 const FString ENDPOINT_AD				= FString(TEXT("ad"));
 
@@ -53,6 +54,7 @@ public:
 	
 	static void SetDevelopment(bool _value);
 	static FString GetUrl();
+	static FString GetAdsAppID();
 	static FString GetAdUrl();
 	static FString GetStatUrl();
 	static FString GetLastRequest();
@@ -74,5 +76,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static int GetChainID();
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static void SetChainID(int _chainId);
 
-	//static void SendRequest(class UObject* _object, FString _url, FString _verb, FString _payload, TFunctionRef<void(const FString, const FAnkrCallCompleteDynamicDelegate&, TSharedPtr<FJsonObject>)> _function, const FAnkrCallCompleteDynamicDelegate& _callback);
+	static FString BuildPayload();
+	static FString BuildPayloadA( FString _abi);
+	static FString BuildPayloadT(const FString _ticket);
+	static FString BuildPayloadTC(const FString _contract, const FString _abi_hash, const FString _method, const FString _args);
+	static FString BuildPayloadM(const FString _message);
+	static FString BuildPayloadS(const FString _message, const FString _signature);
+	static FString BuildPayloadX(const FString _device_id, const FString _abi, const FString _ticket, const FString _message, const FString _siqnature, const FString _contract, const FString _abi_hash, const FString _method, const FString _args);
+	
 };

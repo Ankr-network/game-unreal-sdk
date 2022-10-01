@@ -6,6 +6,7 @@ var hierarchy =
           [ "UUpdateNFTExample", "class_u_update_n_f_t_example.html", null ],
           [ "UWearableNFTExample", "class_u_wearable_n_f_t_example.html", null ]
         ] ]
-      ] ]
+      ] ],
+      [ "UPayloadBuilder", "class_u_payload_builder.html", null ]
     ] ]
 ];

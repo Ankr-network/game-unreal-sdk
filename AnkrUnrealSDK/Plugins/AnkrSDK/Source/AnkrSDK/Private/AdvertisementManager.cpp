@@ -1,5 +1,6 @@
 #include "AdvertisementManager.h"
 #include "AnkrUtility.h"
+#include "PayloadBuilder.h"
 #include <string>
 
 UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -7,299 +8,162 @@ UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectIni
 	UE_LOG(LogTemp, Warning, TEXT("UAdvertisementManager - Constructor"));
     
 #if PLATFORM_IOS
-    //if(libraryManageriOS == nullptr)
-    //{
-        //libraryManageriOS = [[LibraryManager alloc] init];
-    //}
+	LibraryManager::GetInstance().LoadLibrary();
 #elif PLATFORM_ANDROID
-	//LibraryManager::GetInstance().Load();
+	LibraryManager::GetInstance().LoadLibrary();
 #endif
 }
 
-void UAdvertisementManager::InitializeAdvertisement(FString _deviceId, FString _appId, FString _publicAddress, FString _language)
+void UAdvertisementManager::InitializeAdvertisement(FString _appId, FString _language)
 {
-#if PLATFORM_IOS
-    /*std::string _deviceIdStr = std::string(TCHAR_TO_UTF8(*_deviceId));
-    NSString* _deviceIdNSString = [[NSString alloc] initWithUTF8String:_deviceIdStr.c_str()];
-    
-    std::string _appIdStr = std::string(TCHAR_TO_UTF8(*_appId));
-    NSString* _appIdNSString = [[NSString alloc] initWithUTF8String:_appIdStr.c_str()];
-    
-    std::string _publicAddressStr = std::string(TCHAR_TO_UTF8(*_publicAddress));
-    NSString* _publicAddressNSString = [[NSString alloc] initWithUTF8String:_publicAddressStr.c_str()];
-    
-    std::string _languageStr = std::string(TCHAR_TO_UTF8(*_language));
-    NSString* _languageNSString = [[NSString alloc] initWithUTF8String:_languageStr.c_str()];
-    
-    [libraryManageriOS Initialize:_appIdNSString deviceId:_deviceIdNSString publicAddress:_deviceIdNSString language:_languageNSString];*/
-#elif PLATFORM_ANDROID
-
-
-
-#else
-    
-	deviceId = _deviceId;
 	appId = _appId;
-	activeAccount = _publicAddress;
 	language = _language;
+
+#if PLATFORM_IOS
+	LibraryManager::Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
+#elif PLATFORM_ANDROID
+	LibraryManager::Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
 #endif
 }
 
 void UAdvertisementManager::LoadAd(FString _unitId)
 {
 #if PLATFORM_IOS
-    //std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
-    //NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
-    
-    //[libraryManageriOS LoadAd:_unitIdNSString];
-#else
-    
-    
+	LibraryManager::LoadAd(_unitId);
+#elif PLATFORM_ANDROID
+	LibraryManager::LoadAd(_unitId);
 #endif
 }
 
-void UAdvertisementManager::Show(FString _unitId)
+void UAdvertisementManager::ShowView(FString _unitId)
 {
 #if PLATFORM_IOS
-    //std::string _unitIdStr = std::string(TCHAR_TO_UTF8(*_unitId));
-    //NSString* _unitIdNSString = [[NSString alloc] initWithUTF8String:_unitIdStr.c_str()];
-    
-    //[libraryManageriOS Show:_unitIdNSString];
-#else
-    
-    
+	LibraryManager::ShowView(_unitId);
+#elif PLATFORM_ANDROID
+	LibraryManager::ShowView(_unitId);
 #endif
 }
 
 void UAdvertisementManager::StartSession()
 {
-	/*http = &FHttpModule::Get();
-
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - StartSession - GetContentAsString: %s"), *content);
-		});
-
-	FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_START_SESSION;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"app_id\": \"" + appId + "\", \"device_id\": \"" + deviceId + "\", \"public_address\":\"" + activeAccount + "\", \"language\":\"" + language + "\"}");
-	Request->ProcessRequest();*/
-
-	const FString payload = FString("{\"app_id\": \"" + appId + "\", \"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"public_address\":\"" + UAnkrUtility::GetWalletAddress() + "\", \"language\":\"" + language + "\"}");
+	const FString payload = UPayloadBuilder::BuildPayload("app_id",			UPayloadBuilder::FStringToJsonValue(appId),
+														  "device_id",		UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
+														  "public_address", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetWalletAddress()),
+														  "language",		UPayloadBuilder::FStringToJsonValue(language));
 	
 	SendRequest(UAnkrUtility::GetAdUrl() + ENDPOINT_START_SESSION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - StartSession: %s"), *content);
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - StartSession: %s"), *content);
 		}, false);
 }
 
-void UAdvertisementManager::GetAdvertisement(FString _unit_id, const FAdvertisementReceivedDelegate& advertisementData)
+void UAdvertisementManager::GetAdvertisement(FString _unit_id, EAdvertisementTextureType _textureType, const FAdvertisementReceivedDelegate& Result)
 {
-	/*http = &FHttpModule::Get();
+	const FString payload = UPayloadBuilder::BuildPayload("device_id",	  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
+														  "unit_id",	  UPayloadBuilder::FStringToJsonValue(_unit_id),
+														  "texture_type", UPayloadBuilder::FStringToJsonValue(GetAdTextureType(_textureType)));
 
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([advertisementData, this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	SendRequest(UAnkrUtility::GetAdUrl() + ENDPOINT_AD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAdvertisementReceivedDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - GetAdvertisement - GetContentAsString: %s"), *content);
-
-			TSharedPtr<FJsonObject> JsonObject;
-			TSharedRef<TJsonReader<>> Reader = TJsonReaderFactory<>::Create(content);
-
-			FString data = content;
-			if (FJsonSerializer::Deserialize(Reader, JsonObject))
-			{
-				FAdvertisementDataStructure adData = FAdvertisementDataStructure::FromJson(data);
-				adData.result.texture_url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + adData.result.uuid;
-				adData.Log();
-
-				advertisementData.ExecuteIfBound(adData);
-			
-				if (adData.code == AD_SESSION_EXPIRED)
-				{
-					//StartSession();
-				}
-			}
-		});
-
-	FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD;
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"device_id\": \"" + deviceId + "\", \"unit_id\":\"" + _unit_id + "\"}");
-	Request->ProcessRequest();*/
-
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"unit_id\":\"" + _unit_id + "\"}");
-
-	SendRequest(UAnkrUtility::GetAdUrl() + ENDPOINT_AD, "POST", payload, [this, advertisementData](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - GetAdvertisement: %s"), *content);
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - GetAdvertisement: %s"), *content);
 
 			FAdvertisementDataStructure adData = FAdvertisementDataStructure::FromJson(content);
 			adData.result.texture_url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + adData.result.uuid;
 			adData.Log();
-
-			advertisementData.ExecuteIfBound(adData);
 			
-			if (adData.code == AD_SESSION_EXPIRED)
-			{
-				//StartSession();
-			}
+			callback.ExecuteIfBound(adData);
 
-		}, false);
+		}, Result, false);
 }
 
-void UAdvertisementManager::DownloadVideoAdvertisement(FAdvertisementDataStructure advertisementData, FAdvertisementVideoAdDownloadDelegate Result)
+void UAdvertisementManager::DownloadVideoAdvertisement(FAdvertisementDataStructure _data, const FAdvertisementVideoAdDownloadDelegate& Result)
 {
-	/*http = &FHttpModule::Get();
-
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([this, advertisementData, Result](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
+	SendRequest(_data.result.texture_url, [this](const TArray<uint8> bytes, const FString content, FAdvertisementDataStructure data, const FAdvertisementVideoAdDownloadDelegate& callback)
 		{
-			const TArray<uint8> data = Response->GetContent();
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - DownloadVideoAdvertisement: bytesLength: %d"), bytes.Num());
 
-			FString path = *FPaths::ProjectSavedDir() + FString("VideoAd/").Append(advertisementData.result.uuid).Append(".mp4");
-			FFileHelper::SaveArrayToFile(data, *path);
-
-			Result.ExecuteIfBound(path);
-		});
-
-	Request->SetURL(advertisementData.result.texture_url);
-	Request->SetVerb("GET");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->ProcessRequest();*/
-
-	SendRequest(advertisementData.result.texture_url, "GET", "", [this, advertisementData, Result](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - DownloadVideoAdvertisement: %s"), *content);
-
-			FString path = *FPaths::ProjectSavedDir() + FString("VideoAd/").Append(advertisementData.result.uuid).Append(".mp4");
+			FString path = *FPaths::ProjectSavedDir() + FString("VideoAd/").Append(data.result.uuid).Append(".mp4");
 			FFileHelper::SaveArrayToFile(bytes, *path);
 
-			Result.ExecuteIfBound(path);
+			callback.ExecuteIfBound(path);
 
-		}, false);
+		}, _data, Result, false);
 }
 
 void UAdvertisementManager::ShowAdvertisement(FAdvertisementDataStructure _data)
 {
-	/*http = &FHttpModule::Get();
-
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - ShowAdvertisement - GetContentAsString: %s"), *content);
-		});
-
-	FString started_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
-	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
-
-	FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("show");
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"started_at\": \"" + started_at + "\", \"finished_at\":\"" + finished_at + "\"}");
-	Request->ProcessRequest();*/
-
 	FString started_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("show");
-	const FString payload = FString("{\"started_at\": \"" + started_at + "\", \"finished_at\":\"" + finished_at + "\"}");
+	const FString payload = UPayloadBuilder::BuildPayload("started_at",  UPayloadBuilder::FStringToJsonValue(started_at),
+														  "finished_at", UPayloadBuilder::FStringToJsonValue(finished_at));
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - ShowAdvertisement: %s"), *content);
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - ShowAdvertisement: %s"), *content);
+		}, false);
+}
+
+void UAdvertisementManager::CancelAdvertisement(FAdvertisementDataStructure _data)
+{
+	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
+
+	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("cancel");
+	const FString payload = UPayloadBuilder::BuildPayload("finished_at", UPayloadBuilder::FStringToJsonValue(finished_at));
+
+	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - CancelAdvertisement: %s"), *content);
+		}, false);
+}
+
+void UAdvertisementManager::FinishAdvertisement(FAdvertisementDataStructure _data)
+{
+	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
+
+	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("finish");
+	const FString payload = UPayloadBuilder::BuildPayload("finished_at", UPayloadBuilder::FStringToJsonValue(finished_at));
+
+	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - FinishAdvertisement: %s"), *content);
 		}, false);
 }
 
 void UAdvertisementManager::RewardAdvertisement(FAdvertisementDataStructure _data)
 {
-	/*http = &FHttpModule::Get();
-
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - RewardAdvertisement - GetContentAsString: %s"), *content);
-		});
-
-	FString rewarded_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
-
-	FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("reward");
-	Request->SetURL(url);
-	Request->SetVerb("POST");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"rewarded_at\": \"" + rewarded_at + "\"}");
-	Request->ProcessRequest();*/
-
 	FString rewarded_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("reward");
-	const FString payload = FString("{\"rewarded_at\": \"" + rewarded_at + "\"}");
+	const FString payload = UPayloadBuilder::BuildPayload("rewarded_at", UPayloadBuilder::FStringToJsonValue(rewarded_at));
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - RewardAdvertisement: %s"), *content);
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - RewardAdvertisement: %s"), *content);
 		}, false);
 }
 
 void UAdvertisementManager::EngageAdvertisement(FAdvertisementDataStructure _data)
 {
-	/*http = &FHttpModule::Get();
-
-#if ENGINE_MAJOR_VERSION == 5 || (ENGINE_MAJOR_VERSION == 4 && ENGINE_MINOR_VERSION >= 26)
-	TSharedRef<IHttpRequest, ESPMode::ThreadSafe> Request = http->CreateRequest();
-#else
-	TSharedRef<IHttpRequest> Request = http->CreateRequest();
-#endif
-	Request->OnProcessRequestComplete().BindLambda([this](FHttpRequestPtr Request, FHttpResponsePtr Response, bool bWasSuccessful)
-		{
-			const FString content = Response->GetContentAsString();
-			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - EngageAdvertisement - GetContentAsString: %s"), *content);
-		});
-
-	FString clicked_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
-
-	FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("engage");
-	Request->SetURL(url);
-	Request->SetVerb("GET");
-	Request->SetHeader(CONTENT_TYPE_KEY, CONTENT_TYPE_VALUE);
-	Request->SetContentAsString("{\"clicked_at\": \"" + clicked_at + "\"}");
-	Request->ProcessRequest();*/
-
 	FString clicked_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("engage");
-	const FString payload = FString("{\"clicked_at\": \"" + clicked_at + "\"}");
+	const FString payload = UPayloadBuilder::BuildPayload("clicked_at", UPayloadBuilder::FStringToJsonValue(clicked_at));
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("AnkrClient - EngageAdvertisement: %s"), *content);
+			UE_LOG(LogTemp, Warning, TEXT("AdvertisementManager - EngageAdvertisement: %s"), *content);
 		}, false);
+}
+
+FString UAdvertisementManager::GetAdTextureType(EAdvertisementTextureType _adTextureType)
+{
+	switch (_adTextureType)
+	{
+	case EAdvertisementTextureType::E_False: return FString("false");
+	case EAdvertisementTextureType::E_Video: return FString("video");
+	case EAdvertisementTextureType::E_Image: return FString("image");
+	default: return FString("false");
+	}
 }

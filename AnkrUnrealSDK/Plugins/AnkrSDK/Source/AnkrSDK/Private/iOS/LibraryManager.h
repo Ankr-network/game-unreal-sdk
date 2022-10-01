@@ -1,15 +1,7 @@
 #pragma once
 
-#include <iostream>
-#include <string>
-#include <functional>
-#include <unordered_map>
-#include <queue>
-#include "../../Public/AnkrDelegates.h"
-#include "RequestBodyStructure.h"
-
 #import <Foundation/Foundation.h>
-#import "AnkrSDKUnreal-Swift.h"
+#import "AdsBridge-Swift.h"
 
 class ANKRSDK_API LibraryManager
 {
@@ -30,33 +22,9 @@ public:
 
 public:
 
-    AnkrClient* ankrClient = nullptr;
-    void Load();
-    void Unload();
-    
-    void Initialize(bool, FString);
-    void Ping();
-    void ConnectWallet(FString);
-    void GetWallet(FString);
-    void SendABI(FString);
-    void SendTransaction(FString);
-    void CallMethod(FString);
-    void SignMessage(FString);
-    void GetResult(FString);
-    void VerifyMessage(FString);
-
-    static std::wstring GetWString(FString input);
-    static std::string GetString(std::wstring _wstring);
-    static FString GetFString(std::wstring _wstring);
-    NSString* FStringToNSString(FString _input);
-    FString NSStringToFString(NSString* _input);
-    
-    void Log(FString _message);
-    int GlobalCallIndex;
-    std::unordered_map<std::string, FAnkrCallStruct> CallList;
-    std::queue<FAnkrCallStruct> CallQueue;
-
-    int GetGlobalCallIndex();
-    bool AddCall(const char* _sender, const FAnkrCallCompleteDynamicDelegate _callComplete);
-    void FlushCall(const char* _sender, bool _success, const char* _data);
+    void LoadLibrary();
+    void UnloadLibrary();
+	void Initialize(FString appId, FString deviceId, FString publicAddress, FString language);
+	void LoadAd(FString _unitId);
+	void ShowView(FString _unitId);
 };

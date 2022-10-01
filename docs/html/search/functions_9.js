@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['rewardadvertisement_0',['RewardAdvertisement',['../class_u_advertisement_manager.html#a4f009df5b21323455e9b9e44d1fa6ecc',1,'UAdvertisementManager']]]
+  ['ping_0',['Ping',['../class_u_ankr_client.html#a2b46e8cae70b022bf5c043f044cab487',1,'UAnkrClient']]]
 ];

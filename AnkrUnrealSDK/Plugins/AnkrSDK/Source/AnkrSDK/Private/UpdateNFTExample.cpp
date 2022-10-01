@@ -1,6 +1,7 @@
 #include "UpdateNFTExample.h"
 #include "AnkrUtility.h"
 #include "RequestBodyStructure.h"
+#include "PayloadBuilder.h"
 
 UUpdateNFTExample::UUpdateNFTExample(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -10,8 +11,11 @@ UUpdateNFTExample::UUpdateNFTExample(const FObjectInitializer& ObjectInitializer
 
 void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FString method = "getTokenDetails";
-	const FString payload = FString("{\"device_id\": \"" + UAnkrUtility::GetDeviceID() + "\", \"contract_address\": \"" + ContractAddress + "\", \"abi_hash\": \"" + abi_hash + "\", \"method\": \"" + method + "\", \"args\": \"" + FString::FromInt(tokenId) + "\"}");
+	const FString payload = UPayloadBuilder::BuildPayload("device_id",		  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
+														  "contract_address", UPayloadBuilder::FStringToJsonValue(ContractAddress),
+														  "abi_hash",		  UPayloadBuilder::FStringToJsonValue(abi_hash),
+														  "method",			  UPayloadBuilder::FStringToJsonValue("getTokenDetails"),
+														  "args",			  UPayloadBuilder::FStringToJsonValue(FString::FromInt(tokenId)));
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -24,15 +28,25 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrCallCompl
 
 void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FAnkrCallCompleteDynamicDelegate Result)
 {
-	FRequestBodyStruct body{};
-	body.device_id = UAnkrUtility::GetDeviceID();
-	body.contract_address = ContractAddress;
-	body.abi_hash = abi_hash;
-	body.method = "updateTokenWithSignedMessage";
-	body.args.Add(_item);
+	TSharedPtr<FJsonObject> item = UPayloadBuilder::GetBuilder();
+	item->SetNumberField("tokenId",    _item.tokenId);
+	item->SetNumberField("itemType",   _item.itemType);
+	item->SetNumberField("strength",   _item.strength);
+	item->SetNumberField("level",      _item.level);
+	item->SetNumberField("expireTime", _item.expireTime);
+	item->SetStringField("signature",  _item.signature);
 
-	const FString payload = FString(FRequestBodyStruct::ToJson(body));
+	TArray<TSharedPtr<FJsonValue>> args;
+	UPayloadBuilder::AddNestedObject(args, item);
 
+	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
+	builder->SetStringField("device_id",        UAnkrUtility::GetDeviceID());
+	builder->SetStringField("contract_address", ContractAddress);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"updateTokenWithSignedMessage");
+	builder->SetArrayField("args",				args);
+	const FString payload = UPayloadBuilder::Build(builder);
+	
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("UpdateNFTExample - UpdateNFT - response: %s"), *content);
@@ -51,7 +65,7 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 
 void UUpdateNFTExample::GetUpdateNFTResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	const FString payload = FString("{\"ticket\": \"" + ticketId + "\" }");
+	const FString payload = UPayloadBuilder::BuildPayload("ticket", ticketId);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_RESULT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
