@@ -1,5 +1,4 @@
 #include "LibraryManager.h"
-#include "AnkrSaveGame.h"
 #include "AnkrUtility.h"
 
 void LibraryManager::LoadLibrary()
@@ -10,7 +9,7 @@ void LibraryManager::LoadLibrary()
 
 	JCO_AnkrAds = MakeShareable(new FJavaClassObject("com/ankr/nativeads/AnkrAds", "()V"));
 
-	UE_LOG(LogTemp, Error, TEXT("LibraryManager.cpp - Load"));
+	UE_LOG(LogTemp, Error, TEXT("LibraryManager.cpp - LoadLibrary"));
 }
 
 void LibraryManager::UnloadLibrary()

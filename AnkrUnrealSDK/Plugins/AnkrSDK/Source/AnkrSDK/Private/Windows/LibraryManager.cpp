@@ -25,7 +25,8 @@ void LibraryManager::LoadLibrary()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Name.dll is missing, please download the SDK for Windows platform and copy the dll to the following path 'Plugins/PluginName/Source/PluginName/Private/Windows/Libraries'"));
+        UE_LOG(LogTemp, Warning, TEXT("%s is missing. If you are using any dynamic library, please copy the dll to the following path 'Plugins/PluginName/Source/PluginName/Private/Windows/Libraries'"), *dllPath);
+        
 		isInitialized = false;
 	}
 }

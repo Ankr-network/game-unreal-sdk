@@ -4,12 +4,6 @@
 #include "Runtime/ApplicationCore/Public/Android/AndroidApplication.h"
 #include "Android/AndroidJava.h"
 
-#include <string>
-#include <queue>
-#include <unordered_map>
-#include "RequestBodyStructure.h"
-#include "../../Public/AnkrDelegates.h"
-
 class ANKRSDK_API LibraryManager
 {
 
@@ -32,10 +26,10 @@ public:
 	//TSharedPtr<FJavaClassObject> FJavaClassObject_DumpClass;
 	//FJavaClassMethod FJavaClassMethod_DumpMethod;
 
-	TSharedPtr<FJavaClassObject> JCO_AnkrAds;
-	FJavaClassMethod JCM_Initialize;
-	FJavaClassMethod JCM_LoadAd;
-	FJavaClassMethod JCM_ShowView;
+	//TSharedPtr<FJavaClassObject> JCO_AnkrAds;
+	//FJavaClassMethod JCM_Initialize;
+	//FJavaClassMethod JCM_LoadAd;
+	//FJavaClassMethod JCM_ShowView;
 
 	void LoadLibrary();
 	void UnloadLibrary();

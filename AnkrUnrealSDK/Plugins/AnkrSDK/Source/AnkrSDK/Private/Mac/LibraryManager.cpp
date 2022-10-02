@@ -1,49 +1,65 @@
 #include "LibraryManager.h"
-#include <dlfcn.h>
-#include <string>
-#include "HAL/PlatformFileManager.h"
-#include "GenericPlatform/GenericPlatformFile.h"
+
+void RegisterLibrary(FString _dylib, std::string& _src, std::string& _dst)
+{
+    const FString UserLibrary = FString("/usr/local/lib/");
+    
+    FString name      = FPaths::GetBaseFilename(*_dylib);
+    FString extension = FPaths::GetExtension(*_dylib);
+    FString registration(UserLibrary + name + "." + extension);
+    
+    std::string stdSrc = std::string(TCHAR_TO_UTF8(*_dylib));
+    std::string stdDst = std::string(TCHAR_TO_UTF8(*registration));
+    
+    std::basic_string<TCHAR> source(stdSrc.begin(), stdSrc.end());
+    std::basic_string<TCHAR> destination(stdDst.begin(), stdDst.end());
+    
+    IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
+    PlatformFile.DeleteFile(destination.c_str());
+    PlatformFile.CopyFile(destination.c_str(), source.c_str());
+    
+    _src = stdSrc;
+    _dst = stdDst;
+}
 
 void LibraryManager::LoadLibrary()
 {
 	isInitialized = false;
 
-	const FString UserLibrary = FString("/usr/local/lib/");
-
-	FString dllPath = *FPaths::ProjectPluginsDir() + FString("PluginName/Source/PluginName/Private/Mac/Libraries/Name.dylib");
-	bool exists = FPaths::FileExists(dllPath);
-
-	if (FPaths::FileExists(dllPath))
+	FString dylib = *FPaths::ProjectPluginsDir() + FString("PluginName/Source/PluginName/Private/Mac/Libraries/Name.dylib");
+    
+	bool exists = FPaths::FileExists(dylib);
+	if (exists)
 	{
-		std::string fullPath = std::string(TCHAR_TO_UTF8(*dllPath));
-
-		FString fileName = FPaths::GetBaseFilename(*dllPath);
-		FString fileExt = FPaths::GetExtension(*dllPath);
-
-		FString libraryPath(UserLibrary + fileName + "." + fileExt);
-		std::string conversion = std::string(TCHAR_TO_UTF8(*libraryPath));
-
-		std::basic_string<TCHAR> source(fullPath.begin(), fullPath.end());
-		std::basic_string<TCHAR> destination(conversion.begin(), conversion.end());
-
-		IPlatformFile& PlatformFile = FPlatformFileManager::Get().GetPlatformFile();
-		PlatformFile.DeleteFile(destination.c_str());
-		PlatformFile.CopyFile(destination.c_str(), source.c_str());
+        std::string src;
+        std::string dst;
+        RegisterLibrary(dylib, src, dst);
 		
 		char* error;
-		HNDL = dlopen(fullPath.c_str(), RTLD_NOW | RTLD_GLOBAL);
+		HNDL = dlopen(src.c_str(), RTLD_NOW | RTLD_GLOBAL);
 		if ((error = dlerror()) != nullptr)
 		{
 			FString e(error);
-			UE_LOG(LogTemp, Warning, TEXT("dlopen failed: %s"), *e);
+			UE_LOG(LogTemp, Warning, TEXT("LibraryManager - dlopen() - failed: %s"), *e);
 		}
-
-		if (HNDL != NULL)
-		{
-			isInitialized = true;
-			dumpMethod = (DumpMethodHandle)dlsym(HNDL, "MethodNameExport");
-		}
+        
+        if(HNDL == NULL)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("LibraryManager - Library can not be loaded at path: %s"), *dylib);
+            return;
+        }
+			
+        dumpMethod = (DumpMethodHandle)dlsym(HNDL, "MethodNameExport");
+        
+        isInitialized = true;
+		
 	}
+    else
+    {
+        UE_LOG(LogTemp, Warning, TEXT("%s is missing. If you are using any dynamic library, please copy the dylib to the following path 'Plugins/PluginName/Source/PluginName/Private/Mac/Libraries'"), *dylib);
+        
+        isInitialized = false;
+    }
 }
 
 void LibraryManager::UnloadLibrary()
@@ -57,6 +73,14 @@ void LibraryManager::UnloadLibrary()
 
 		isInitialized = false;
 	}
+}
+
+void LibraryManager::DumpMethod()
+{
+    if (isInitialized)
+    {
+        (*dumpMethod)(0x00, 0);
+    }
 }
 
 NSString* LibraryManager::FStringToNSString(FString _input)

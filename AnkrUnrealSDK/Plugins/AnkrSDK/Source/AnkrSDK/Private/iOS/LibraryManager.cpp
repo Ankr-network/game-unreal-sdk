@@ -1,11 +1,14 @@
 #include "LibraryManager.h"
+#import "AdsBridge-Swift.h"
 
 void LibraryManager::LoadLibrary()
 {
+    // Nothing to do here for now.
 }
 
 void LibraryManager::UnloadLibrary()
 {
+    // Nothing to do here for now.
 }
 
 void LibraryManager::Initialize(FString appId, FString deviceId, FString publicAddress, FString language)

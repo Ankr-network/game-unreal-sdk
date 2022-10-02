@@ -29,8 +29,8 @@ public:
 
     void LoadLibrary();
     void UnloadLibrary();
+    void DumpMethod();
 
     NSString* FStringToNSString(FString _input);
     FString NSStringToFString(NSString* _input);
-
 };

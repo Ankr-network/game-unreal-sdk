@@ -20,16 +20,16 @@ void UAdvertisementManager::InitializeAdvertisement(FString _appId, FString _lan
 	language = _language;
 
 #if PLATFORM_IOS
-	LibraryManager::Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
+	LibraryManager::GetInstance().Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
 #elif PLATFORM_ANDROID
-	LibraryManager::Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
+	LibraryManager::GetInstance().Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
 #endif
 }
 
 void UAdvertisementManager::LoadAd(FString _unitId)
 {
 #if PLATFORM_IOS
-	LibraryManager::LoadAd(_unitId);
+	LibraryManager::GetInstance().LoadAd(_unitId);
 #elif PLATFORM_ANDROID
 	LibraryManager::LoadAd(_unitId);
 #endif
@@ -38,7 +38,7 @@ void UAdvertisementManager::LoadAd(FString _unitId)
 void UAdvertisementManager::ShowView(FString _unitId)
 {
 #if PLATFORM_IOS
-	LibraryManager::ShowView(_unitId);
+	LibraryManager::GetInstance().ShowView(_unitId);
 #elif PLATFORM_ANDROID
 	LibraryManager::ShowView(_unitId);
 #endif

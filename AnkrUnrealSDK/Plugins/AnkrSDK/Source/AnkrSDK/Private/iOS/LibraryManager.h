@@ -1,7 +1,6 @@
 #pragma once
 
 #import <Foundation/Foundation.h>
-#import "AdsBridge-Swift.h"
 
 class ANKRSDK_API LibraryManager
 {
@@ -27,4 +26,7 @@ public:
 	void Initialize(FString appId, FString deviceId, FString publicAddress, FString language);
 	void LoadAd(FString _unitId);
 	void ShowView(FString _unitId);
+    
+    NSString* FStringToNSString(FString _input);
+    FString NSStringToFString(NSString* _input);
 };
