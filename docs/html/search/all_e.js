@@ -1,19 +1,10 @@
 var searchData=
 [
-  ['save_0',['Save',['../class_u_ankr_save_game.html#a8b1ab76bc4e69e2538fb54475aabc96d',1,'UAnkrSaveGame']]],
-  ['sendabi_1',['SendABI',['../class_u_ankr_client.html#aca2ff4dee0c15424497b0b2ac9661610',1,'UAnkrClient']]],
-  ['sender_2',['sender',['../struct_f_ankr_call_struct.html#a747bf9805d60e0eed35a47575867939f',1,'FAnkrCallStruct']]],
-  ['sendtransaction_3',['SendTransaction',['../class_u_ankr_client.html#af1a256a3263467e957eef6f98d3064da',1,'UAnkrClient']]],
-  ['session_4',['session',['../class_u_update_n_f_t_example.html#a163b8f765b8a766feacacc7ae65166f1',1,'UUpdateNFTExample::session()'],['../class_u_wearable_n_f_t_example.html#aa9666fd4d4eda1e288b4bca98f8cfb82',1,'UWearableNFTExample::session()']]],
-  ['setaccount_5',['SetAccount',['../class_u_update_n_f_t_example.html#a6e57dd95d76d5696a20b90d52c137a0e',1,'UUpdateNFTExample::SetAccount()'],['../class_u_wearable_n_f_t_example.html#ab21c3b0cf39e42c527058b43fae83adb',1,'UWearableNFTExample::SetAccount()']]],
-  ['setdevelopment_6',['SetDevelopment',['../class_ankr_utility.html#a189a51e03f1282975563f12f28e98f0c',1,'AnkrUtility']]],
-  ['setlastrequest_7',['SetLastRequest',['../class_u_ankr_client.html#ab4c2545fd306e873b8bd406c7b2d1760',1,'UAnkrClient::SetLastRequest()'],['../class_ankr_utility.html#a4967164a26003d379b644d88c753dc02',1,'AnkrUtility::SetLastRequest()']]],
-  ['show_8',['Show',['../class_u_advertisement_manager.html#a26d3d47dc8a063ac09cce7d15a3f4bc8',1,'UAdvertisementManager']]],
-  ['showadvertisement_9',['ShowAdvertisement',['../class_u_advertisement_manager.html#a4a526814accc251c55540e6ce70bf118',1,'UAdvertisementManager']]],
-  ['shutdownmodule_10',['ShutdownModule',['../class_f_ankr_s_d_k_module.html#ad85992d4bbd9157b3468e072daa4e643',1,'FAnkrSDKModule']]],
-  ['signmessage_11',['SignMessage',['../class_u_ankr_client.html#a3163623044d4d98c4f254d6f972f5b4e',1,'UAnkrClient']]],
-  ['slash_12',['SLASH',['../_ankr_utility_8h.html#a709a7c2a6ec3904a6fad7e12f230e0fd',1,'AnkrUtility.h']]],
-  ['startsession_13',['StartSession',['../class_u_advertisement_manager.html#a978ea400867f7f6d0950847fd9095152',1,'UAdvertisementManager']]],
-  ['startupmodule_14',['StartupModule',['../class_f_ankr_s_d_k_module.html#aa1e4cdeb0c3c83ee1c39de801a215267',1,'FAnkrSDKModule']]],
-  ['success_15',['success',['../struct_f_ankr_call_struct.html#a551f2fe53e65732c432cf9a1137cad8b',1,'FAnkrCallStruct']]]
+  ['uadvertisementmanager_0',['UAdvertisementManager',['../class_u_advertisement_manager.html',1,'']]],
+  ['uankrclient_1',['UAnkrClient',['../class_u_ankr_client.html',1,'']]],
+  ['uankrclientbase_2',['UAnkrClientBase',['../class_u_ankr_client_base.html',1,'']]],
+  ['upayloadbuilder_3',['UPayloadBuilder',['../class_u_payload_builder.html',1,'']]],
+  ['updatenft_4',['UpdateNFT',['../class_u_update_n_f_t_example.html#a61bd2f563f8d5df92a7e6198b3b69b9c',1,'UUpdateNFTExample']]],
+  ['uupdatenftexample_5',['UUpdateNFTExample',['../class_u_update_n_f_t_example.html',1,'']]],
+  ['uwearablenftexample_6',['UWearableNFTExample',['../class_u_wearable_n_f_t_example.html',1,'']]]
 ];

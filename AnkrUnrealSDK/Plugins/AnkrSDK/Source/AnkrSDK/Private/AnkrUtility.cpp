@@ -9,10 +9,7 @@ FString UAnkrUtility::GetUrl()
 {
 	return IsDevelopment ? API_DEVELOPMENT_URL : API_PRODUCTION_URL;
 }
-FString UAnkrUtility::GetAdsAppID()
-{
-	return ADS_APP_ID;
-}
+
 FString UAnkrUtility::GetAdUrl()
 {
 	return IsDevelopment ? API_AD_DEVELOPMENT_URL : API_AD_PRODUCTION_URL;
@@ -106,4 +103,21 @@ int UAnkrUtility::GetChainID()
 void UAnkrUtility::SetChainID(int _chainId)
 {
 	ChainID = _chainId;
+}
+
+FString UAnkrUtility::GetAdvertisementAppID()
+{
+	return AdvertisementAppID;
+}
+void UAnkrUtility::SetAdvertisementAppID(FString _appId)
+{
+	AdvertisementAppID = _appId;
+}
+FString UAnkrUtility::GetLanguage()
+{
+	return Language;
+}
+void UAnkrUtility::SetLanguage(FString _language)
+{
+	Language = _language;
 }

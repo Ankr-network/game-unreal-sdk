@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['verifymessage_0',['VerifyMessage',['../class_u_ankr_client.html#a7731405e4225b4ef05c82e7d1ac12aed',1,'UAnkrClient']]]
+  ['updatenft_0',['UpdateNFT',['../class_u_update_n_f_t_example.html#a61bd2f563f8d5df92a7e6198b3b69b9c',1,'UUpdateNFTExample']]]
 ];

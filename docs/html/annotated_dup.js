@@ -1,5 +1,6 @@
 var annotated_dup =
 [
+    [ "UAdvertisementManager", "class_u_advertisement_manager.html", "class_u_advertisement_manager" ],
     [ "UAnkrClient", "class_u_ankr_client.html", "class_u_ankr_client" ],
     [ "UAnkrClientBase", "class_u_ankr_client_base.html", "class_u_ankr_client_base" ],
     [ "UPayloadBuilder", "class_u_payload_builder.html", null ],

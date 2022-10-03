@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['updatenft_0',['UpdateNFT',['../class_u_update_n_f_t_example.html#a61bd2f563f8d5df92a7e6198b3b69b9c',1,'UUpdateNFTExample']]]
+  ['rewardadvertisement_0',['RewardAdvertisement',['../class_u_advertisement_manager.html#a4f009df5b21323455e9b9e44d1fa6ecc',1,'UAdvertisementManager']]]
 ];

@@ -94,63 +94,449 @@ $(document).ready(function(){initNavTree('class_u_advertisement_manager.html',''
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="class_u_advertisement_manager-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">UAdvertisementManager Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
+
+<p>AdvertisementManager provides functionalities to load and show ads for various platforms.  
+ <a href="class_u_advertisement_manager.html#details">More...</a></p>
+
+<p><code>#include &lt;<a class="el" href="_advertisement_manager_8h_source.html">AdvertisementManager.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a884035456d93ad33ca6858d59a54eb4e"><td class="memItemLeft" align="right" valign="top"><a id="a884035456d93ad33ca6858d59a54eb4e" name="a884035456d93ad33ca6858d59a54eb4e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UPROPERTY</b> (BlueprintReadOnly, VisibleAnywhere) FString appId</td></tr>
-<tr class="separator:a884035456d93ad33ca6858d59a54eb4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1ef17f7515ab72a009fc455d912a21d"><td class="memItemLeft" align="right" valign="top"><a id="ae1ef17f7515ab72a009fc455d912a21d" name="ae1ef17f7515ab72a009fc455d912a21d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UPROPERTY</b> (BlueprintReadOnly, VisibleAnywhere) FString language</td></tr>
-<tr class="separator:ae1ef17f7515ab72a009fc455d912a21d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4dc04f3e42f26ac6384c6a689abd3121"><td class="memItemLeft" align="right" valign="top"><a id="a4dc04f3e42f26ac6384c6a689abd3121" name="a4dc04f3e42f26ac6384c6a689abd3121"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UPROPERTY</b> (BlueprintReadOnly, VisibleAnywhere) FString activeAccount</td></tr>
-<tr class="separator:a4dc04f3e42f26ac6384c6a689abd3121"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9037680a58590561de30cee4680185d4"><td class="memItemLeft" align="right" valign="top"><a id="a9037680a58590561de30cee4680185d4" name="a9037680a58590561de30cee4680185d4"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>UPROPERTY</b> (BlueprintReadOnly, VisibleAnywhere) int chainId</td></tr>
-<tr class="separator:a9037680a58590561de30cee4680185d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a978ea400867f7f6d0950847fd9095152"><td class="memItemLeft" align="right" valign="top"><a id="a978ea400867f7f6d0950847fd9095152" name="a978ea400867f7f6d0950847fd9095152"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>StartSession</b> ()</td></tr>
+<tr class="memitem:a978ea400867f7f6d0950847fd9095152"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#a978ea400867f7f6d0950847fd9095152">StartSession</a> ()</td></tr>
+<tr class="memdesc:a978ea400867f7f6d0950847fd9095152"><td class="mdescLeft">&#160;</td><td class="mdescRight">StartSession function is used to start a new advertisement session.  <a href="class_u_advertisement_manager.html#a978ea400867f7f6d0950847fd9095152">More...</a><br /></td></tr>
 <tr class="separator:a978ea400867f7f6d0950847fd9095152"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a5d93a2961acc7891e9488efabc8e9c"><td class="memItemLeft" align="right" valign="top"><a id="a7a5d93a2961acc7891e9488efabc8e9c" name="a7a5d93a2961acc7891e9488efabc8e9c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>InitializeAdvertisement</b> (FString _deviceId, FString _appId, FString _publicAddress, FString _language)</td></tr>
-<tr class="separator:a7a5d93a2961acc7891e9488efabc8e9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae74a7039fafec8b8bc03abca7d5fb5c9"><td class="memItemLeft" align="right" valign="top"><a id="ae74a7039fafec8b8bc03abca7d5fb5c9" name="ae74a7039fafec8b8bc03abca7d5fb5c9"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>GetAdvertisement</b> (FString _unit_id, FAdvertisementReceivedDelegate advertisementData)</td></tr>
-<tr class="separator:ae74a7039fafec8b8bc03abca7d5fb5c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a34ab1d0d888cc5eabd8715ecac132028"><td class="memItemLeft" align="right" valign="top"><a id="a34ab1d0d888cc5eabd8715ecac132028" name="a34ab1d0d888cc5eabd8715ecac132028"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>DownloadVideoAdvertisement</b> (<a class="el" href="struct_f_advertisement_data_structure.html">FAdvertisementDataStructure</a> advertisementData, FAdvertisementVideoAdDownloadDelegate Result)</td></tr>
-<tr class="separator:a34ab1d0d888cc5eabd8715ecac132028"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a526814accc251c55540e6ce70bf118"><td class="memItemLeft" align="right" valign="top"><a id="a4a526814accc251c55540e6ce70bf118" name="a4a526814accc251c55540e6ce70bf118"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>ShowAdvertisement</b> (<a class="el" href="struct_f_advertisement_data_structure.html">FAdvertisementDataStructure</a> _data)</td></tr>
-<tr class="separator:a4a526814accc251c55540e6ce70bf118"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f009df5b21323455e9b9e44d1fa6ecc"><td class="memItemLeft" align="right" valign="top"><a id="a4f009df5b21323455e9b9e44d1fa6ecc" name="a4f009df5b21323455e9b9e44d1fa6ecc"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>RewardAdvertisement</b> (<a class="el" href="struct_f_advertisement_data_structure.html">FAdvertisementDataStructure</a> _data)</td></tr>
-<tr class="separator:a4f009df5b21323455e9b9e44d1fa6ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe916caa910e10b6a82fdd48ff92a68b"><td class="memItemLeft" align="right" valign="top"><a id="afe916caa910e10b6a82fdd48ff92a68b" name="afe916caa910e10b6a82fdd48ff92a68b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>EngageAdvertisement</b> (<a class="el" href="struct_f_advertisement_data_structure.html">FAdvertisementDataStructure</a> _data)</td></tr>
-<tr class="separator:afe916caa910e10b6a82fdd48ff92a68b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af77fcacf792f9b662cdf2267c923ffeb"><td class="memItemLeft" align="right" valign="top"><a id="af77fcacf792f9b662cdf2267c923ffeb" name="af77fcacf792f9b662cdf2267c923ffeb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>LoadAd</b> (FString _unitId)</td></tr>
+<tr class="memitem:a9f45773fd3ed35b2cb60cb449f86e8af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#a9f45773fd3ed35b2cb60cb449f86e8af">InitializeAdvertisement</a> (FString _appId, FString _deviceId, FString _publicAddress, FString _language)</td></tr>
+<tr class="memdesc:a9f45773fd3ed35b2cb60cb449f86e8af"><td class="mdescLeft">&#160;</td><td class="mdescRight">InitializeAdvertisement function is used to set the app id, device id, public address and language for the ads.  <a href="class_u_advertisement_manager.html#a9f45773fd3ed35b2cb60cb449f86e8af">More...</a><br /></td></tr>
+<tr class="separator:a9f45773fd3ed35b2cb60cb449f86e8af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af77fcacf792f9b662cdf2267c923ffeb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#af77fcacf792f9b662cdf2267c923ffeb">LoadAd</a> (FString _unitId)</td></tr>
+<tr class="memdesc:af77fcacf792f9b662cdf2267c923ffeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">LoadAd function is used to load the ads for the specified ad unit id.  <a href="class_u_advertisement_manager.html#af77fcacf792f9b662cdf2267c923ffeb">More...</a><br /></td></tr>
 <tr class="separator:af77fcacf792f9b662cdf2267c923ffeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a26d3d47dc8a063ac09cce7d15a3f4bc8"><td class="memItemLeft" align="right" valign="top"><a id="a26d3d47dc8a063ac09cce7d15a3f4bc8" name="a26d3d47dc8a063ac09cce7d15a3f4bc8"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>Show</b> (FString _unitId)</td></tr>
-<tr class="separator:a26d3d47dc8a063ac09cce7d15a3f4bc8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
-Public Attributes</h2></td></tr>
-<tr class="memitem:abcd47926b0f6b0b78648caa297d1df94"><td class="memItemLeft" align="right" valign="top"><a id="abcd47926b0f6b0b78648caa297d1df94" name="abcd47926b0f6b0b78648caa297d1df94"></a>
-FHttpModule *&#160;</td><td class="memItemRight" valign="bottom"><b>http</b></td></tr>
-<tr class="separator:abcd47926b0f6b0b78648caa297d1df94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e1d07ea4146ce8d5e63edca0e10a9af"><td class="memItemLeft" align="right" valign="top"><a id="a4e1d07ea4146ce8d5e63edca0e10a9af" name="a4e1d07ea4146ce8d5e63edca0e10a9af"></a>
-FString&#160;</td><td class="memItemRight" valign="bottom"><b>deviceId</b></td></tr>
-<tr class="separator:a4e1d07ea4146ce8d5e63edca0e10a9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aadceb6857a181daac909004a03e5cdd1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#aadceb6857a181daac909004a03e5cdd1">ShowView</a> (FString _unitId)</td></tr>
+<tr class="memdesc:aadceb6857a181daac909004a03e5cdd1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ShowView function is used to show the ads for the specified ad unit id.  <a href="class_u_advertisement_manager.html#aadceb6857a181daac909004a03e5cdd1">More...</a><br /></td></tr>
+<tr class="separator:aadceb6857a181daac909004a03e5cdd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af12e109d789b46ccfedab58aa6fa8a36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#af12e109d789b46ccfedab58aa6fa8a36">GetAdvertisement</a> (FString _unit_id, EAdvertisementTextureType _textureType, const FAdvertisementReceivedDelegate &amp;advertisementData)</td></tr>
+<tr class="memdesc:af12e109d789b46ccfedab58aa6fa8a36"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetAdvertisement function is used to get the advertisement information.  <a href="class_u_advertisement_manager.html#af12e109d789b46ccfedab58aa6fa8a36">More...</a><br /></td></tr>
+<tr class="separator:af12e109d789b46ccfedab58aa6fa8a36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4dcc9e3d875bc467402108f6cd1e071"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#ab4dcc9e3d875bc467402108f6cd1e071">DownloadVideoAdvertisement</a> (FAdvertisementDataStructure advertisementData, const FAdvertisementVideoAdDownloadDelegate &amp;Result)</td></tr>
+<tr class="memdesc:ab4dcc9e3d875bc467402108f6cd1e071"><td class="mdescLeft">&#160;</td><td class="mdescRight">DownloadVideoAdvertisement function is used to download the content of the advertisement.  <a href="class_u_advertisement_manager.html#ab4dcc9e3d875bc467402108f6cd1e071">More...</a><br /></td></tr>
+<tr class="separator:ab4dcc9e3d875bc467402108f6cd1e071"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a526814accc251c55540e6ce70bf118"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#a4a526814accc251c55540e6ce70bf118">ShowAdvertisement</a> (FAdvertisementDataStructure _data)</td></tr>
+<tr class="memdesc:a4a526814accc251c55540e6ce70bf118"><td class="mdescLeft">&#160;</td><td class="mdescRight">ShowAdvertisement function is used to show the advertisement on the screen.  <a href="class_u_advertisement_manager.html#a4a526814accc251c55540e6ce70bf118">More...</a><br /></td></tr>
+<tr class="separator:a4a526814accc251c55540e6ce70bf118"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e32dd1bb99a2bf6c059d8b4e6606573"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#a1e32dd1bb99a2bf6c059d8b4e6606573">CancelAdvertisement</a> (FAdvertisementDataStructure _data)</td></tr>
+<tr class="memdesc:a1e32dd1bb99a2bf6c059d8b4e6606573"><td class="mdescLeft">&#160;</td><td class="mdescRight">CancelAdvertisement function is used to cancel the view ad.  <a href="class_u_advertisement_manager.html#a1e32dd1bb99a2bf6c059d8b4e6606573">More...</a><br /></td></tr>
+<tr class="separator:a1e32dd1bb99a2bf6c059d8b4e6606573"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad297ba39a346395a745d9ee499673a38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#ad297ba39a346395a745d9ee499673a38">FinishAdvertisement</a> (FAdvertisementDataStructure _data)</td></tr>
+<tr class="memdesc:ad297ba39a346395a745d9ee499673a38"><td class="mdescLeft">&#160;</td><td class="mdescRight">FinishAdvertisement function is used to inform when the user has finished watching the ad.  <a href="class_u_advertisement_manager.html#ad297ba39a346395a745d9ee499673a38">More...</a><br /></td></tr>
+<tr class="separator:ad297ba39a346395a745d9ee499673a38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f009df5b21323455e9b9e44d1fa6ecc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#a4f009df5b21323455e9b9e44d1fa6ecc">RewardAdvertisement</a> (FAdvertisementDataStructure _data)</td></tr>
+<tr class="memdesc:a4f009df5b21323455e9b9e44d1fa6ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">RewardAdvertisement function is used to inform when the user has finished watching rewarded ad and earned reward.  <a href="class_u_advertisement_manager.html#a4f009df5b21323455e9b9e44d1fa6ecc">More...</a><br /></td></tr>
+<tr class="separator:a4f009df5b21323455e9b9e44d1fa6ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe916caa910e10b6a82fdd48ff92a68b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#afe916caa910e10b6a82fdd48ff92a68b">EngageAdvertisement</a> (FAdvertisementDataStructure _data)</td></tr>
+<tr class="memdesc:afe916caa910e10b6a82fdd48ff92a68b"><td class="mdescLeft">&#160;</td><td class="mdescRight">EngageAdvertisement function is used to trace the click activities on the ad.  <a href="class_u_advertisement_manager.html#afe916caa910e10b6a82fdd48ff92a68b">More...</a><br /></td></tr>
+<tr class="separator:afe916caa910e10b6a82fdd48ff92a68b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ade4a5f32268b8e0b4521ffba140243"><td class="memItemLeft" align="right" valign="top">FString&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_advertisement_manager.html#a2ade4a5f32268b8e0b4521ffba140243">GetAdTextureType</a> (EAdvertisementTextureType _adTextureType)</td></tr>
+<tr class="memdesc:a2ade4a5f32268b8e0b4521ffba140243"><td class="mdescLeft">&#160;</td><td class="mdescRight">GetAdTextureType function is used to open the browser when the user clicks on the ad.  <a href="class_u_advertisement_manager.html#a2ade4a5f32268b8e0b4521ffba140243">More...</a><br /></td></tr>
+<tr class="separator:a2ade4a5f32268b8e0b4521ffba140243"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_class_u_ankr_client_base"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_u_ankr_client_base')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_u_ankr_client_base.html">UAnkrClientBase</a></td></tr>
+<tr class="memitem:a9052632c5424290d21c3a10b0c80c787 inherit pub_methods_class_u_ankr_client_base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client_base.html#a9052632c5424290d21c3a10b0c80c787">SendRequest</a> (FString _url, FString _verb, FString _payload, TFunctionRef&lt; void(const TArray&lt; uint8 &gt;, const FString, TSharedPtr&lt; FJsonObject &gt;)&gt; _function, bool _backgroundTask)</td></tr>
+<tr class="memdesc:a9052632c5424290d21c3a10b0c80c787 inherit pub_methods_class_u_ankr_client_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendRequest function is used to send GET or POST request and the response will be received as a JsonObject.  <a href="class_u_ankr_client_base.html#a9052632c5424290d21c3a10b0c80c787">More...</a><br /></td></tr>
+<tr class="separator:a9052632c5424290d21c3a10b0c80c787 inherit pub_methods_class_u_ankr_client_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38f12f584253a7ee298de08ddf6b4e3f inherit pub_methods_class_u_ankr_client_base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client_base.html#a38f12f584253a7ee298de08ddf6b4e3f">SendRequest</a> (FString _url, FString _verb, FString _payload, TFunctionRef&lt; void(const TArray&lt; uint8 &gt;, const FString, const FAnkrCallCompleteDynamicDelegate &amp;, TSharedPtr&lt; FJsonObject &gt;)&gt; _function, const FAnkrCallCompleteDynamicDelegate &amp;_callback, bool _backgroundTask)</td></tr>
+<tr class="memdesc:a38f12f584253a7ee298de08ddf6b4e3f inherit pub_methods_class_u_ankr_client_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendRequest function is used to send GET or POST request and the response will be received as a JsonObject.  <a href="class_u_ankr_client_base.html#a38f12f584253a7ee298de08ddf6b4e3f">More...</a><br /></td></tr>
+<tr class="separator:a38f12f584253a7ee298de08ddf6b4e3f inherit pub_methods_class_u_ankr_client_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c0e7fd29d2cbec47b82e46fd3b4fb62 inherit pub_methods_class_u_ankr_client_base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client_base.html#a1c0e7fd29d2cbec47b82e46fd3b4fb62">SendRequest</a> (FString _url, FString _verb, FString _payload, TFunctionRef&lt; void(const TArray&lt; uint8 &gt;, const FString, const FAdvertisementReceivedDelegate &amp;, TSharedPtr&lt; FJsonObject &gt;)&gt; _function, const FAdvertisementReceivedDelegate &amp;_callback, bool _backgroundTask)</td></tr>
+<tr class="memdesc:a1c0e7fd29d2cbec47b82e46fd3b4fb62 inherit pub_methods_class_u_ankr_client_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendRequest function is used to send GET or POST request and the response will be received as a JsonObject.  <a href="class_u_ankr_client_base.html#a1c0e7fd29d2cbec47b82e46fd3b4fb62">More...</a><br /></td></tr>
+<tr class="separator:a1c0e7fd29d2cbec47b82e46fd3b4fb62 inherit pub_methods_class_u_ankr_client_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3ae2454c5a3f6db53a8559957efece1 inherit pub_methods_class_u_ankr_client_base"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_u_ankr_client_base.html#ad3ae2454c5a3f6db53a8559957efece1">SendRequest</a> (FString _url, TFunctionRef&lt; void(const TArray&lt; uint8 &gt;, const FString, FAdvertisementDataStructure data, const FAdvertisementVideoAdDownloadDelegate &amp;)&gt; _function, FAdvertisementDataStructure data, const FAdvertisementVideoAdDownloadDelegate &amp;_callback, bool _backgroundTask)</td></tr>
+<tr class="memdesc:ad3ae2454c5a3f6db53a8559957efece1 inherit pub_methods_class_u_ankr_client_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">SendRequest function is used to send GET or POST request and the response will be received as a JsonObject.  <a href="class_u_ankr_client_base.html#ad3ae2454c5a3f6db53a8559957efece1">More...</a><br /></td></tr>
+<tr class="separator:ad3ae2454c5a3f6db53a8559957efece1 inherit pub_methods_class_u_ankr_client_base"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p >AdvertisementManager provides functionalities to load and show ads for various platforms. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a978ea400867f7f6d0950847fd9095152" name="a978ea400867f7f6d0950847fd9095152"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a978ea400867f7f6d0950847fd9095152">&#9670;&nbsp;</a></span>StartSession()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::StartSession </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>StartSession function is used to start a new advertisement session. </p>
+<p >The function does not require parameter and returns nothing. The function is called once at the start of the app and once session gets expired.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">Result</td><td>A callback delegate that will be triggered once a response is received with a data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9f45773fd3ed35b2cb60cb449f86e8af" name="a9f45773fd3ed35b2cb60cb449f86e8af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9f45773fd3ed35b2cb60cb449f86e8af">&#9670;&nbsp;</a></span>InitializeAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::InitializeAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_appId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_deviceId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_publicAddress</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_language</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>InitializeAdvertisement function is used to set the app id, device id, public address and language for the ads. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_appId</td><td>The app id for the advertisement. </td></tr>
+    <tr><td class="paramname">_deviceId</td><td>The device id that the AnkrSDK is using. </td></tr>
+    <tr><td class="paramname">_publicAddress</td><td>The wallet address of the user logged in. </td></tr>
+    <tr><td class="paramname">_language</td><td>The language to be used for the advertisement. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section attention"><dt>Attention</dt><dd>This function also loads native ads libraries for iOS and Android. </dd></dl>
+
+</div>
+</div>
+<a id="af77fcacf792f9b662cdf2267c923ffeb" name="af77fcacf792f9b662cdf2267c923ffeb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af77fcacf792f9b662cdf2267c923ffeb">&#9670;&nbsp;</a></span>LoadAd()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::LoadAd </td>
+          <td>(</td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_unitId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>LoadAd function is used to load the ads for the specified ad unit id. </p>
+<p >The function requires a parameter and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_unitId</td><td>The unit id of the advertisement. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aadceb6857a181daac909004a03e5cdd1" name="aadceb6857a181daac909004a03e5cdd1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadceb6857a181daac909004a03e5cdd1">&#9670;&nbsp;</a></span>ShowView()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::ShowView </td>
+          <td>(</td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_unitId</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ShowView function is used to show the ads for the specified ad unit id. </p>
+<p >The function requires a parameter and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_unitId</td><td>The unit id of the advertisement. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="af12e109d789b46ccfedab58aa6fa8a36" name="af12e109d789b46ccfedab58aa6fa8a36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af12e109d789b46ccfedab58aa6fa8a36">&#9670;&nbsp;</a></span>GetAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::GetAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FString&#160;</td>
+          <td class="paramname"><em>_unit_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">EAdvertisementTextureType&#160;</td>
+          <td class="paramname"><em>_textureType</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const FAdvertisementReceivedDelegate &amp;&#160;</td>
+          <td class="paramname"><em>advertisementData</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>GetAdvertisement function is used to get the advertisement information. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_unit_id</td><td>The unit id of the advertisement. </td></tr>
+    <tr><td class="paramname">_textureType</td><td>Whether the type of the texture would be 'image' or 'video'. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ab4dcc9e3d875bc467402108f6cd1e071" name="ab4dcc9e3d875bc467402108f6cd1e071"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4dcc9e3d875bc467402108f6cd1e071">&#9670;&nbsp;</a></span>DownloadVideoAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::DownloadVideoAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FAdvertisementDataStructure&#160;</td>
+          <td class="paramname"><em>advertisementData</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const FAdvertisementVideoAdDownloadDelegate &amp;&#160;</td>
+          <td class="paramname"><em>Result</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>DownloadVideoAdvertisement function is used to download the content of the advertisement. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">advertisementData</td><td>The advertisement structure that contains the download url address. </td></tr>
+    <tr><td class="paramname">Result</td><td>A callback delegate that will be triggered once a response is received with data. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4a526814accc251c55540e6ce70bf118" name="a4a526814accc251c55540e6ce70bf118"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a526814accc251c55540e6ce70bf118">&#9670;&nbsp;</a></span>ShowAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::ShowAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FAdvertisementDataStructure&#160;</td>
+          <td class="paramname"><em>_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ShowAdvertisement function is used to show the advertisement on the screen. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_data</td><td>The advertisement data structure that contains the information to show the ad. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1e32dd1bb99a2bf6c059d8b4e6606573" name="a1e32dd1bb99a2bf6c059d8b4e6606573"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e32dd1bb99a2bf6c059d8b4e6606573">&#9670;&nbsp;</a></span>CancelAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::CancelAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FAdvertisementDataStructure&#160;</td>
+          <td class="paramname"><em>_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>CancelAdvertisement function is used to cancel the view ad. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_data</td><td>The advertisement data structure that contains the information being requested to the show the ad. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad297ba39a346395a745d9ee499673a38" name="ad297ba39a346395a745d9ee499673a38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad297ba39a346395a745d9ee499673a38">&#9670;&nbsp;</a></span>FinishAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::FinishAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FAdvertisementDataStructure&#160;</td>
+          <td class="paramname"><em>_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>FinishAdvertisement function is used to inform when the user has finished watching the ad. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_data</td><td>The advertisement data structure that contains the information on the ads. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a4f009df5b21323455e9b9e44d1fa6ecc" name="a4f009df5b21323455e9b9e44d1fa6ecc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f009df5b21323455e9b9e44d1fa6ecc">&#9670;&nbsp;</a></span>RewardAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::RewardAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FAdvertisementDataStructure&#160;</td>
+          <td class="paramname"><em>_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>RewardAdvertisement function is used to inform when the user has finished watching rewarded ad and earned reward. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_data</td><td>The advertisement data structure that contains the information on the ads. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="afe916caa910e10b6a82fdd48ff92a68b" name="afe916caa910e10b6a82fdd48ff92a68b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe916caa910e10b6a82fdd48ff92a68b">&#9670;&nbsp;</a></span>EngageAdvertisement()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void UAdvertisementManager::EngageAdvertisement </td>
+          <td>(</td>
+          <td class="paramtype">FAdvertisementDataStructure&#160;</td>
+          <td class="paramname"><em>_data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>EngageAdvertisement function is used to trace the click activities on the ad. </p>
+<p >The function requires parameters and returns nothing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_data</td><td>The advertisement data structure that contains the information on the ads. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2ade4a5f32268b8e0b4521ffba140243" name="a2ade4a5f32268b8e0b4521ffba140243"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ade4a5f32268b8e0b4521ffba140243">&#9670;&nbsp;</a></span>GetAdTextureType()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">FString UAdvertisementManager::GetAdTextureType </td>
+          <td>(</td>
+          <td class="paramtype">EAdvertisementTextureType&#160;</td>
+          <td class="paramname"><em>_adTextureType</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>GetAdTextureType function is used to open the browser when the user clicks on the ad. </p>
+<p >The function requires parameters and returns FString.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">_adTextureType</td><td>The texture type to be selected. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The FString texture type. </dd></dl>
+
+</div>
+</div>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

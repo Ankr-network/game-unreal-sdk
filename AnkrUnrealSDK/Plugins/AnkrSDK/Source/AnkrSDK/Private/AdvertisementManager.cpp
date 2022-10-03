@@ -16,8 +16,8 @@ UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectIni
 
 void UAdvertisementManager::InitializeAdvertisement(FString _appId, FString _deviceId, FString _publicAddress, FString _language)
 {
-	appId = _appId;
-	language = _language;
+	UAnkrUtility::SetAdvertisementAppID(_appId);
+	UAnkrUtility::SetLanguage(_language);
 
 #if PLATFORM_IOS
 	LibraryManager::GetInstance().Initialize(_appId, _deviceId, _publicAddress, _language);
@@ -48,10 +48,10 @@ void UAdvertisementManager::StartSession()
 {
 	const FString payload = UPayloadBuilder::BuildPayload(
 		{ 
-			{"app_id",		   UPayloadBuilder::FStringToJsonValue(appId)},
+			{"app_id",		   UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetAdvertisementAppID())},
 			{"device_id",      UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()) },
 			{"public_address", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetWalletAddress()) },
-			{"language",	   UPayloadBuilder::FStringToJsonValue(language) }
+			{"language",	   UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetLanguage()) }
 		});
 	
 	SendRequest(UAnkrUtility::GetAdUrl() + ENDPOINT_START_SESSION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)

@@ -999,7 +999,6 @@ RECURSIVE              = YES
 
 EXCLUDE                = D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrUtility.h \
                          D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AdvertisementData.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AdvertisementManager.h \
                          D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrDelegates.h \
                          D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrSaveGame.h \
                          D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrSDK.h \
