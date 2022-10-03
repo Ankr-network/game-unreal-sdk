@@ -14,15 +14,15 @@ UAdvertisementManager::UAdvertisementManager(const FObjectInitializer& ObjectIni
 #endif
 }
 
-void UAdvertisementManager::InitializeAdvertisement(FString _appId, FString _language)
+void UAdvertisementManager::InitializeAdvertisement(FString _appId, FString _deviceId, FString _publicAddress, FString _language)
 {
 	appId = _appId;
 	language = _language;
 
 #if PLATFORM_IOS
-	LibraryManager::GetInstance().Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
+	LibraryManager::GetInstance().Initialize(_appId, _deviceId, _publicAddress, _language);
 #elif PLATFORM_ANDROID
-	LibraryManager::GetInstance().Initialize(_appId, UAnkrUtility::GetDeviceID(), UAnkrUtility::GetWalletAddress(), _language);
+	LibraryManager::GetInstance().Initialize(_appId, _deviceId, _publicAddress, _language);
 #endif
 }
 
@@ -31,7 +31,7 @@ void UAdvertisementManager::LoadAd(FString _unitId)
 #if PLATFORM_IOS
 	LibraryManager::GetInstance().LoadAd(_unitId);
 #elif PLATFORM_ANDROID
-	LibraryManager::LoadAd(_unitId);
+	LibraryManager::GetInstance().LoadAd(_unitId);
 #endif
 }
 
@@ -40,16 +40,19 @@ void UAdvertisementManager::ShowView(FString _unitId)
 #if PLATFORM_IOS
 	LibraryManager::GetInstance().ShowView(_unitId);
 #elif PLATFORM_ANDROID
-	LibraryManager::ShowView(_unitId);
+	LibraryManager::GetInstance().ShowView(_unitId);
 #endif
 }
 
 void UAdvertisementManager::StartSession()
 {
-	const FString payload = UPayloadBuilder::BuildPayload("app_id",			UPayloadBuilder::FStringToJsonValue(appId),
-														  "device_id",		UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
-														  "public_address", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetWalletAddress()),
-														  "language",		UPayloadBuilder::FStringToJsonValue(language));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"app_id",		   UPayloadBuilder::FStringToJsonValue(appId)},
+			{"device_id",      UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()) },
+			{"public_address", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetWalletAddress()) },
+			{"language",	   UPayloadBuilder::FStringToJsonValue(language) }
+		});
 	
 	SendRequest(UAnkrUtility::GetAdUrl() + ENDPOINT_START_SESSION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -59,9 +62,12 @@ void UAdvertisementManager::StartSession()
 
 void UAdvertisementManager::GetAdvertisement(FString _unit_id, EAdvertisementTextureType _textureType, const FAdvertisementReceivedDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id",	  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
-														  "unit_id",	  UPayloadBuilder::FStringToJsonValue(_unit_id),
-														  "texture_type", UPayloadBuilder::FStringToJsonValue(GetAdTextureType(_textureType)));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"device_id",    UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
+			{"unit_id",      UPayloadBuilder::FStringToJsonValue(_unit_id)},
+			{"texture_type", UPayloadBuilder::FStringToJsonValue(GetAdTextureType(_textureType))} 
+		});
 
 	SendRequest(UAnkrUtility::GetAdUrl() + ENDPOINT_AD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAdvertisementReceivedDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -96,8 +102,11 @@ void UAdvertisementManager::ShowAdvertisement(FAdvertisementDataStructure _data)
 	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("show");
-	const FString payload = UPayloadBuilder::BuildPayload("started_at",  UPayloadBuilder::FStringToJsonValue(started_at),
-														  "finished_at", UPayloadBuilder::FStringToJsonValue(finished_at));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"started_at",  UPayloadBuilder::FStringToJsonValue("started_at")},
+			{"finished_at", UPayloadBuilder::FStringToJsonValue("finished_at")} 
+		});
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -110,7 +119,10 @@ void UAdvertisementManager::CancelAdvertisement(FAdvertisementDataStructure _dat
 	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("cancel");
-	const FString payload = UPayloadBuilder::BuildPayload("finished_at", UPayloadBuilder::FStringToJsonValue(finished_at));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"finished_at", UPayloadBuilder::FStringToJsonValue(finished_at)}
+		});
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -123,7 +135,10 @@ void UAdvertisementManager::FinishAdvertisement(FAdvertisementDataStructure _dat
 	FString finished_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("finish");
-	const FString payload = UPayloadBuilder::BuildPayload("finished_at", UPayloadBuilder::FStringToJsonValue(finished_at));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"finished_at", UPayloadBuilder::FStringToJsonValue(finished_at)}
+		});
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -136,7 +151,10 @@ void UAdvertisementManager::RewardAdvertisement(FAdvertisementDataStructure _dat
 	FString rewarded_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("reward");
-	const FString payload = UPayloadBuilder::BuildPayload("rewarded_at", UPayloadBuilder::FStringToJsonValue(rewarded_at));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"rewarded_at", UPayloadBuilder::FStringToJsonValue(rewarded_at)}
+		});
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -149,7 +167,10 @@ void UAdvertisementManager::EngageAdvertisement(FAdvertisementDataStructure _dat
 	FString clicked_at = FString::Printf(TEXT("%d"), FDateTime::Now().ToUnixTimestamp());
 
 	const FString url = UAnkrUtility::GetAdUrl() + ENDPOINT_AD + SLASH + _data.result.uuid + SLASH + FString("engage");
-	const FString payload = UPayloadBuilder::BuildPayload("clicked_at", UPayloadBuilder::FStringToJsonValue(clicked_at));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"clicked_at", UPayloadBuilder::FStringToJsonValue(clicked_at)}
+		});
 
 	SendRequest(url, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{

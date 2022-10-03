@@ -31,7 +31,10 @@ void UAnkrClient::Ping(const FAnkrCallCompleteDynamicDelegate& Result)
 
 void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id", UAnkrUtility::GetDeviceID());
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"device_id", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())}
+		});
 	
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CONNECT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -68,7 +71,10 @@ void UAnkrClient::ConnectWallet(const FAnkrCallCompleteDynamicDelegate& Result)
 
 void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id", UAnkrUtility::GetDeviceID());
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"device_id", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())}
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_WALLET_INFO, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -109,7 +115,10 @@ void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 
 void UAnkrClient::SendABI(FString abi, const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("abi", abi);
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"abi", UPayloadBuilder::FStringToJsonValue(abi)}
+		});
 	
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_ABI, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -124,11 +133,14 @@ void UAnkrClient::SendABI(FString abi, const FAnkrCallCompleteDynamicDelegate& R
 
 void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString method, FString args, const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id",		  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
-														  "contract_address", UPayloadBuilder::FStringToJsonValue(contract),
-														  "abi_hash",         UPayloadBuilder::FStringToJsonValue(abi_hash),
-														  "method",           UPayloadBuilder::FStringToJsonValue(method),
-														  "args",             UPayloadBuilder::FStringToJsonValue(args));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"device_id",		 UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
+			{"contract_address", UPayloadBuilder::FStringToJsonValue(contract)},
+			{"abi_hash",		 UPayloadBuilder::FStringToJsonValue(abi_hash)},
+			{"method",			 UPayloadBuilder::FStringToJsonValue(method)},
+			{"args",			 UPayloadBuilder::FStringToJsonValue(args)} 
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -148,7 +160,10 @@ void UAnkrClient::SendTransaction(FString contract, FString abi_hash, FString me
 
 void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("ticket", ticketId);
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"ticket", UPayloadBuilder::FStringToJsonValue(ticketId)}
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_RESULT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -164,11 +179,15 @@ void UAnkrClient::GetTicketResult(FString ticketId, const FAnkrCallCompleteDynam
 
 void UAnkrClient::CallMethod(FString contract, FString abi_hash, FString method, FString args, const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id",		  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
-														  "contract_address", UPayloadBuilder::FStringToJsonValue(contract),
-														  "abi_hash",		  UPayloadBuilder::FStringToJsonValue(abi_hash),
-														  "method",			  UPayloadBuilder::FStringToJsonValue(method),
-														  "args",		      UPayloadBuilder::FStringToJsonValue(args));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"device_id",		 UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
+			{"contract_address", UPayloadBuilder::FStringToJsonValue(contract)},
+			{"abi_hash",		 UPayloadBuilder::FStringToJsonValue(abi_hash)},
+			{"method",			 UPayloadBuilder::FStringToJsonValue(method)},
+			{"args",			 UPayloadBuilder::FStringToJsonValue(args)} 
+		});
+	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - CallMethod - payload: %s."), *payload);
 	
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -181,8 +200,11 @@ void UAnkrClient::CallMethod(FString contract, FString abi_hash, FString method,
 
 void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDelegate & Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
-														  "message",   UPayloadBuilder::FStringToJsonValue(message));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"device_id", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
+			{"message",   UPayloadBuilder::FStringToJsonValue(message)} 
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SIGN_MESSAGE, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -202,7 +224,10 @@ void UAnkrClient::SignMessage(FString message, const FAnkrCallCompleteDynamicDel
 
 void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("ticket", ticket);
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"ticket", UPayloadBuilder::FStringToJsonValue(ticket)}
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_RESULT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -218,9 +243,12 @@ void UAnkrClient::GetSignature(FString ticket, const FAnkrCallCompleteDynamicDel
 
 void UAnkrClient::VerifyMessage(FString message, FString signature, const FAnkrCallCompleteDynamicDelegate& Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
-														  "message",   UPayloadBuilder::FStringToJsonValue(message),
-														  "signature", UPayloadBuilder::FStringToJsonValue(signature));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"device_id", UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
+			{"message",   UPayloadBuilder::FStringToJsonValue(message)},
+			{"signature", UPayloadBuilder::FStringToJsonValue(signature)} 
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_VERIFY_MESSAGE, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -235,9 +263,12 @@ void UAnkrClient::VerifyMessage(FString message, FString signature, const FAnkrC
 
 void UAnkrClient::CollectStatistics(FString _app_id, FString _device_id, FString _public_address)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("app_id",			UPayloadBuilder::FStringToJsonValue(_app_id),
-														  "device_id",		UPayloadBuilder::FStringToJsonValue(_device_id),
-														  "public_address", UPayloadBuilder::FStringToJsonValue(_public_address));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{"app_id",         UPayloadBuilder::FStringToJsonValue(_app_id)},
+			{"device_id",      UPayloadBuilder::FStringToJsonValue(_device_id)},
+			{"public_address", UPayloadBuilder::FStringToJsonValue(_public_address)} 
+		});
 
 	SendRequest(UAnkrUtility::GetStatUrl() + ENDPOINT_STATS_COLLECT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, TSharedPtr<FJsonObject> jsonObject)
 		{

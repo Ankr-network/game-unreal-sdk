@@ -69,13 +69,16 @@
 	<prebuildCopies>
 		<log text="AnkrSDK - Android - prebuildCopies"/>
 		<!--<copyDir src="$S(PluginDir)/Java" dst="$(BuildDir)/src/com/epicgames/unreal"/>-->
+		<copyDir src="$S(PluginDir)/Private/Android/Libraries/nativeads-release" dst = "$S(BuildDir)/JavaLibs/nativeads-release" />
 	</prebuildCopies>
 	
 	<!-- optional files or directories to copy or delete from Intermediate/Android/APK after ndk-build -->
 	<resourceCopies>
 		<log text="AnkrSDK - Android - resourceCopies"/>
-		<copyFile src="$S(PluginDir)/Private/Android/Libraries/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>
+		<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-release/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>-->
 		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-release.aar" dst="$S(BuildDir)/gradle/app/nativeads-release.aar"/>-->
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-release.aar" dst="$S(BuildDir)/libs/nativeads-release.aar"/>-->
 	</resourceCopies>
 	
 	<!-- optional files or directories to copy or delete from Intermediate/Android/APK before Gradle -->
@@ -102,7 +105,7 @@
 	<gameActivityImportAdditions>
 		<log text="AnkrSDK - Android - gameActivityImportAdditions"/>
 		<insert>
-			import com.ankr.nativeads.AnkrAds;
+			import com.ankr.nativeads.*;
 		</insert>
 	</gameActivityImportAdditions>
 	

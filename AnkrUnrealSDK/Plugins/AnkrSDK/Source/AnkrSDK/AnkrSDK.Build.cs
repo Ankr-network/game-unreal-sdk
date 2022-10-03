@@ -114,7 +114,5 @@ public class AnkrSDK : ModuleRules
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Android"));
         string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
         AdditionalPropertiesForReceipt.Add("AndroidPlugin", Path.Combine(PluginPath, "AnkrSDKAndroid_UPL.xml"));
-
-		//PublicAdditionalLibraries.Add(ModuleDirectory + "/Private/Android/Libraries/nativeads-release.aar");
 	}
 }

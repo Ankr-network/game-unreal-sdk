@@ -11,11 +11,14 @@ UUpdateNFTExample::UUpdateNFTExample(const FObjectInitializer& ObjectInitializer
 
 void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("device_id",		  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID()),
-														  "contract_address", UPayloadBuilder::FStringToJsonValue(ContractAddress),
-														  "abi_hash",		  UPayloadBuilder::FStringToJsonValue(abi_hash),
-														  "method",			  UPayloadBuilder::FStringToJsonValue("getTokenDetails"),
-														  "args",			  UPayloadBuilder::FStringToJsonValue(FString::FromInt(tokenId)));
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{ 
+			{ "device_id",		  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
+			{"contract_address", UPayloadBuilder::FStringToJsonValue(ContractAddress)},
+			{"abi_hash",		  UPayloadBuilder::FStringToJsonValue(abi_hash)},
+			{"method",			  UPayloadBuilder::FStringToJsonValue("getTokenDetails")},
+			{"args",			  UPayloadBuilder::FStringToJsonValue(FString::FromInt(tokenId))} 
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{
@@ -65,7 +68,10 @@ void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FA
 
 void UUpdateNFTExample::GetUpdateNFTResult(FString ticketId, FAnkrCallCompleteDynamicDelegate Result)
 {
-	const FString payload = UPayloadBuilder::BuildPayload("ticket", ticketId);
+	const FString payload = UPayloadBuilder::BuildPayload(
+		{
+			{"ticket", UPayloadBuilder::FStringToJsonValue(ticketId)}
+		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_RESULT, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
 		{

@@ -54,7 +54,6 @@ public:
 	
 	static void SetDevelopment(bool _value);
 	static FString GetUrl();
-	static FString GetAdsAppID();
 	static FString GetAdUrl();
 	static FString GetStatUrl();
 	static FString GetLastRequest();
@@ -74,14 +73,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static void AddWalletAddress(FString _address);
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static FString GetWalletAddress();
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static int GetChainID();
-	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static void SetChainID(int _chainId);
-
-	static FString BuildPayload();
-	static FString BuildPayloadA( FString _abi);
-	static FString BuildPayloadT(const FString _ticket);
-	static FString BuildPayloadTC(const FString _contract, const FString _abi_hash, const FString _method, const FString _args);
-	static FString BuildPayloadM(const FString _message);
-	static FString BuildPayloadS(const FString _message, const FString _signature);
-	static FString BuildPayloadX(const FString _device_id, const FString _abi, const FString _ticket, const FString _message, const FString _siqnature, const FString _contract, const FString _abi_hash, const FString _method, const FString _args);
-	
+	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static void SetChainID(int _chainId);	
+	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static FString GetAdsAppID();
 };

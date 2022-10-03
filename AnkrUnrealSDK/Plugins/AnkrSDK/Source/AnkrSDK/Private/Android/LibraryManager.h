@@ -23,14 +23,6 @@ public:
 
 public:
 
-	//TSharedPtr<FJavaClassObject> FJavaClassObject_DumpClass;
-	//FJavaClassMethod FJavaClassMethod_DumpMethod;
-
-	//TSharedPtr<FJavaClassObject> JCO_AnkrAds;
-	//FJavaClassMethod JCM_Initialize;
-	//FJavaClassMethod JCM_LoadAd;
-	//FJavaClassMethod JCM_ShowView;
-
 	void LoadLibrary();
 	void UnloadLibrary();
 	void Initialize(FString appId, FString deviceId, FString publicAddress, FString language);

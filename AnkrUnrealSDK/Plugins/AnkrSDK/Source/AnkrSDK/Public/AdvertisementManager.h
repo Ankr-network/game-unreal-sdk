@@ -32,7 +32,7 @@ public:
 	void StartSession();
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void InitializeAdvertisement(FString _appId, FString _language);
+	void InitializeAdvertisement(FString _appId, FString _deviceId, FString _publicAddress, FString _language);
 
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetAdvertisement(FString _unit_id, EAdvertisementTextureType _textureType, const FAdvertisementReceivedDelegate& advertisementData);
