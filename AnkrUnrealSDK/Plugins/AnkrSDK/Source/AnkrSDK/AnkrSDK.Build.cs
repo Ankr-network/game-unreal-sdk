@@ -81,7 +81,7 @@ public class AnkrSDK : ModuleRules
 
 	void SetWindowsDependencies()
     {
-		PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Windows"));
+        PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Windows"));
 	}
 
 	void SetMacDependencies()
@@ -99,8 +99,12 @@ public class AnkrSDK : ModuleRules
 
         PrivateDependencyModuleNames.AddRange(new string[] { "Launch" });
 
-        PublicIncludePaths.Add(ModuleDirectory + "/Private/iOS/Libraries/AdsBridge.framework/Headers");
-        PublicAdditionalFrameworks.Add(new Framework("AdsBridge", ModuleDirectory + "/Private/iOS/Libraries/AdsBridge.framework"));
+		string FrameworkPath = ModuleDirectory + "/Private/iOS/Libraries/AdsBridge.framework";
+		if (Directory.Exists(FrameworkPath))
+		{
+			PublicIncludePaths.Add(FrameworkPath + "/Headers");
+			PublicAdditionalFrameworks.Add(new Framework("AdsBridge", FrameworkPath));
+		}
 
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/iOS"));
         string PluginPath = Utils.MakePathRelativeTo(ModuleDirectory, Target.RelativeEnginePath);
