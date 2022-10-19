@@ -121,3 +121,27 @@ void UAnkrUtility::SetLanguage(FString _language)
 {
 	Language = _language;
 }
+
+void UAnkrUtility::Reset()
+{
+	LastRequest = FString("");
+	DeviceID = FString("");
+	Session = FString("");
+	WalletConnectDeepLink = FString("");
+	NeedLogin = true;
+	Accounts.Reset();
+	ChainID = -1;
+}
+
+std::string UAnkrUtility::FStringToStdString(FString fstring)
+{
+	std::string conversion = std::string(TCHAR_TO_UTF8(*fstring));
+
+	return conversion;
+}
+FString UAnkrUtility::StdStringToFString(std::string stdstring)
+{
+	FString conversion(stdstring.c_str());
+
+	return conversion;
+}

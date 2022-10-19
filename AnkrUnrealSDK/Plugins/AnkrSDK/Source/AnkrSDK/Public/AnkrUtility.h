@@ -80,4 +80,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static void SetAdvertisementAppID(FString _appId);
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static FString GetLanguage();
 	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static void SetLanguage(FString _language);
+	UFUNCTION(BlueprintCallable, Category = "AnkrUtility") static void Reset();
+
+	static std::string FStringToStdString(FString fstring);
+	static FString StdStringToFString(std::string stdstring);
 };

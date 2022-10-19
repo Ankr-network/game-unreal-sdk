@@ -15,4 +15,5 @@ public:
 
     static void Save(FString _uniqueId);
     static UAnkrSaveGame* Load();
+    static void Erase();
 };

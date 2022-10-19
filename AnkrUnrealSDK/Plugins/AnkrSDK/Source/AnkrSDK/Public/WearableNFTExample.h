@@ -3,9 +3,9 @@
 #include "AnkrClient.h"
 #include "WearableNFTExample.generated.h"
 
-const FString BlueHatAddress      = "0x00010000000000000000000000000000000000000000000000000000000001";
-const FString RedHatAddress       = "0x00010000000000000000000000000000000000000000000000000000000002";
-const FString WhiteHatAddress     = "0x00010000000000000000000000000000000000000000000000000000000003";
+const FString BlueHatAddress      = "0x00010000000000000000000000000000000000000000000000000000000001"; //6901746346790563787434755862277025452451108972170386555162524223799297
+const FString RedHatAddress       = "0x00010000000000000000000000000000000000000000000000000000000002"; //6901746346790563787434755862277025452451108972170386555162524223799298
+const FString WhiteHatAddress     = "0x00010000000000000000000000000000000000000000000000000000000003"; //6901746346790563787434755862277025452451108972170386555162524223799299
 const FString BlueShoesAddress    = "0x00020000000000000000000000000000000000000000000000000000000001";
 const FString RedShoesAddress     = "0x00020000000000000000000000000000000000000000000000000000000002";
 const FString WhiteShoesAddress   = "0x00020000000000000000000000000000000000000000000000000000000003";
@@ -137,7 +137,6 @@ public:
 	///
 	/// @param abi_hash The hash of the abi string of the contract.
 	/// @param characterId The character id obtained by GetCharacterTokenId(FString, int, FString, FString, FAnkrCallCompleteDynamicDelegate);
-	/// @param hasHat Whether the character already has the hat or not.
 	/// @param hatAddress The address of the hat to change hat to.
 	/// @param Result A callback delegate that will be triggered once a response is received with data.
 	/// 
@@ -146,7 +145,7 @@ public:
 	/// {"device_id":"YOUR_DEVICE_ID", "contract_address":"0x7081F409F750EACD27867c988b4B3771d935Fe16", "abi_hash":"YOUR_ABI_HASH", "method":"changeHat", "args":["TOKEN_ID", "HAT_ADDRESS"]}
 	/// ~~~~~~~~~~~~~~~~~~~~~~~
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
-	void ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result);
+	void ChangeHat(FString abi_hash, int characterId, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result);
 
 	/// GetHat function is used to get the current hat of the character and requires the user confirmation through wallet such as metamask.
 	///
@@ -213,4 +212,7 @@ public:
 	/// @param Result A callback delegate that will be triggered once a response is received with data.
 	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
 	void GetTokenURI(FString abi_hash, int tokenId, FAnkrCallCompleteDynamicDelegate Result);
+
+	UFUNCTION(BlueprintCallable, Category = "ANKR SDK")
+	FString GetHatAddressByID(FString _hatID);
 };

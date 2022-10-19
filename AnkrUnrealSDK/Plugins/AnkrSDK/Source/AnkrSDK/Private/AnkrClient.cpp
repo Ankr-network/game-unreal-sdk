@@ -14,7 +14,7 @@ void UAnkrClient::Initialize()
 	UAnkrSaveGame* load = UAnkrSaveGame::Load();
 
 	UAnkrUtility::SetDeviceID(load->UniqueId);
-	UAnkrUtility::SetDevelopment(false);
+	UAnkrUtility::SetDevelopment(true);
 
 	UE_LOG(LogTemp, Warning, TEXT("AnkrClient - Initialize - AnkrSDK will use device id: %s."), *UAnkrUtility::GetDeviceID());
 }
@@ -100,6 +100,9 @@ void UAnkrClient::GetWalletInfo(const FAnkrCallCompleteDynamicDelegate& Result)
 				else
 				{
 					UE_LOG(LogTemp, Error, TEXT("AnkrClient - GetWalletInfo - Couldn't get an account, wallet is not connected: %s"), *content);
+
+					UAnkrSaveGame::Erase();
+					UAnkrUtility::Reset();
 				}
 			}
 			else

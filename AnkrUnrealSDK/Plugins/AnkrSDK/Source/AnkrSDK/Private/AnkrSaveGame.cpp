@@ -20,3 +20,10 @@ void UAnkrSaveGame::Save(FString _uniqueId)
 
     UGameplayStatics::SaveGameToSlot(save, "AnkrSDK", 0);
 }
+void UAnkrSaveGame::Erase()
+{
+	if (UGameplayStatics::DoesSaveGameExist("AnkrSDK", 0))
+	{
+		UGameplayStatics::DeleteGameInSlot("AnkrSDK", 0);
+	}
+}

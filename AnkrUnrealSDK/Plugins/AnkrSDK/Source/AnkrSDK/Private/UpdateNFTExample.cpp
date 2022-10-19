@@ -13,11 +13,11 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FAnkrCallCompl
 {
 	const FString payload = UPayloadBuilder::BuildPayload(
 		{ 
-			{ "device_id",		  UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
+			{"device_id",		 UPayloadBuilder::FStringToJsonValue(UAnkrUtility::GetDeviceID())},
 			{"contract_address", UPayloadBuilder::FStringToJsonValue(ContractAddress)},
-			{"abi_hash",		  UPayloadBuilder::FStringToJsonValue(abi_hash)},
-			{"method",			  UPayloadBuilder::FStringToJsonValue("getTokenDetails")},
-			{"args",			  UPayloadBuilder::FStringToJsonValue(FString::FromInt(tokenId))} 
+			{"abi_hash",		 UPayloadBuilder::FStringToJsonValue(abi_hash)},
+			{"method",			 UPayloadBuilder::FStringToJsonValue("getTokenDetails")},
+			{"args",			 UPayloadBuilder::FStringToJsonValue(FString::FromInt(tokenId))} 
 		});
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_CALL_METHOD, "POST", payload, [this](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
