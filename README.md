@@ -640,9 +640,9 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result)
+void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result)
 {
-	if (!hasHat || characterId == -1)
+	if (characterId < 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - ChangeHat - CharacterID or HatID is null"));
 		return;
@@ -650,17 +650,22 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 
 	if (hatAddress.Equals(BlueHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatBlue");
 	else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatRed");
+	else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatWhite");
+
+	TSharedPtr<FJsonObject> gas = UPayloadBuilder::GetBuilder();
+	gas->SetNumberField("gasLimit", 200000);
 
 	TArray<TSharedPtr<FJsonValue>> args;
 	UPayloadBuilder::AddArrayItem(args, FString::FromInt(characterId));
 	UPayloadBuilder::AddArrayItem(args, hatAddress);
+	//UPayloadBuilder::AddNestedObject(args, gas);
 
 	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
-	builder->SetStringField("device_id",	    UAnkrUtility::GetDeviceID());
+	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
 	builder->SetStringField("contract_address", GameCharacterContractAddress);
-	builder->SetStringField("abi_hash",	    abi_hash);
-	builder->SetStringField("method",	    "changeHat");
-	builder->SetArrayField("args",		    args);
+	builder->SetStringField("abi_hash",			abi_hash);
+	builder->SetStringField("method",			"changeHat");
+	builder->SetArrayField("args",				args);
 	const FString payload = UPayloadBuilder::Build(builder);
 
 	SendRequest(UAnkrUtility::GetUrl() + ENDPOINT_SEND_TRANSACTION, "POST", payload, [this, hatAddress](const TArray<uint8> bytes, const FString content, const FAnkrCallCompleteDynamicDelegate& callback, TSharedPtr<FJsonObject> jsonObject)
@@ -732,24 +737,24 @@ void UWearableNFTExample::GetWearableNFTResult(FString ticketId, FAnkrCallComple
 		{
 			UE_LOG(LogTemp, Warning, TEXT("WearableNFTExample - GetWearableNFTResult - response: %s"), *content);
 
-			FString data = content;
-			int code = 1;
+			FString status;
+			FString txHash;
+			bool hasTxHash = false;
 
-			if (UAnkrUtility::GetLastRequest().Equals("ChangeHatBlue") || UAnkrUtility::GetLastRequest().Equals("ChangeHatRed"))
+			bool result = jsonObject->GetBoolField("result");
+			if (result)
 			{
-				bool result                    = jsonObject->GetBoolField("result");
 				TSharedPtr<FJsonObject> object = jsonObject->GetObjectField("data");
-				FString transactionHash        = object->GetStringField("tx_hash");
-				FString status                 = object->GetStringField("status");
-				UE_LOG(LogTemp, Warning, TEXT("tx_hash: %s | status: %s"), *transactionHash, *status);
+				status = object->GetStringField("status");
 
-				if (result && status == "success")
+				hasTxHash = object->TryGetStringField("tx_hash", txHash);
+				if (hasTxHash)
 				{
-					code = 123;
+					UE_LOG(LogTemp, Warning, TEXT("tx_hash: %s"), *txHash);
 				}
 			}
 
-			callback.ExecuteIfBound(content, data, "", code, false);
+			callback.ExecuteIfBound(content, txHash, status, -1, hasTxHash);
 
 		}, Result, false);
 }
