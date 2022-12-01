@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AnkrSDK: AnkrUnrealSDK/Plugins/AnkrSDK/Source/AnkrSDK/Public/AdvertisementManager.h Source File</title>
+<title>MirageSDK: MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/AdvertisementManager.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Logo.jfif"/></td>
   <td id="projectalign">
-   <div id="projectname">AnkrSDK<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">MirageSDK<span id="projectnumber">&#160;1.1.2</span>
    </div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
@@ -97,7 +97,7 @@ $(document).ready(function(){initNavTree('_advertisement_manager_8h_source.html'
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;AnkrClientBase.h&quot;</span></div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;MirageClientBase.h&quot;</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span> </div>
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#if PLATFORM_IOS</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#import &quot;../Private/iOS/LibraryManager.h&quot;</span></div>
@@ -116,57 +116,57 @@ $(document).ready(function(){initNavTree('_advertisement_manager_8h_source.html'
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span><span class="preprocessor">#define AD_INCORRECT_APP_TYPE 1005 </span><span class="comment">// Incorrect app_type.</span></div>
 <div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
 <div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>UCLASS(Blueprintable, BlueprintType)</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html">   23</a></span>class ANKRSDK_API <a class="code hl_class" href="class_u_advertisement_manager.html">UAdvertisementManager</a> : public <a class="code hl_class" href="class_u_ankr_client_base.html">UAnkrClientBase</a></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html">   23</a></span>class MIRAGESDK_API <a class="code hl_class" href="class_u_advertisement_manager.html">UAdvertisementManager</a> : public <a class="code hl_class" href="class_u_mirage_client_base.html">UMirageClientBase</a></div>
 <div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
 <div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>    GENERATED_UCLASS_BODY()</div>
 <div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
 <div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span><span class="keyword">public</span>:</div>
 <div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    </div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    UFUNCTION(BlueprintCallable, Category = <span class="stringliteral">&quot;ANKR SDK&quot;</span>)</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    UFUNCTION(BlueprintCallable, Category = <span class="stringliteral">&quot;MIRAGE SDK&quot;</span>)</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#a978ea400867f7f6d0950847fd9095152">   36</a></span>    void StartSession();</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00048" name="l00048"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#a9f45773fd3ed35b2cb60cb449f86e8af">   48</a></span>    <span class="keywordtype">void</span> InitializeAdvertisement(FString _appId, FString _deviceId, FString _publicAddress, FString _language);</div>
 <div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno">   55</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00056" name="l00056"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#af77fcacf792f9b662cdf2267c923ffeb">   56</a></span>    <span class="keywordtype">void</span> LoadAd(FString _unitId);</div>
 <div class="line"><a id="l00057" name="l00057"></a><span class="lineno">   57</span> </div>
-<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00063" name="l00063"></a><span class="lineno">   63</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00064" name="l00064"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#aadceb6857a181daac909004a03e5cdd1">   64</a></span>    <span class="keywordtype">void</span> ShowView(FString _unitId);</div>
 <div class="line"><a id="l00065" name="l00065"></a><span class="lineno">   65</span> </div>
-<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00072" name="l00072"></a><span class="lineno">   72</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00073" name="l00073"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#af12e109d789b46ccfedab58aa6fa8a36">   73</a></span>    <span class="keywordtype">void</span> GetAdvertisement(FString _unit_id, EAdvertisementTextureType _textureType, const FAdvertisementReceivedDelegate&amp; advertisementData);</div>
 <div class="line"><a id="l00074" name="l00074"></a><span class="lineno">   74</span> </div>
-<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00081" name="l00081"></a><span class="lineno">   81</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00082" name="l00082"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#ab4dcc9e3d875bc467402108f6cd1e071">   82</a></span>    <span class="keywordtype">void</span> DownloadVideoAdvertisement(FAdvertisementDataStructure advertisementData, const FAdvertisementVideoAdDownloadDelegate&amp; Result);</div>
 <div class="line"><a id="l00083" name="l00083"></a><span class="lineno">   83</span> </div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#a4a526814accc251c55540e6ce70bf118">   90</a></span>    <span class="keywordtype">void</span> ShowAdvertisement(FAdvertisementDataStructure _data);</div>
 <div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span> </div>
-<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00098" name="l00098"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#a1e32dd1bb99a2bf6c059d8b4e6606573">   98</a></span>    <span class="keywordtype">void</span> CancelAdvertisement(FAdvertisementDataStructure _data);</div>
 <div class="line"><a id="l00099" name="l00099"></a><span class="lineno">   99</span>    </div>
-<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00105" name="l00105"></a><span class="lineno">  105</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00106" name="l00106"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#ad297ba39a346395a745d9ee499673a38">  106</a></span>    <span class="keywordtype">void</span> FinishAdvertisement(FAdvertisementDataStructure _data);</div>
 <div class="line"><a id="l00107" name="l00107"></a><span class="lineno">  107</span> </div>
-<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#a4f009df5b21323455e9b9e44d1fa6ecc">  114</a></span>    <span class="keywordtype">void</span> RewardAdvertisement(FAdvertisementDataStructure _data);</div>
 <div class="line"><a id="l00115" name="l00115"></a><span class="lineno">  115</span> </div>
-<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00122" name="l00122"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#afe916caa910e10b6a82fdd48ff92a68b">  122</a></span>    <span class="keywordtype">void</span> EngageAdvertisement(FAdvertisementDataStructure _data);</div>
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span> </div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    UFUNCTION(BlueprintCallable, Category = &quot;ANKR SDK&quot;)</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
 <div class="line"><a id="l00131" name="l00131"></a><span class="lineno"><a class="line" href="class_u_advertisement_manager.html#a2ade4a5f32268b8e0b4521ffba140243">  131</a></span>    FString GetAdTextureType(EAdvertisementTextureType _adTextureType);</div>
 <div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
 <div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>};</div>
 <div class="ttc" id="aclass_u_advertisement_manager_html"><div class="ttname"><a href="class_u_advertisement_manager.html">UAdvertisementManager</a></div><div class="ttdoc">AdvertisementManager provides functionalities to load and show ads for various platforms.</div><div class="ttdef"><b>Definition:</b> AdvertisementManager.h:24</div></div>
-<div class="ttc" id="aclass_u_ankr_client_base_html"><div class="ttname"><a href="class_u_ankr_client_base.html">UAnkrClientBase</a></div><div class="ttdoc">UAnkrClientBase is an ANKR class that provides helper functions to send GET or POST requests asynchro...</div><div class="ttdef"><b>Definition:</b> AnkrClientBase.h:13</div></div>
+<div class="ttc" id="aclass_u_mirage_client_base_html"><div class="ttname"><a href="class_u_mirage_client_base.html">UMirageClientBase</a></div><div class="ttdoc">UMirageClientBase is an Mirage class that provides helper functions to send GET or POST requests asyn...</div><div class="ttdef"><b>Definition:</b> MirageClientBase.h:13</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_869a7e922cf53f02e9c90594b2b3332a.html">AnkrUnrealSDK</a></li><li class="navelem"><a class="el" href="dir_7e5f5a6b9bd170b4e7f6a2f9ee231548.html">Plugins</a></li><li class="navelem"><a class="el" href="dir_cafbe179d55a92535028920d9347e485.html">AnkrSDK</a></li><li class="navelem"><a class="el" href="dir_f191043461933f78475346877ae595af.html">Source</a></li><li class="navelem"><a class="el" href="dir_1158dcd3ef8bd72fc6d36f2de7e0d5bf.html">AnkrSDK</a></li><li class="navelem"><a class="el" href="dir_16a7b801939cb8a3cf172a3c979dac29.html">Public</a></li><li class="navelem"><b>AdvertisementManager.h</b></li>
+    <li class="navelem"><a class="el" href="dir_608fc31dd14c64905ecd6d3f3379e652.html">MirageUnrealSDK</a></li><li class="navelem"><a class="el" href="dir_bca5fd9cdd172d180a5d131c6f1838c9.html">Plugins</a></li><li class="navelem"><a class="el" href="dir_5fa19749f56e4233008c112b5ba9b171.html">MirageSDK</a></li><li class="navelem"><a class="el" href="dir_489d2c84db6231bc5ff4e3ab27c320e5.html">Source</a></li><li class="navelem"><a class="el" href="dir_0358cdf57543c3562e20c591c71d2524.html">MirageSDK</a></li><li class="navelem"><a class="el" href="dir_88e956ddc3b1d88983240d175e590982.html">Public</a></li><li class="navelem"><b>AdvertisementManager.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

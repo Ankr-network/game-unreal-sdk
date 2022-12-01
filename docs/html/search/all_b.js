@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['ping_0',['Ping',['../class_u_ankr_client.html#a2b46e8cae70b022bf5c043f044cab487',1,'UAnkrClient']]]
+  ['ping_0',['Ping',['../class_u_mirage_client.html#a7f8a6cc23c1754e7a1ac28ca19e02c3a',1,'UMirageClient']]]
 ];

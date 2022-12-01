@@ -41,13 +41,13 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = AnkrSDK
+PROJECT_NAME           = MirageSDK
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
 # control system is used.
 
-PROJECT_NUMBER         = 1.0.1
+PROJECT_NUMBER         = 1.1.2
 
 # Using the PROJECT_BRIEF tag one can provide an optional one line description
 # for a project that appears at the top of each page and should give viewer a
@@ -906,7 +906,7 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public \
+INPUT                  = MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public \
                          D:\GitHub\GitHub\game-unreal-sdk\docs\docs_pages
 
 # This tag can be used to specify the character encoding of the source files
@@ -997,15 +997,16 @@ RECURSIVE              = YES
 # Note that relative paths are relative to the directory from which doxygen is
 # run.
 
-EXCLUDE                = D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrUtility.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AdvertisementData.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrDelegates.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrSaveGame.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrSDK.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\ItemInfo.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\qrcodegen.hpp \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\QRCodeGenerator.h \
-                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\RequestBodyStructure.h
+EXCLUDE                = MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/AdvertisementData.h \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/MirageDelegates.h \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/MirageSaveGame.h \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/MirageUtility.h \
+                         D:\GitHub\GitHub\game-unreal-sdk\AnkrUnrealSDK\Plugins\AnkrSDK\Source\AnkrSDK\Public\AnkrUtility.h \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/ItemInfo.h \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/MirageSDK.h \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/qrcodegen.hpp \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/QRCodeGenerator.h \
+                         MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/RequestBodyStructure.h
 
 # The EXCLUDE_SYMLINKS tag can be used to select whether or not files or
 # directories that are symbolic links (a Unix file system feature) are excluded

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<!-- init section is always evaluated once per architecture -->
+	<init>
+		<log text="MirageSDK - Android - init"/>
+	</init>
+
+	<!--Android Specific sections-->
+	<!--  optional updates applied to AndroidManifest.xml -->
+	<androidManifestUpdates>
+		<!-- Add permissions -->
+		<log text="MirageSDK - Android - androidManifestUpdates"/>
+		<addPermission android:name="android.permission.READ_EXTERNAL_STORAGE" android:required="true"/>
+		<addPermission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:required="true"/>
+	</androidManifestUpdates>
+
+	<!--  optional additions to proguard -->
+	<proguardAdditions>   
+		<log text="MirageSDK - Android - proguardAdditions"/>
+	</proguardAdditions>
+
+	<!--  optional AAR imports additions -->
+	<AARImports>
+		<log text="MirageSDK - AARImports"/>
+		<insertValue value="repository $S(PluginDir)/Private/Android/Libraries"/>
+		<insertNewline/>
+		<!--<insert>com.ankr.nativeads,nativeads-release,1.0</insert>-->
+		<insertNewline/>
+	</AARImports>
+
+	<!--  optional base build.gradle additions -->
+	<baseBuildGradleAdditions>  
+		<log text="MirageSDK - Android - baseBuildGradleAdditions"/>
+	</baseBuildGradleAdditions>
+
+	<!--  optional base build.gradle buildscript additions -->
+	<buildscriptGradleAdditions>
+		<log text="MirageSDK - Android - buildscriptGradleAdditions"/>
+		<insert>
+			dependencies
+			{
+				<!--classpath 'com.google.gms:google-services:4.3.4' // google-services plugin-->
+				<!--classpath 'com.ankr.nativeads:nativeads-release:1.0'-->
+			}
+		</insert>
+	</buildscriptGradleAdditions>
+	<!--  optional app build.gradle additions -->
+	<buildGradleAdditions>
+		<log text="MirageSDK - Android - buildGradleAdditions"/>
+		<insert>
+			<!--dependencies.implementation(name: 'nativeads-release', ext: 'aar')-->
+			dependencies 
+			{
+				implementation 'com.android.installreferrer:installreferrer:1.0'
+				implementation 'androidx.annotation:annotation:1.0.0'
+				implementation 'com.squareup.picasso:picasso:2.8'
+				<!--implementation 'com.ankr.nativeads:nativeads-release:1.0'-->
+			}
+			<!--apply plugin: 'com.ankr.nativeads.nativeads-release'-->
+		</insert>
+	</buildGradleAdditions>
+	
+	<!--  optional additions to generated build.xml before ${sdk.dir}/tools/ant/build.xml import -->
+	<buildXmlPropertyAdditions> </buildXmlPropertyAdditions>
+	
+	<!--  optional files or directories to copy or delete from Intermediate/Android/APK before ndk-build -->
+	<prebuildCopies>
+		<log text="MirageSDK - Android - prebuildCopies"/>
+		<!--<copyDir src="$S(PluginDir)/Java" dst="$(BuildDir)/src/com/epicgames/unreal"/>-->
+		<copyDir src="$S(PluginDir)/Private/Android/Libraries/nativeads-release" dst = "$S(BuildDir)/JavaLibs/nativeads-release" />
+	</prebuildCopies>
+	
+	<!-- optional files or directories to copy or delete from Intermediate/Android/APK after ndk-build -->
+	<resourceCopies>
+		<log text="MirageSDK - Android - resourceCopies"/>
+		<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-release/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/classes.jar" dst="$S(BuildDir)/libs/classes.jar"/>-->
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-release.aar" dst="$S(BuildDir)/gradle/app/nativeads-release.aar"/>-->
+		<!--<copyFile src="$S(PluginDir)/Private/Android/Libraries/nativeads-release.aar" dst="$S(BuildDir)/libs/nativeads-release.aar"/>-->
+	</resourceCopies>
+	
+	<!-- optional files or directories to copy or delete from Intermediate/Android/APK before Gradle -->
+	<gradleCopies>
+		<log text="MirageSDK - Android - gradleCopies"/>
+	</gradleCopies>
+	
+	<!-- optional properties to add to gradle.properties -->
+	<gradleProperties>
+		<log text="MirageSDK - Android - gradleProperties"/>
+		<insert>
+			android.useAndroidX=true
+			android.enableJetifier=true
+		</insert>
+	</gradleProperties>
+	
+	<!-- optional parameters to add to Gradle commandline (prefix with a space or will run into previous parameter(s)) -->
+	<gradleParameters> </gradleParameters>
+	
+	<!-- optional minimum SDK API level required -->
+	<minimumSDKAPI> </minimumSDKAPI>
+	
+	<!-- optional additions to the GameActivity imports in GameActivity.java -->
+	<gameActivityImportAdditions>
+		<log text="MirageSDK - Android - gameActivityImportAdditions"/>
+		<insert>
+			import com.ankr.nativeads.*;
+		</insert>
+	</gameActivityImportAdditions>
+	
+	<!-- optional additions to the GameActivity after imports in GameActivity.java -->
+	<gameActivityPostImportAdditions> </gameActivityPostImportAdditions>
+	<!-- optional additions to the GameActivity class implements in GameActivity.java (end each line with a comma) -->
+	<gameActivityImplementsAdditions> </gameActivityImplementsAdditions>
+	<!-- optional additions to the GameActivity class body in GameActivity.java -->
+	<gameActivityClassAdditions></gameActivityClassAdditions>
+	<!-- optional additions to GameActivity onCreate metadata reading in GameActivity.java -->
+	<gameActivityReadMetadata> </gameActivityReadMetadata>
+	<!-- optional additions to GameActivity onCreate in GameActivity.java -->
+	<gameActivityOnCreateAdditions> </gameActivityOnCreateAdditions>
+	<!-- optional additions to GameActivity onDestroy in GameActivity.java -->
+	<gameActivityOnDestroyAdditions> </gameActivityOnDestroyAdditions>
+	<!-- optional additions to GameActivity onStart in GameActivity.java -->
+	<gameActivityOnStartAdditions> </gameActivityOnStartAdditions>
+	<!-- optional additions to GameActivity onStop in GameActivity.java -->
+	<gameActivityOnStopAdditions> </gameActivityOnStopAdditions>
+	<!-- optional additions to GameActivity onPause in GameActivity.java -->
+	<gameActivityOnPauseAdditions> </gameActivityOnPauseAdditions>
+	<!-- optional additions to GameActivity onResume in GameActivity.java -->
+	<gameActivityOnResumeAdditions>    </gameActivityOnResumeAdditions>
+	<!-- optional additions to GameActivity onNewIntent in GameActivity.java -->
+	<gameActivityOnNewIntentAdditions> </gameActivityOnNewIntentAdditions>
+	<!-- optional additions to GameActivity onActivityResult in GameActivity.java -->
+	<gameActivityOnActivityResultAdditions>    </gameActivityOnActivityResultAdditions>
+	<!-- optional libraries to load in GameActivity.java before libUE4.so -->
+	<soLoadLibrary>    </soLoadLibrary>
+
+
+	<compilerArgument>-Xlint:deprecation</compilerArgument>
+
+
+</root>

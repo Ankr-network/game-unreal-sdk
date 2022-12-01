@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.4"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>AnkrSDK: AnkrUnrealSDK/Plugins/AnkrSDK/Source/AnkrSDK/Public/RequestBodyStructure.h Source File</title>
+<title>MirageSDK: MirageUnrealSDK/Plugins/MirageSDK/Source/MirageSDK/Public/RequestBodyStructure.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -31,7 +31,7 @@
  <tr id="projectrow">
   <td id="projectlogo"><img alt="Logo" src="Logo.jfif"/></td>
   <td id="projectalign">
-   <div id="projectname">AnkrSDK<span id="projectnumber">&#160;1.0.1</span>
+   <div id="projectname">MirageSDK<span id="projectnumber">&#160;1.1.2</span>
    </div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
@@ -103,7 +103,7 @@ $(document).ready(function(){initNavTree('_request_body_structure_8h_source.html
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &lt;JsonObjectConverter.h&gt;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &quot;ItemInfo.h&quot;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;string&gt;</span></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;AnkrDelegates.h&quot;</span></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="preprocessor">#include &quot;MirageDelegates.h&quot;</span></div>
 <div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span><span class="preprocessor">#include &quot;RequestBodyStructure.generated.h&quot;</span></div>
 <div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
 <div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>USTRUCT(BlueprintType)</div>
@@ -132,32 +132,19 @@ $(document).ready(function(){initNavTree('_request_body_structure_8h_source.html
 <div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    }</div>
 <div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>};</div>
 <div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>USTRUCT(BlueprintType)</div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="struct_f_ankr_call_struct.html">   39</a></span>struct <a class="code hl_struct" href="struct_f_ankr_call_struct.html">FAnkrCallStruct</a></div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>UCLASS()</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="class_u_request_body_structure.html">   39</a></span>class MIRAGESDK_API <a class="code hl_class" href="class_u_request_body_structure.html">URequestBodyStructure</a> : public UUserDefinedStruct</div>
 <div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span>{</div>
 <div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span>    GENERATED_BODY()</div>
-<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>    </div>
-<div class="line"><a id="l00043" name="l00043"></a><span class="lineno">   43</span>    <span class="keywordtype">int</span> callIndex;</div>
-<div class="line"><a id="l00044" name="l00044"></a><span class="lineno">   44</span>    FString sender;</div>
-<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>    <span class="keywordtype">bool</span> success;</div>
-<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span>    FString data;</div>
-<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span>    FAnkrCallCompleteDynamicDelegate CallComplete;</div>
-<div class="line"><a id="l00048" name="l00048"></a><span class="lineno">   48</span>};</div>
-<div class="line"><a id="l00049" name="l00049"></a><span class="lineno">   49</span> </div>
-<div class="line"><a id="l00050" name="l00050"></a><span class="lineno">   50</span>UCLASS()</div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno"><a class="line" href="class_u_request_body_structure.html">   51</a></span>class ANKRSDK_API <a class="code hl_class" href="class_u_request_body_structure.html">URequestBodyStructure</a> : public UUserDefinedStruct</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno">   52</span>{</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span>    GENERATED_BODY()</div>
-<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>};</div>
-<div class="ttc" id="aclass_u_request_body_structure_html"><div class="ttname"><a href="class_u_request_body_structure.html">URequestBodyStructure</a></div><div class="ttdef"><b>Definition:</b> RequestBodyStructure.h:52</div></div>
-<div class="ttc" id="astruct_f_ankr_call_struct_html"><div class="ttname"><a href="struct_f_ankr_call_struct.html">FAnkrCallStruct</a></div><div class="ttdef"><b>Definition:</b> RequestBodyStructure.h:40</div></div>
+<div class="line"><a id="l00042" name="l00042"></a><span class="lineno">   42</span>};</div>
+<div class="ttc" id="aclass_u_request_body_structure_html"><div class="ttname"><a href="class_u_request_body_structure.html">URequestBodyStructure</a></div><div class="ttdef"><b>Definition:</b> RequestBodyStructure.h:40</div></div>
 <div class="ttc" id="astruct_f_request_body_struct_html"><div class="ttname"><a href="struct_f_request_body_struct.html">FRequestBodyStruct</a></div><div class="ttdef"><b>Definition:</b> RequestBodyStructure.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_869a7e922cf53f02e9c90594b2b3332a.html">AnkrUnrealSDK</a></li><li class="navelem"><a class="el" href="dir_7e5f5a6b9bd170b4e7f6a2f9ee231548.html">Plugins</a></li><li class="navelem"><a class="el" href="dir_cafbe179d55a92535028920d9347e485.html">AnkrSDK</a></li><li class="navelem"><a class="el" href="dir_f191043461933f78475346877ae595af.html">Source</a></li><li class="navelem"><a class="el" href="dir_1158dcd3ef8bd72fc6d36f2de7e0d5bf.html">AnkrSDK</a></li><li class="navelem"><a class="el" href="dir_16a7b801939cb8a3cf172a3c979dac29.html">Public</a></li><li class="navelem"><b>RequestBodyStructure.h</b></li>
+    <li class="navelem"><a class="el" href="dir_608fc31dd14c64905ecd6d3f3379e652.html">MirageUnrealSDK</a></li><li class="navelem"><a class="el" href="dir_bca5fd9cdd172d180a5d131c6f1838c9.html">Plugins</a></li><li class="navelem"><a class="el" href="dir_5fa19749f56e4233008c112b5ba9b171.html">MirageSDK</a></li><li class="navelem"><a class="el" href="dir_489d2c84db6231bc5ff4e3ab27c320e5.html">Source</a></li><li class="navelem"><a class="el" href="dir_0358cdf57543c3562e20c591c71d2524.html">MirageSDK</a></li><li class="navelem"><a class="el" href="dir_88e956ddc3b1d88983240d175e590982.html">Public</a></li><li class="navelem"><b>RequestBodyStructure.h</b></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.4 </li>
   </ul>
 </div>

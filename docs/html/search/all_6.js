@@ -1,19 +1,19 @@
 var searchData=
 [
-  ['gameitemsetapproval_0',['GameItemSetApproval',['../class_u_wearable_n_f_t_example.html#a338d2014ab61a8cae74699d07fae6992',1,'UWearableNFTExample']]],
+  ['gameitemsetapproval_0',['GameItemSetApproval',['../class_u_wearable_n_f_t_example.html#ad221b536191875a214e004bd5b32baf2',1,'UWearableNFTExample']]],
   ['getadtexturetype_1',['GetAdTextureType',['../class_u_advertisement_manager.html#a2ade4a5f32268b8e0b4521ffba140243',1,'UAdvertisementManager']]],
   ['getadvertisement_2',['GetAdvertisement',['../class_u_advertisement_manager.html#af12e109d789b46ccfedab58aa6fa8a36',1,'UAdvertisementManager']]],
   ['getbuilder_3',['GetBuilder',['../class_u_payload_builder.html#abf53b7408dd1f0a1721806b0dcea48ad',1,'UPayloadBuilder']]],
-  ['getcharacterbalance_4',['GetCharacterBalance',['../class_u_wearable_n_f_t_example.html#a2c9cddaaceff38cff31d021ee11db9e4',1,'UWearableNFTExample']]],
-  ['getcharactertokenid_5',['GetCharacterTokenId',['../class_u_wearable_n_f_t_example.html#af77974d149a1c8c9ba80de7a44af14bc',1,'UWearableNFTExample']]],
-  ['gethat_6',['GetHat',['../class_u_wearable_n_f_t_example.html#ae0cebb71934623086707446df24052d4',1,'UWearableNFTExample']]],
-  ['getitemsbalance_7',['GetItemsBalance',['../class_u_wearable_n_f_t_example.html#afcfaee02c77c5337d74d1d25f2a3bfbf',1,'UWearableNFTExample']]],
-  ['getlastrequest_8',['GetLastRequest',['../class_u_ankr_client.html#ab921c06fed236f2b1c81811801796d92',1,'UAnkrClient']]],
-  ['getnftinfo_9',['GetNFTInfo',['../class_u_update_n_f_t_example.html#a451e54a31351af60b7c86fa4c47c417d',1,'UUpdateNFTExample']]],
-  ['getsignature_10',['GetSignature',['../class_u_ankr_client.html#aad222640b30f82782255645bd2348e5e',1,'UAnkrClient']]],
-  ['getticketresult_11',['GetTicketResult',['../class_u_ankr_client.html#aa90750c30ced0fbfe9f14f9fac4295a2',1,'UAnkrClient']]],
-  ['gettokenuri_12',['GetTokenURI',['../class_u_wearable_n_f_t_example.html#a98e9fa2c1b0cfa1ce66467890a79d52f',1,'UWearableNFTExample']]],
-  ['getupdatenftresult_13',['GetUpdateNFTResult',['../class_u_update_n_f_t_example.html#abf9fbdd083199508608c93377a34eedc',1,'UUpdateNFTExample']]],
-  ['getwalletinfo_14',['GetWalletInfo',['../class_u_ankr_client.html#a327b4c442e6e95570e223a402a0ed038',1,'UAnkrClient']]],
-  ['getwearablenftresult_15',['GetWearableNFTResult',['../class_u_wearable_n_f_t_example.html#a9ef09a7433bca5b82e5978cfcf11162a',1,'UWearableNFTExample']]]
+  ['getcharacterbalance_4',['GetCharacterBalance',['../class_u_wearable_n_f_t_example.html#a05f043ba3aeb49f4d9fef347b603bf48',1,'UWearableNFTExample']]],
+  ['getcharactertokenid_5',['GetCharacterTokenId',['../class_u_wearable_n_f_t_example.html#ad87f49ec623a65d71aa33cb2999f2e2c',1,'UWearableNFTExample']]],
+  ['gethat_6',['GetHat',['../class_u_wearable_n_f_t_example.html#a74be271c0e8e5d48dee1a80b2c87afce',1,'UWearableNFTExample']]],
+  ['getitemsbalance_7',['GetItemsBalance',['../class_u_wearable_n_f_t_example.html#afb3c84b86d2c4ee58e705193c61089b5',1,'UWearableNFTExample']]],
+  ['getlastrequest_8',['GetLastRequest',['../class_u_mirage_client.html#a75477eda8c437cbed3a40ac6ba5d4d96',1,'UMirageClient']]],
+  ['getnftinfo_9',['GetNFTInfo',['../class_u_update_n_f_t_example.html#aec0307311ee836d085e1c179348403b2',1,'UUpdateNFTExample']]],
+  ['getsignature_10',['GetSignature',['../class_u_mirage_client.html#af446463fb8b2ac3ba53338285791c3e6',1,'UMirageClient']]],
+  ['getticketresult_11',['GetTicketResult',['../class_u_mirage_client.html#a5eda8d3b8039bca82225f70da9056288',1,'UMirageClient']]],
+  ['gettokenuri_12',['GetTokenURI',['../class_u_wearable_n_f_t_example.html#a18c159d8e96ac17be6b3e3a01367db74',1,'UWearableNFTExample']]],
+  ['getupdatenftresult_13',['GetUpdateNFTResult',['../class_u_update_n_f_t_example.html#a36946370338d584e85857aa2be8b5434',1,'UUpdateNFTExample']]],
+  ['getwalletinfo_14',['GetWalletInfo',['../class_u_mirage_client.html#aa3aef48555b56ec169cd1b38d9ae9583',1,'UMirageClient']]],
+  ['getwearablenftresult_15',['GetWearableNFTResult',['../class_u_wearable_n_f_t_example.html#a920b8055da4c60de541103e19bbf8cd5',1,'UWearableNFTExample']]]
 ];
