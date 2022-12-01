@@ -1,5 +1,5 @@
 
-<h3 lign="center">Unreal SDK</h3>
+<h3 align="center">Unreal SDK</h3>
 
   <p align="center">
     The Unreal Engine is aimed at Developers wanting to implement blockchain features into their game. The Unreal Engine allows the game to connect and interact with the blockchain.
