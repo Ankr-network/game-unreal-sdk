@@ -357,7 +357,7 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FMirageCallCom
 {
 	const FString payload = UPayloadBuilder::BuildPayload(
 		{ 
-			{ "device_id",	     UPayloadBuilder::FStringToJsonValue(UMirageUtility::GetDeviceID())},
+			{"device_id",	     UPayloadBuilder::FStringToJsonValue(UMirageUtility::GetDeviceID())},
 			{"contract_address", UPayloadBuilder::FStringToJsonValue(ContractAddress)},
 			{"abi_hash",	     UPayloadBuilder::FStringToJsonValue(abi_hash)},
 			{"method",	     UPayloadBuilder::FStringToJsonValue("getTokenDetails")},
@@ -645,11 +645,7 @@ Metamask will show popup to sign or confirm the transaction for that ticket.
 
 ```js
 
-<<<<<<< Updated upstream
 void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, FString hatAddress, FAnkrCallCompleteDynamicDelegate Result)
-=======
-void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasHat, FString hatAddress, FMirageCallCompleteDynamicDelegate Result)
->>>>>>> Stashed changes
 {
 	if (characterId < 0)
 	{
@@ -657,17 +653,12 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 		return;
 	}
 
-<<<<<<< Updated upstream
 	if (hatAddress.Equals(BlueHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatBlue");
 	else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatRed");
 	else if (hatAddress.Equals(RedHatAddress)) UAnkrUtility::SetLastRequest("ChangeHatWhite");
 
 	TSharedPtr<FJsonObject> gas = UPayloadBuilder::GetBuilder();
 	gas->SetNumberField("gasLimit", 200000);
-=======
-	if (hatAddress.Equals(BlueHatAddress)) UMirageUtility::SetLastRequest("ChangeHatBlue");
-	else if (hatAddress.Equals(RedHatAddress)) UMirageUtility::SetLastRequest("ChangeHatRed");
->>>>>>> Stashed changes
 
 	TArray<TSharedPtr<FJsonValue>> args;
 	UPayloadBuilder::AddArrayItem(args, FString::FromInt(characterId));
@@ -675,11 +666,8 @@ void UWearableNFTExample::ChangeHat(FString abi_hash, int characterId, bool hasH
 	//UPayloadBuilder::AddNestedObject(args, gas);
 
 	TSharedPtr<FJsonObject> builder = UPayloadBuilder::GetBuilder();
-<<<<<<< Updated upstream
-	builder->SetStringField("device_id",		UAnkrUtility::GetDeviceID());
-=======
+
 	builder->SetStringField("device_id",	    UMirageUtility::GetDeviceID());
->>>>>>> Stashed changes
 	builder->SetStringField("contract_address", GameCharacterContractAddress);
 	builder->SetStringField("abi_hash",			abi_hash);
 	builder->SetStringField("method",			"changeHat");
@@ -759,12 +747,8 @@ void UWearableNFTExample::GetWearableNFTResult(FString ticketId, FMirageCallComp
 			FString txHash;
 			bool hasTxHash = false;
 
-<<<<<<< Updated upstream
 			bool result = jsonObject->GetBoolField("result");
 			if (result)
-=======
-			if (UMirageUtility::GetLastRequest().Equals("ChangeHatBlue") || UMirageUtility::GetLastRequest().Equals("ChangeHatRed"))
->>>>>>> Stashed changes
 			{
 				TSharedPtr<FJsonObject> object = jsonObject->GetObjectField("data");
 				status = object->GetStringField("status");
