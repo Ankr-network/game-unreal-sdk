@@ -55,7 +55,8 @@
 
 (6a) Open any of your blueprint, call "Construct Object From Class", select MirageClient and store the reference in a variable.
 
-<img width="517" alt="InstanceCreation" src="https://user-images.githubusercontent.com/99165088/189541606-8049b5c2-bfba-42df-989d-7bb424d9389c.png">
+<img width="596" alt="Initialize" src="https://user-images.githubusercontent.com/99165088/205157585-ce110605-9e09-4331-af7b-bebb042d4e49.png">
+
 
 (6b) Locate your GameInstance.h if already created. If not Add C++ class from Content Browser in Unreal Engine, check 'Show All Classes' and select GameInstance. Name your class 'MyGameInstance'.
 
@@ -131,7 +132,9 @@ To Connect wallet call the C++ ConnectWallet in Blueprint shown below:
 void UMirageClient::ConnectWallet(const FMirageCallCompleteDynamicDelegate& Result);
 
 ```
-<img width="494" alt="ConnectWalletpng" src="https://user-images.githubusercontent.com/99165088/187159950-fc5d030a-012d-42cb-bdfa-3383867f48b3.png">
+
+<img width="632" alt="ConnectWallet" src="https://user-images.githubusercontent.com/99165088/205157638-d099e353-1755-4124-8510-433eb2235a6a.png">
+
 
 2. If Login is required, wallet app will be opened on your mobile device to connect to.
 
@@ -144,7 +147,9 @@ To Get wallet information call the C++ GetWalletInfo in Blueprint shown below:
 void UMirageClient::GetWalletInfo(const FMirageCallCompleteDynamicDelegate& Result);
 
 ```
-<img width="529" alt="GetWalletpng" src="https://user-images.githubusercontent.com/99165088/187161391-da60ae1c-38a5-47e9-9553-94a5a6349a2a.png">
+
+<img width="713" alt="GetWallletInfo" src="https://user-images.githubusercontent.com/99165088/205157675-e3e861f2-3c84-4363-8c9e-2f20ecd45edf.png">
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
