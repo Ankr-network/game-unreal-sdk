@@ -7,7 +7,7 @@ public class MirageUnrealSDK : ModuleRules
 	public MirageUnrealSDK(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
-
+	
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "MirageSDK" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });

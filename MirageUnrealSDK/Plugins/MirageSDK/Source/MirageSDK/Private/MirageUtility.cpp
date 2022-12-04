@@ -29,19 +29,6 @@ void UMirageUtility::SetLastRequest(FString _lastRequest)
 	LastRequest = _lastRequest;
 }
 
-FString UMirageUtility::GetDefaultERC20()
-{
-	return DefaultERC20;
-}
-FString UMirageUtility::GetDefaultERC721()
-{
-	return DefaultERC721;
-}
-FString UMirageUtility::GetDefaultERC1155()
-{
-	return DefaultERC1155;
-}
-
 FString UMirageUtility::GetDeviceID()
 {
 	return DeviceID;

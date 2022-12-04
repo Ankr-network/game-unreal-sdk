@@ -9,6 +9,7 @@ public class MirageUnrealSDKTarget : TargetRules
 	{
 		Type = TargetType.Game;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "MirageUnrealSDK" } );
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+		ExtraModuleNames.Add("MirageUnrealSDK");
 	}
 }

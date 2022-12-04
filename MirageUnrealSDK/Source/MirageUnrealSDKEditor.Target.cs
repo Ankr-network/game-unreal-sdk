@@ -9,6 +9,7 @@ public class MirageUnrealSDKEditorTarget : TargetRules
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "MirageUnrealSDK" } );
+		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_1;
+		ExtraModuleNames.Add("MirageUnrealSDK");
 	}
 }

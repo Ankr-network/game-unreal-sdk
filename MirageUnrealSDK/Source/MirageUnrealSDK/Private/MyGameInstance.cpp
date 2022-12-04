@@ -5,7 +5,7 @@ UMyGameInstance::UMyGameInstance()
 	hndl_AppWillEnterBackground	   = FCoreDelegates::ApplicationWillEnterBackgroundDelegate .AddUObject(this, &UMyGameInstance::OnMobileFocusLost);
 	hndl_AppHasEnteredForground	   = FCoreDelegates::ApplicationHasEnteredForegroundDelegate.AddUObject(this, &UMyGameInstance::OnMobileFocusGained);
 	hndl_ApplicationWillDeactivate = FCoreDelegates::ApplicationWillDeactivateDelegate      .AddUObject(this, &UMyGameInstance::OnMobileAppDeactivated);
-	onApplicationResume.AddDynamic(this, &UMyGameInstance::OnApplicationResume);
+	onApplicationResume.AddDynamic(this, &UMyGameInstance::OnApplicationResumed);
 }
 
 UMirageClient* UMyGameInstance::GetMirageClient()
@@ -87,7 +87,7 @@ void UMyGameInstance::OnMobileAppDeactivated()
 	UE_LOG(LogTemp, Warning, TEXT("UMyGameInstance::OnMobileAppDeactivated"));
 }
 
-void UMyGameInstance::OnApplicationResume()
+void UMyGameInstance::OnApplicationResumed()
 {
 	GEngine->AddOnScreenDebugMessage(1, 3.0f, FColor::Red, *FString("UMyGameInstance::OnApplicationResume"));
 	UE_LOG(LogTemp, Warning, TEXT("UMyGameInstance::OnApplicationResume"));
@@ -98,5 +98,5 @@ UMyGameInstance::~UMyGameInstance()
 	FCoreDelegates::ApplicationWillEnterBackgroundDelegate .Remove(hndl_AppWillEnterBackground);
 	FCoreDelegates::ApplicationHasEnteredForegroundDelegate.Remove(hndl_AppHasEnteredForground);
 	FCoreDelegates::ApplicationWillDeactivateDelegate      .Remove(hndl_ApplicationWillDeactivate);
-	onApplicationResume.RemoveDynamic(this, &UMyGameInstance::OnApplicationResume);
+	onApplicationResume.RemoveDynamic(this, &UMyGameInstance::OnApplicationResumed);
 }
