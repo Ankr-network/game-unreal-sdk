@@ -14,7 +14,7 @@ void UMirageClient::Initialize()
 	UMirageSaveGame* load = UMirageSaveGame::Load();
 
 	UMirageUtility::SetDeviceID(load->UniqueId);
-	UMirageUtility::SetDevelopment(false);
+	UMirageUtility::SetDevelopment(true);
 
 	UE_LOG(LogTemp, Warning, TEXT("MirageClient - Initialize - MirageSDK will use device id: %s."), *UMirageUtility::GetDeviceID());
 }
