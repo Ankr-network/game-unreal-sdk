@@ -83,12 +83,12 @@ public class MirageSDK : ModuleRules
     {
         PrivateIncludePaths.Add(Path.Combine(ModuleDirectory, "Private/Windows"));
 
-		string SodiumLibraryPath		= Path.Combine(ModuleDirectory, "Private", "Windows", "Libraries", "libsodium.lib");
-		string SodiumDynamicLibraryPath = Path.Combine(ModuleDirectory, "Private", "Windows", "Libraries", "libsodium.dll");
+		//string LibPath = Path.Combine(ModuleDirectory, "Private", "Windows", "Libraries", "lib.lib");
+		//string DLLPath = Path.Combine(ModuleDirectory, "Private", "Windows", "Libraries", "dll.dll");
 
-		//PublicAdditionalLibraries.Add(SodiumLibraryPath);
-		//RuntimeDependencies.Add(SodiumDynamicLibraryPath);
-		//PublicDelayLoadDLLs.Add("libsodium.dll");
+		//PublicAdditionalLibraries.Add(LibPath);
+		//RuntimeDependencies.Add(DLLPath);
+		//PublicDelayLoadDLLs.Add("dll.dll");
 	}
 
 	void SetMacDependencies()

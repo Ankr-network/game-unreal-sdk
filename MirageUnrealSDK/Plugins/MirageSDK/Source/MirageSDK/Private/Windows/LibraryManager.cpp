@@ -6,12 +6,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"
 
-
-#define crypto_sign_BYTES 64U
-#define crypto_sign_SEEDBYTES 32U
-#define crypto_sign_PUBLICKEYBYTES 32U
-#define crypto_sign_SECRETKEYBYTES (32U + 32U)
-
 void LibraryManager::Load()
 {
 	isInitialized = false;

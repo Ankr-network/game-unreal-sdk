@@ -30,7 +30,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">MirageSDK<span id="projectnumber">&#160;1.1.2</span>
+   <div id="projectname">MirageSDK<span id="projectnumber">&#160;1.1.3</span>
    </div>
   </td>
     <td>        <div id="MSearchBox" class="MSearchBoxInactive">
@@ -96,33 +96,32 @@ $(document).ready(function(){initNavTree('_update_n_f_t_example_8h_source.html',
 <div class="contents">
 <div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#pragma once</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span> </div>
-<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;ItemInfo.h&quot;</span></div>
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;MirageClient.h&quot;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &quot;UpdateNFTExample.generated.h&quot;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>UCLASS(Blueprintable, BlueprintType)</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html">    9</a></span>class MIRAGESDK_API <a class="code hl_class" href="class_u_update_n_f_t_example.html">UUpdateNFTExample</a> : public <a class="code hl_class" href="class_u_mirage_client.html">UMirageClient</a></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    GENERATED_UCLASS_BODY()</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="preprocessor">#ifndef DOXYGEN_SHOULD_SKIP_THIS    </span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString ContractAddress;</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString ABI;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span><span class="preprocessor">#endif </span><span class="comment">/* DOXYGEN_SHOULD_SKIP_THIS */</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    UFUNCTION(BlueprintCallable, Category = <span class="stringliteral">&quot;MIRAGE SDK&quot;</span>)</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html#aec0307311ee836d085e1c179348403b2">   35</a></span>    void GetNFTInfo(FString abi_hash, <span class="keywordtype">int</span> tokenId, FMirageCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
-<div class="line"><a id="l00051" name="l00051"></a><span class="lineno">   51</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
-<div class="line"><a id="l00052" name="l00052"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html#aa51b771524e443ea9c2716fe7cdfc029">   52</a></span>    <span class="keywordtype">void</span> UpdateNFT(FString abi_hash, FItemInfoStructure _item, FMirageCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00053" name="l00053"></a><span class="lineno">   53</span> </div>
-<div class="line"><a id="l00067" name="l00067"></a><span class="lineno">   67</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
-<div class="line"><a id="l00068" name="l00068"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html#a36946370338d584e85857aa2be8b5434">   68</a></span>    <span class="keywordtype">void</span> GetUpdateNFTResult(FString ticketId, FMirageCallCompleteDynamicDelegate Result);</div>
-<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>};</div>
+<div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="preprocessor">#include &quot;MirageClient.h&quot;</span></div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &quot;UpdateNFTExample.generated.h&quot;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>UCLASS(Blueprintable, BlueprintType)</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html">    8</a></span>class MIRAGESDK_API <a class="code hl_class" href="class_u_update_n_f_t_example.html">UUpdateNFTExample</a> : public <a class="code hl_class" href="class_u_mirage_client.html">UMirageClient</a></div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>{</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    GENERATED_UCLASS_BODY()</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span> </div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span><span class="preprocessor">#ifndef DOXYGEN_SHOULD_SKIP_THIS    </span></div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString ContractAddress;</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span>    UPROPERTY(BlueprintReadOnly, VisibleAnywhere) FString ABI;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span><span class="preprocessor">#endif </span><span class="comment">/* DOXYGEN_SHOULD_SKIP_THIS */</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    UFUNCTION(BlueprintCallable, Category = <span class="stringliteral">&quot;MIRAGE SDK&quot;</span>)</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html#aec0307311ee836d085e1c179348403b2">   34</a></span>    void GetNFTInfo(FString abi_hash, <span class="keywordtype">int</span> tokenId, FMirageCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00054" name="l00054"></a><span class="lineno">   54</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
+<div class="line"><a id="l00055" name="l00055"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html#a2386f1845c9a26e0043c1608a671f248">   55</a></span>    <span class="keywordtype">void</span> UpdateNFT(FString abi_hash, <span class="keywordtype">int</span> _tokenId, <span class="keywordtype">int</span> _itemType, <span class="keywordtype">int</span> _strength, <span class="keywordtype">int</span> _level, <span class="keywordtype">int</span> _expireTime, FMirageCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00056" name="l00056"></a><span class="lineno">   56</span> </div>
+<div class="line"><a id="l00069" name="l00069"></a><span class="lineno">   69</span>    UFUNCTION(BlueprintCallable, Category = &quot;MIRAGE SDK&quot;)</div>
+<div class="line"><a id="l00070" name="l00070"></a><span class="lineno"><a class="line" href="class_u_update_n_f_t_example.html#a36946370338d584e85857aa2be8b5434">   70</a></span>    <span class="keywordtype">void</span> GetUpdateNFTResult(FString ticketId, FMirageCallCompleteDynamicDelegate Result);</div>
+<div class="line"><a id="l00071" name="l00071"></a><span class="lineno">   71</span>};</div>
 <div class="ttc" id="aclass_u_mirage_client_html"><div class="ttname"><a href="class_u_mirage_client.html">UMirageClient</a></div><div class="ttdoc">MirageClient provides various functions that are used to connect wallet and interact with the blockch...</div><div class="ttdef"><b>Definition:</b> MirageClient.h:11</div></div>
-<div class="ttc" id="aclass_u_update_n_f_t_example_html"><div class="ttname"><a href="class_u_update_n_f_t_example.html">UUpdateNFTExample</a></div><div class="ttdoc">UUpdateNFTExample provides various functions to get and update NFT's metadata on the blockchain.</div><div class="ttdef"><b>Definition:</b> UpdateNFTExample.h:10</div></div>
+<div class="ttc" id="aclass_u_update_n_f_t_example_html"><div class="ttname"><a href="class_u_update_n_f_t_example.html">UUpdateNFTExample</a></div><div class="ttdoc">UUpdateNFTExample provides various functions to get and update NFT's metadata on the blockchain.</div><div class="ttdef"><b>Definition:</b> UpdateNFTExample.h:9</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

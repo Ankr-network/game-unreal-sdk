@@ -1,6 +1,5 @@
 #include "UpdateNFTExample.h"
 #include "MirageUtility.h"
-#include "RequestBodyStructure.h"
 #include "PayloadBuilder.h"
 
 UUpdateNFTExample::UUpdateNFTExample(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
@@ -29,15 +28,15 @@ void UUpdateNFTExample::GetNFTInfo(FString abi_hash, int tokenId, FMirageCallCom
 		}, Result, false);
 }
 
-void UUpdateNFTExample::UpdateNFT(FString abi_hash, FItemInfoStructure _item, FMirageCallCompleteDynamicDelegate Result)
+void UUpdateNFTExample::UpdateNFT(FString abi_hash, int _tokenId, int _itemType, int _strength, int _level, int _expireTime, FMirageCallCompleteDynamicDelegate Result)
 {
 	TSharedPtr<FJsonObject> item = UPayloadBuilder::GetBuilder();
-	item->SetNumberField("tokenId",    _item.tokenId);
-	item->SetNumberField("itemType",   _item.itemType);
-	item->SetNumberField("strength",   _item.strength);
-	item->SetNumberField("level",      _item.level);
-	item->SetNumberField("expireTime", _item.expireTime);
-	item->SetStringField("signature",  _item.signature);
+	item->SetNumberField("tokenId",    _tokenId);
+	item->SetNumberField("itemType",   _itemType);
+	item->SetNumberField("strength",   _strength);
+	item->SetNumberField("level",      _level);
+	item->SetNumberField("expireTime", _expireTime);
+	item->SetStringField("signature",  FString("0x"));
 
 	TArray<TSharedPtr<FJsonValue>> args;
 	UPayloadBuilder::AddNestedObject(args, item);

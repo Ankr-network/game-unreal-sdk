@@ -34,8 +34,6 @@ class MIRAGESDK_API LibraryManager
 		void Unload();
 		void DumpMethod(bool, FString);
 
-		void LoadLibSodiumDynamicLibrary();
-
 		std::string GetString(std::wstring _wstring);
 		std::wstring GetWString(FString input);
 };
